@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>FoodieGo Login</title>
+
+    <link rel="stylesheet"
+          th:href="@{/css/auth.css}">
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="logo">
+        <h1>🍔 FoodieGo</h1>
+        <p>Welcome Back</p>
+    </div>
+
+    <div th:if="${error == 'invalidCredentials'}"
+         class="error">
+        Invalid email or password.
+    </div>
+
+    <form action="/login"
+          method="post">
+
+        <input type="email"
+               name="email"
+               placeholder="Email Address"
+               required>
+
+        <input type="password"
+               name="password"
+               placeholder="Password"
+               required>
+
+        <button type="submit">
+            Login
+        </button>
+
+    </form>
+
+    <div class="link">
+        <a href="/">
+            Create Account
+        </a>
+    </div>
+
+</div>
+
+</body>
+</html>

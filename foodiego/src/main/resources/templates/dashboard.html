@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FoodieGo Dashboard</title>
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", sans-serif;
+      }
+
+      body {
+        background: #f8f9fa;
+      }
+
+      nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 60px;
+        background: white;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+      }
+
+      .logo {
+        font-size: 28px;
+        font-weight: 700;
+        color: #ff6b35;
+      }
+
+      .logout-btn {
+        text-decoration: none;
+        background: #ff6b35;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 10px;
+      }
+
+      .hero {
+        height: 70vh;
+        background: linear-gradient(135deg, #ff6b35, #ff8c42);
+        color: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 20px;
+      }
+
+      .hero h1 {
+        font-size: 55px;
+        margin-bottom: 20px;
+      }
+
+      .hero p {
+        font-size: 20px;
+        margin-bottom: 30px;
+      }
+
+      .search-box {
+        display: flex;
+        gap: 10px;
+      }
+
+      .search-box input {
+        width: 400px;
+        padding: 15px;
+        border: none;
+        border-radius: 10px;
+      }
+
+      .search-box button {
+        padding: 15px 25px;
+        border: none;
+        border-radius: 10px;
+        background: black;
+        color: white;
+        cursor: pointer;
+      }
+
+      .categories {
+        padding: 70px;
+      }
+
+      .categories h2 {
+        margin-bottom: 30px;
+      }
+
+      .category-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+      }
+
+      .card {
+        background: white;
+        padding: 30px;
+        text-align: center;
+        border-radius: 15px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        font-size: 22px;
+        transition: 0.3s;
+      }
+
+      .card:hover {
+        transform: translateY(-5px);
+      }
+    </style>
+  </head>
+
+  <body>
+    <nav>
+      <div class="logo">🍔 FoodieGo</div>
+
+      <a href="/logout" class="logout-btn"> Logout </a>
+    </nav>
+
+    <section class="hero">
+      <h1>Order Food Anytime, Anywhere</h1>
+
+      <p>
+        Discover your favourite restaurants and enjoy lightning-fast delivery.
+      </p>
+
+      <div class="search-box">
+        <input type="text" placeholder="Search restaurants, dishes..." />
+
+        <button>Search</button>
+      </div>
+    </section>
+
+    <section class="categories">
+      <h2>Popular Categories</h2>
+
+      <div class="category-grid">
+        <div class="card">🍕 Pizza</div>
+
+        <div class="card">🍔 Burgers</div>
+
+        <div class="card">🍛 Biryani</div>
+
+        <div class="card">🍜 Noodles</div>
+
+        <div class="card">🥤 Beverages</div>
+
+        <div class="card">🍰 Desserts</div>
+      </div>
+    </section>
+  </body>
+</html>
