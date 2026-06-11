@@ -1,26 +1,45 @@
 <!doctype html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en" xml:lang="en">
+<html lang="en" xml:lang="en" xmlns:th="http://www.thymeleaf.org">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <title>FoodieGo Signup</title>
 
-    <link rel="stylesheet" th:href="@{/css/auth.css}" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" th:href="@{/css/auth-v3.css}" />
   </head>
 
   <body>
-    <div class="container">
-      <div class="logo">
+    <div class="overlay"></div>
+
+    <div class="login-card">
+      <div class="brand">
         <h1>🍔 FoodieGo</h1>
-        <p>Create Your Account</p>
+
+        <p><p>
+    Join thousands of food lovers today
+</p></p>
       </div>
 
+      <h2>Create Account</h2>
+
+      <p class="subtitle">Join FoodieGo and discover amazing food</p>
+
       <div th:if="${error == 'emailExists'}" class="error">
-        Email already exists.
+        Email already exists
       </div>
 
       <div th:if="${error == 'passwordMismatch'}" class="error">
-        Passwords do not match.
+        Passwords do not match
       </div>
 
       <form action="/register" method="post">
@@ -45,7 +64,7 @@
         <button type="submit">Create Account</button>
       </form>
 
-      <div class="link">
+      <div class="signup-link">
         <a href="/login"> Already have an account? Login </a>
       </div>
     </div>

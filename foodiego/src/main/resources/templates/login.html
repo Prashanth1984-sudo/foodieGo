@@ -1,26 +1,54 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 
 <head>
+
     <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
     <title>FoodieGo Login</title>
 
+    <link rel="preconnect"
+          href="https://fonts.googleapis.com">
+
+    <link rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossorigin>
+
     <link rel="stylesheet"
-          th:href="@{/css/auth.css}">
+          th:href="@{/css/fonts.css}">
+
+    <link rel="stylesheet"
+          th:href="@{/css/auth-v3.css}">
+
 </head>
 
 <body>
 
-<div class="container">
+<div class="overlay"></div>
 
-    <div class="logo">
+<div class="login-card">
+
+    <div class="brand">
+
         <h1>🍔 FoodieGo</h1>
-        <p>Welcome Back</p>
+
+        <p>
+            India's fastest growing food delivery platform
+        </p>
+
     </div>
+
+    <h2>Welcome Back</h2>
+
+    <p class="subtitle">
+        Login to continue your delicious journey
+    </p>
 
     <div th:if="${error == 'invalidCredentials'}"
          class="error">
-        Invalid email or password.
+        Invalid email or password
     </div>
 
     <form action="/login"
@@ -37,18 +65,23 @@
                required>
 
         <button type="submit">
+
             Login
+
         </button>
 
     </form>
 
-    <div class="link">
+    <div class="signup-link">
+
         <a href="/">
-            Create Account
+            Create New Account
         </a>
+
     </div>
 
 </div>
 
 </body>
+
 </html>
