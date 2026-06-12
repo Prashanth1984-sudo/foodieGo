@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Order Details</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" th:href="@{/css/order-details.css}" />
+  </head>
+
+  <body>
+    <div class="container">
+      <!-- BACK BUTTON -->
+
+      <div class="top-bar">
+        <a href="/orders" class="back-btn"> ← Back to Orders </a>
+      </div>
+
+      <!-- ORDER HEADER -->
+
+      <div class="order-header">
+        <h1>
+          Order #
+          <span th:text="${order.id}"> 1 </span>
+        </h1>
+
+        <div class="status-badge">
+          <span th:text="${order.status}"> PLACED </span>
+        </div>
+
+        <p class="order-date">
+          Ordered On:
+
+          <span
+            th:text="${#temporals.format(order.orderDate,'dd MMM yyyy • hh:mm a')}"
+          >
+          </span>
+        </p>
+
+        <div class="order-stats">
+          <div class="stat-box">
+            <h3 th:text="${itemCount}">1</h3>
+
+            <p>Items</p>
+          </div>
+
+          <div class="stat-box">
+            <h3>₹<span th:text="${order.totalAmount}"> </span></h3>
+
+            <p>Total Amount</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- TIMELINE -->
+
+      <div class="timeline">
+        <div class="timeline-step active">✓ Order Placed</div>
+
+        <div
+          th:class="${order.status == 'PREPARING' ||
+                   order.status == 'OUT_FOR_DELIVERY' ||
+                   order.status == 'DELIVERED'}
+                   ?
+                   'timeline-step active'
+                   :
+                   'timeline-step'"
+        >
+          🍳 Preparing
+        </div>
+
+        <div
+          th:class="${order.status == 'OUT_FOR_DELIVERY' ||
+                   order.status == 'DELIVERED'}
+                   ?
+                   'timeline-step active'
+                   :
+                   'timeline-step'"
+        >
+          🚚 Out For Delivery
+        </div>
+
+        <div
+          th:class="${order.status == 'DELIVERED'}
+                   ?
+                   'timeline-step active'
+                   :
+                   'timeline-step'"
+        >
+          🎉 Delivered
+        </div>
+      </div>
+
+      <!-- ORDERED ITEMS -->
+
+      <h2 class="section-title">Ordered Items</h2>
+
+      <div class="items-container">
+        <div class="item-card" th:each="item : ${items}">
+          <div class="item-image">
+            <img th:src="${item.imageUrl}" th:alt="${item.name}" />
+          </div>
+
+          <div class="item-info">
+            <h3 th:text="${item.name}">Food Name</h3>
+
+            <p class="food-description" th:text="${item.description}">
+              Food Description
+            </p>
+
+            <div class="item-meta">
+              <div>
+                <label> Quantity </label>
+
+                <strong th:text="${item.quantity}"> 1 </strong>
+              </div>
+
+              <div>
+                <label> Price </label>
+
+                <strong> ₹<span th:text="${item.price}"> </span> </strong>
+              </div>
+
+              <div>
+                <label> Subtotal </label>
+
+                <strong>
+                  ₹<span th:text="${item.price * item.quantity}"> </span>
+                </strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ORDER SUMMARY -->
+
+      <div class="summary-card">
+        <div class="summary-row">
+          <span> Order Status </span>
+
+          <span th:text="${order.status}"> PLACED </span>
+        </div>
+
+        <div class="summary-row">
+          <span> Total Items </span>
+
+          <span th:text="${itemCount}"> 1 </span>
+        </div>
+
+        <div class="summary-row">
+          <span> Payment Method </span>
+
+          <span> Cash On Delivery </span>
+        </div>
+
+        <div class="summary-row">
+          <span> Delivery Type </span>
+
+          <span> Standard Delivery </span>
+        </div>
+
+        <div class="summary-row total-row">
+          <span> Total Amount </span>
+
+          <span> ₹<span th:text="${order.totalAmount}"> </span> </span>
+        </div>
+
+        <div class="action-buttons">
+          <a href="/dashboard" class="home-btn"> Continue Shopping </a>
+
+          <button class="reorder-btn">Order Again</button>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

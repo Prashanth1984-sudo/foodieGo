@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>FoodieGo Cart</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" th:href="@{/css/cart.css}" />
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="header">
+        <a href="/dashboard" class="back-btn"> ← Continue Shopping </a>
+
+        <h1>🛒 Your Cart</h1>
+      </div>
+
+      <div class="cart-layout">
+        <div class="cart-items">
+          <div class="cart-card" th:each="item : ${cartItems}">
+            <img th:src="${item.imageUrl}" th:alt="${item.name}" />
+
+            <div class="item-details">
+              <h3 th:text="${item.name}">Food Name</h3>
+
+              <p>₹<span th:text="${item.price}"> </span></p>
+            </div>
+
+            <div class="quantity-section">
+              <form
+                th:action="@{/cart/decrease/{id}(id=${item.cartId})}"
+                method="post"
+              >
+                <button type="submit">-</button>
+              </form>
+
+              <span th:text="${item.quantity}"> </span>
+
+              <form
+                th:action="@{/cart/increase/{id}(id=${item.cartId})}"
+                method="post"
+              >
+                <button type="submit">+</button>
+              </form>
+            </div>
+
+            <form
+              th:action="@{/cart/remove/{id}(id=${item.cartId})}"
+              method="post"
+            >
+              <button class="remove-btn" type="submit">Remove</button>
+            </form>
+          </div>
+        </div>
+
+        <div class="summary-card">
+          <h2>Order Summary</h2>
+
+          <div class="summary-row">
+            <span>Total</span>
+
+            <span> ₹<span th:text="${total}"> </span> </span>
+          </div>
+
+          <a href="/checkout" class="checkout-btn"> Proceed To Checkout </a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>My Orders</title>
+
+    <link rel="stylesheet" th:href="@{/css/orders.css}" />
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="header">
+        <a href="/dashboard"> ← Back to Dashboard </a>
+
+        <h1>📦 My Orders</h1>
+      </div>
+
+      <div class="orders-list">
+        <div class="order-card" th:each="order : ${orders}">
+          <div class="order-top">
+            <h3>
+              Order #
+              <span th:text="${order.id}"> </span>
+            </h3>
+
+            <span class="status" th:text="${order.status}"> </span>
+          </div>
+
+          <p>₹<span th:text="${order.totalAmount}"> </span></p>
+
+          <p th:text="${order.orderDate}"></p>
+
+          <a th:href="@{/orders/{id}(id=${order.id})}" class="view-btn">
+            View Details
+          </a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

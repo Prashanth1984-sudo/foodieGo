@@ -1,0 +1,24 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" xml:lang="en">
+  <head>
+    <title>Checkout</title>
+
+    <link rel="stylesheet" th:href="@{/css/checkout.css}" />
+  </head>
+
+  <body>
+    <div class="container">
+      <h1>Checkout</h1>
+
+      <form action="/checkout/place-order" method="post">
+        <input type="text" placeholder="Delivery Address" required />
+
+        <input type="text" placeholder="Phone Number" required />
+
+        <div class="total">Total: ₹<span th:text="${total}"> </span></div>
+
+        <button type="submit">Place Order</button>
+      </form>
+    </div>
+  </body>
+</html>
