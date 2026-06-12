@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title th:text="${restaurant.name}">Restaurant</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" th:href="@{/css/restaurant-details.css}" />
+  </head>
+
+  <body>
+    <nav class="navbar">
+      <a href="/dashboard" class="back-btn"> ← Back </a>
+
+      <div class="logo">🍔 FoodieGo</div>
+    </nav>
+    <section class="restaurant-hero">
+      <img
+        src="https://images.unsplash.com/photo-1552566626-52f8b828add9?q=80&w=2000"
+        alt="Restaurant Banner"
+      />
+
+      <div class="hero-overlay"></div>
+
+      <div class="hero-content">
+        <a href="/dashboard" class="back-btn"> ← Back </a>
+
+        <h1 th:text="${restaurant.name}">Restaurant Name</h1>
+
+        <p th:text="${restaurant.description}">Restaurant Description</p>
+
+        <div class="restaurant-meta">
+          <span>
+            ⭐
+            <span th:text="${restaurant.rating}"> 4.9 </span>
+          </span>
+
+          <span th:text="${restaurant.cuisine}"> Cuisine </span>
+
+          <span>
+            🚚
+            <span th:text="${restaurant.deliveryTime}"> </span>
+          </span>
+        </div>
+      </div>
+    </section>
+
+    <section class="offers">
+      <div class="offer-card">🎉 20% OFF up to ₹150</div>
+
+      <div class="offer-card">🚚 Free Delivery</div>
+
+      <div class="offer-card">⭐ Top Rated Partner</div>
+    </section>
+
+    <section class="menu-section">
+      <div class="menu-header">
+        <h2>Popular Dishes</h2>
+
+        <div class="categories">
+          <button>All</button>
+          <button>Biryani</button>
+          <button>Starters</button>
+          <button>Drinks</button>
+          <button>Desserts</button>
+        </div>
+      </div>
+
+      <div class="content-wrapper">
+        <div class="menu-grid">
+          <div class="menu-card" th:each="item : ${menuItems}">
+            <img th:src="${item.imageUrl}" th:alt="${item.name}" />
+
+            <div class="menu-info">
+              <h3 th:text="${item.name}">Food Name</h3>
+
+              <p th:text="${item.description}">Description</p>
+
+              <div class="menu-footer">
+                <span class="price">
+                  ₹<span th:text="${item.price}"> </span>
+                </span>
+
+                <button class="add-btn">Add +</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <aside class="cart-sidebar">
+          <h3>🛒 Cart</h3>
+
+          <p>Your selected items will appear here.</p>
+
+          <div class="cart-total">Total: ₹0</div>
+
+          <button class="checkout-btn">Checkout</button>
+        </aside>
+      </div>
+    </section>
+  </body>
+</html>
