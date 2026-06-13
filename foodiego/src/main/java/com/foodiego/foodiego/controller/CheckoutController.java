@@ -23,136 +23,132 @@ import java.util.List;
 @RequestMapping("/checkout")
 public class CheckoutController {
 
-    private final CartItemRepository cartItemRepository;
-    private final MenuItemRepository menuItemRepository;
-    private final OrderRepository orderRepository;
-    private final OrderItemRepository orderItemRepository;
+        private final CartItemRepository cartItemRepository;
+        private final MenuItemRepository menuItemRepository;
+        private final OrderRepository orderRepository;
+        private final OrderItemRepository orderItemRepository;
 
-    public CheckoutController(
-            CartItemRepository cartItemRepository,
-            MenuItemRepository menuItemRepository,
-            OrderRepository orderRepository,
-            OrderItemRepository orderItemRepository) {
+        public CheckoutController(
+                        CartItemRepository cartItemRepository,
+                        MenuItemRepository menuItemRepository,
+                        OrderRepository orderRepository,
+                        OrderItemRepository orderItemRepository) {
 
-        this.cartItemRepository = cartItemRepository;
-        this.menuItemRepository = menuItemRepository;
-        this.orderRepository = orderRepository;
-        this.orderItemRepository = orderItemRepository;
-    }
-
-    @GetMapping
-    public String checkout(
-            HttpSession session,
-            Model model) {
-
-        String userEmail = (String) session.getAttribute(
-                "loggedInUser");
-
-        if (userEmail == null) {
-            return "redirect:/login";
+                this.cartItemRepository = cartItemRepository;
+                this.menuItemRepository = menuItemRepository;
+                this.orderRepository = orderRepository;
+                this.orderItemRepository = orderItemRepository;
         }
 
-        List<CartItem> cartItems = cartItemRepository
-                .findByUserEmail(userEmail);
+        @GetMapping
+        public String checkout(
+                        HttpSession session,
+                        Model model) {
 
-        double total = 0;
+                String userEmail = (String) session.getAttribute(
+                                "loggedInUser");
 
-        for (CartItem cart : cartItems) {
+                if (userEmail == null) {
+                        return "redirect:/login";
+                }
 
-            MenuItem menu = menuItemRepository
-                    .findById(
-                            cart.getMenuItemId())
-                    .orElse(null);
+                List<CartItem> cartItems = cartItemRepository
+                                .findByUserEmail(userEmail);
 
-            if (menu != null) {
+                double total = 0;
 
-                total += menu.getPrice()
-                        *
-                        cart.getQuantity();
-            }
+                for (CartItem cart : cartItems) {
+
+                        MenuItem menu = menuItemRepository
+                                        .findById(
+                                                        cart.getMenuItemId())
+                                        .orElse(null);
+
+                        if (menu != null) {
+
+                                total += menu.getPrice()
+                                                *
+                                                cart.getQuantity();
+                        }
+                }
+
+                model.addAttribute("total", total);
+
+                return "checkout";
         }
 
-        model.addAttribute("total", total);
+        @PostMapping("/place-order")
+        public String placeOrder(
+                        HttpSession session) {
 
-        return "checkout";
-    }
+                String userEmail = (String) session.getAttribute(
+                                "loggedInUser");
 
-    @PostMapping("/place-order")
-    public String placeOrder(
-            HttpSession session) {
+                if (userEmail == null) {
+                        return "redirect:/login";
+                }
 
-        String userEmail = (String) session.getAttribute(
-                "loggedInUser");
+                List<CartItem> cartItems = cartItemRepository
+                                .findByUserEmail(userEmail);
 
-        if (userEmail == null) {
-            return "redirect:/login";
+                double total = 0;
+
+                for (CartItem cart : cartItems) {
+
+                        MenuItem menu = menuItemRepository
+                                        .findById(
+                                                        cart.getMenuItemId())
+                                        .orElse(null);
+
+                        if (menu != null) {
+
+                                total += menu.getPrice()
+                                                *
+                                                cart.getQuantity();
+                        }
+                }
+
+                Order order = new Order();
+
+                order.setUserEmail(userEmail);
+
+                order.setTotalAmount(total);
+
+                order.setStatus("PLACED");
+
+                order.setOrderDate(
+                                LocalDateTime.now());
+
+                orderRepository.save(order);
+
+                for (CartItem cart : cartItems) {
+
+                        MenuItem menu = menuItemRepository
+                                        .findById(
+                                                        cart.getMenuItemId())
+                                        .orElse(null);
+
+                        if (menu != null) {
+
+                                OrderItem item = new OrderItem();
+
+                                item.setOrderId(order.getId());
+
+                                item.setMenuItemId(menu.getId());
+
+                                item.setQuantity(
+                                                cart.getQuantity());
+
+                                item.setPrice(
+                                                menu.getPrice());
+
+                                orderItemRepository.save(item);
+                        }
+                }
+
+                cartItemRepository.deleteAll(cartItems);
+
+                return "redirect:/order-success/" + order.getId();
         }
 
-        List<CartItem> cartItems = cartItemRepository
-                .findByUserEmail(userEmail);
-
-        double total = 0;
-
-        for (CartItem cart : cartItems) {
-
-            MenuItem menu = menuItemRepository
-                    .findById(
-                            cart.getMenuItemId())
-                    .orElse(null);
-
-            if (menu != null) {
-
-                total += menu.getPrice()
-                        *
-                        cart.getQuantity();
-            }
-        }
-
-        Order order = new Order();
-
-        order.setUserEmail(userEmail);
-
-        order.setTotalAmount(total);
-
-        order.setStatus("PLACED");
-
-        order.setOrderDate(
-                LocalDateTime.now());
-
-        orderRepository.save(order);
-
-        for (CartItem cart : cartItems) {
-
-            MenuItem menu = menuItemRepository
-                    .findById(
-                            cart.getMenuItemId())
-                    .orElse(null);
-
-            if (menu != null) {
-
-                OrderItem item = new OrderItem();
-
-                item.setOrderId(order.getId());
-
-                item.setMenuItemId(menu.getId());
-
-                item.setQuantity(
-                        cart.getQuantity());
-
-                item.setPrice(
-                        menu.getPrice());
-
-                orderItemRepository.save(item);
-            }
-        }
-
-        cartItemRepository.deleteAll(cartItems);
-
-        return "redirect:/checkout/success";
-    }
-
-    @GetMapping("/success")
-    public String success() {
-        return "order-success";
-    }
 }

@@ -26,177 +26,178 @@ import com.foodiego.foodiego.entity.MenuItem;
 @RequestMapping("/cart")
 public class CartController {
 
-    private static final String REDIRECT_CART = "redirect:/cart";
+        private static final String REDIRECT_CART = "redirect:/cart";
 
-    private final CartItemRepository cartItemRepository;
+        private final CartItemRepository cartItemRepository;
 
-    private final MenuItemRepository menuItemRepository;
+        private final MenuItemRepository menuItemRepository;
 
-    public CartController(
-            CartItemRepository cartItemRepository,
-            MenuItemRepository menuItemRepository) {
+        public CartController(
+                        CartItemRepository cartItemRepository,
+                        MenuItemRepository menuItemRepository) {
 
-        this.cartItemRepository = cartItemRepository;
-        this.menuItemRepository = menuItemRepository;
-    }
-
-    @PostMapping("/add/{menuItemId}")
-    public String addToCart(
-            @PathVariable Long menuItemId,
-            HttpSession session,
-            @RequestParam Long restaurantId) {
-
-        String userEmail = (String) session.getAttribute(
-                "loggedInUser");
-
-        if (userEmail == null) {
-            return "redirect:/login";
+                this.cartItemRepository = cartItemRepository;
+                this.menuItemRepository = menuItemRepository;
         }
 
-        Optional<CartItem> existingItem = cartItemRepository
-                .findByUserEmailAndMenuItemId(
-                        userEmail,
-                        menuItemId);
+        @ResponseBody
+        @PostMapping("/add/{menuItemId}")
+        public String addToCart(
+                        @PathVariable Long menuItemId,
+                        HttpSession session,
+                        @RequestParam Long restaurantId) {
 
-        if (existingItem.isPresent()) {
+                String userEmail = (String) session.getAttribute(
+                                "loggedInUser");
 
-            CartItem item = existingItem.get();
+                if (userEmail == null) {
+                        return "redirect:/login";
+                }
 
-            item.setQuantity(
-                    item.getQuantity() + 1);
+                Optional<CartItem> existingItem = cartItemRepository
+                                .findByUserEmailAndMenuItemId(
+                                                userEmail,
+                                                menuItemId);
 
-            cartItemRepository.save(item);
+                if (existingItem.isPresent()) {
 
-        } else {
+                        CartItem item = existingItem.get();
 
-            CartItem item = new CartItem();
+                        item.setQuantity(
+                                        item.getQuantity() + 1);
 
-            item.setUserEmail(userEmail);
+                        cartItemRepository.save(item);
 
-            item.setMenuItemId(menuItemId);
+                } else {
 
-            item.setQuantity(1);
+                        CartItem item = new CartItem();
 
-            cartItemRepository.save(item);
+                        item.setUserEmail(userEmail);
+
+                        item.setMenuItemId(menuItemId);
+
+                        item.setQuantity(1);
+
+                        cartItemRepository.save(item);
+                }
+
+                return "success";
         }
 
-        return "redirect:/restaurants/" + restaurantId;
-    }
+        @GetMapping
+        public String viewCart(
+                        HttpSession session,
+                        Model model) {
 
-    @GetMapping
-    public String viewCart(
-            HttpSession session,
-            Model model) {
+                String userEmail = (String) session.getAttribute(
+                                "loggedInUser");
 
-        String userEmail = (String) session.getAttribute(
-                "loggedInUser");
+                if (userEmail == null) {
+                        return "redirect:/login";
+                }
 
-        if (userEmail == null) {
-            return "redirect:/login";
+                List<CartItem> cartItems = cartItemRepository
+                                .findByUserEmail(userEmail);
+
+                List<CartItemView> cartView = new ArrayList<>();
+
+                double total = 0;
+
+                for (CartItem cart : cartItems) {
+
+                        MenuItem menu = menuItemRepository
+                                        .findById(
+                                                        cart.getMenuItemId())
+                                        .orElse(null);
+
+                        if (menu != null) {
+
+                                CartItemView item = new CartItemView();
+
+                                item.setCartId(cart.getId());
+                                item.setMenuItemId(menu.getId());
+
+                                item.setName(menu.getName());
+
+                                item.setImageUrl(
+                                                menu.getImageUrl());
+
+                                item.setPrice(
+                                                menu.getPrice());
+
+                                item.setQuantity(
+                                                cart.getQuantity());
+
+                                cartView.add(item);
+
+                                total += menu.getPrice()
+                                                *
+                                                cart.getQuantity();
+                        }
+                }
+
+                model.addAttribute(
+                                "cartItems",
+                                cartView);
+
+                model.addAttribute(
+                                "total",
+                                total);
+
+                return "cart";
         }
 
-        List<CartItem> cartItems = cartItemRepository
-                .findByUserEmail(userEmail);
+        @PostMapping("/increase/{id}")
+        public String increase(
+                        @PathVariable Long id) {
 
-        List<CartItemView> cartView = new ArrayList<>();
+                CartItem item = cartItemRepository
+                                .findById(id)
+                                .orElse(null);
 
-        double total = 0;
+                if (item != null) {
 
-        for (CartItem cart : cartItems) {
+                        item.setQuantity(
+                                        item.getQuantity() + 1);
 
-            MenuItem menu = menuItemRepository
-                    .findById(
-                            cart.getMenuItemId())
-                    .orElse(null);
+                        cartItemRepository.save(item);
+                }
 
-            if (menu != null) {
-
-                CartItemView item = new CartItemView();
-
-                item.setCartId(cart.getId());
-                item.setMenuItemId(menu.getId());
-
-                item.setName(menu.getName());
-
-                item.setImageUrl(
-                        menu.getImageUrl());
-
-                item.setPrice(
-                        menu.getPrice());
-
-                item.setQuantity(
-                        cart.getQuantity());
-
-                cartView.add(item);
-
-                total += menu.getPrice()
-                        *
-                        cart.getQuantity();
-            }
+                return REDIRECT_CART;
         }
 
-        model.addAttribute(
-                "cartItems",
-                cartView);
+        @PostMapping("/decrease/{id}")
+        public String decrease(
+                        @PathVariable Long id) {
 
-        model.addAttribute(
-                "total",
-                total);
+                CartItem item = cartItemRepository
+                                .findById(id)
+                                .orElse(null);
 
-        return "cart";
-    }
+                if (item != null) {
 
-    @PostMapping("/increase/{id}")
-    public String increase(
-            @PathVariable Long id) {
+                        if (item.getQuantity() > 1) {
 
-        CartItem item = cartItemRepository
-                .findById(id)
-                .orElse(null);
+                                item.setQuantity(
+                                                item.getQuantity() - 1);
 
-        if (item != null) {
+                                cartItemRepository.save(item);
 
-            item.setQuantity(
-                    item.getQuantity() + 1);
+                        } else {
 
-            cartItemRepository.save(item);
+                                cartItemRepository.delete(item);
+                        }
+                }
+
+                return REDIRECT_CART;
         }
 
-        return REDIRECT_CART;
-    }
+        @PostMapping("/remove/{id}")
+        public String remove(
+                        @PathVariable Long id) {
 
-    @PostMapping("/decrease/{id}")
-    public String decrease(
-            @PathVariable Long id) {
+                cartItemRepository.deleteById(id);
 
-        CartItem item = cartItemRepository
-                .findById(id)
-                .orElse(null);
-
-        if (item != null) {
-
-            if (item.getQuantity() > 1) {
-
-                item.setQuantity(
-                        item.getQuantity() - 1);
-
-                cartItemRepository.save(item);
-
-            } else {
-
-                cartItemRepository.delete(item);
-            }
+                return REDIRECT_CART;
         }
-
-        return REDIRECT_CART;
-    }
-
-    @PostMapping("/remove/{id}")
-    public String remove(
-            @PathVariable Long id) {
-
-        cartItemRepository.deleteById(id);
-
-        return REDIRECT_CART;
-    }
 }

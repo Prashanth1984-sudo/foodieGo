@@ -12,82 +12,83 @@ import com.foodiego.foodiego.repository.RestaurantRepository;
 @Controller
 public class HomeController {
 
-    private final RestaurantRepository restaurantRepository;
+        private final RestaurantRepository restaurantRepository;
 
-    public HomeController(
-            RestaurantRepository restaurantRepository) {
+        public HomeController(
+                        RestaurantRepository restaurantRepository) {
 
-        this.restaurantRepository = restaurantRepository;
-    }
-
-    @GetMapping("/")
-    public String home(
-            @RequestParam(required = false) String error,
-            Model model) {
-
-        model.addAttribute(
-                "error",
-                error);
-
-        return "signup";
-    }
-
-    @GetMapping("/login")
-    public String loginPage(
-            @RequestParam(required = false) String error,
-            Model model) {
-
-        model.addAttribute(
-                "error",
-                error);
-
-        return "login";
-    }
-
-    @GetMapping("/dashboard")
-    public String dashboard(
-            HttpSession session,
-            Model model,
-
-            @RequestParam(required = false) String keyword,
-
-            @RequestParam(required = false) String cuisine) {
-
-        if (session.getAttribute(
-                "loggedInUser") == null) {
-
-            return "redirect:/login";
+                this.restaurantRepository = restaurantRepository;
         }
 
-        if (cuisine != null &&
-                !cuisine.isBlank()) {
+        @GetMapping("/")
+        public String home(
+                        @RequestParam(required = false) String error,
+                        Model model) {
 
-            model.addAttribute(
-                    "restaurants",
+                model.addAttribute(
+                                "error",
+                                error);
 
-                    restaurantRepository
-                            .findByCuisineContainingIgnoreCase(
-                                    cuisine));
-
-        } else if (keyword != null &&
-                !keyword.isBlank()) {
-
-            model.addAttribute(
-                    "restaurants",
-
-                    restaurantRepository
-                            .searchRestaurants(
-                                    keyword));
-
-        } else {
-
-            model.addAttribute(
-                    "restaurants",
-
-                    restaurantRepository
-                            .findAll());
+                return "signup";
         }
 
-        return "dashboard";
-    }
+        @GetMapping("/login")
+        public String loginPage(
+                        @RequestParam(required = false) String error,
+                        Model model) {
+
+                model.addAttribute(
+                                "error",
+                                error);
+
+                return "login";
+        }
+
+        @GetMapping("/dashboard")
+        public String dashboard(
+                        HttpSession session,
+                        Model model,
+
+                        @RequestParam(required = false) String keyword,
+
+                        @RequestParam(required = false) String cuisine) {
+
+                if (session.getAttribute(
+                                "loggedInUser") == null) {
+
+                        return "redirect:/login";
+                }
+
+                if (cuisine != null &&
+                                !cuisine.isBlank()) {
+
+                        model.addAttribute(
+                                        "restaurants",
+
+                                        restaurantRepository
+                                                        .findByCuisineContainingIgnoreCase(
+                                                                        cuisine));
+
+                } else if (keyword != null &&
+                                !keyword.isBlank()) {
+
+                        model.addAttribute(
+                                        "restaurants",
+
+                                        restaurantRepository
+                                                        .searchRestaurants(
+                                                                        keyword));
+
+                } else {
+
+                        model.addAttribute(
+                                        "restaurants",
+
+                                        restaurantRepository
+                                                        .findAll());
+                }
+
+                return "dashboard";
+        }
+
 }

@@ -90,33 +90,91 @@
                   ₹<span th:text="${item.price}"> </span>
                 </span>
 
-                <form
-                  th:action="@{/cart/add/{id}(id=${item.id})}"
-                  method="post"
+                <button
+                  class="add-btn"
+                  th:attr="data-id=${item.id},
+             data-restaurant=${restaurant.id}"
+                  onclick="addToCart(this)"
                 >
-                  <input
-                    type="hidden"
-                    name="restaurantId"
-                    th:value="${restaurant.id}"
-                  />
-
-                  <button type="submit" class="add-btn">Add +</button>
-                </form>
+                  Add +
+                </button>
               </div>
             </div>
           </div>
         </div>
-
-        <aside class="cart-sidebar">
-          <h3>🛒 Cart</h3>
-
-          <p>Your selected items will appear here.</p>
-
-          <div class="cart-total">Total: ₹0</div>
-
-          <button class="checkout-btn">Checkout</button>
-        </aside>
       </div>
     </section>
+    <div id="toast">Added To Cart 🛒</div>
+
+    <script th:inline="javascript">
+      function addToCart(button) {
+        const menuItemId = button.dataset.id;
+
+        const restaurantId = button.dataset.restaurant;
+
+        const itemName = button
+          .closest(".menu-card")
+          .querySelector("h3").innerText;
+
+        fetch(`/cart/add/${menuItemId}`, {
+          method: "POST",
+
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+
+          body: `restaurantId=${restaurantId}`,
+        })
+          .then((response) => response.text())
+          .then(() => {
+            showCartBar(itemName);
+
+            button.innerHTML = "✓ Added";
+
+            button.style.background = "#22c55e";
+
+            setTimeout(() => {
+              button.innerHTML = "Add +";
+
+              button.style.background = "";
+            }, 1500);
+          });
+      }
+
+      function showCartBar(itemName) {
+        const cartBar = document.getElementById("cart-bar");
+
+        const cartCount = document.getElementById("cart-count");
+
+        cartCount.innerHTML = itemName + " added";
+
+        cartBar.classList.add("active");
+
+        setTimeout(() => {
+          cartBar.classList.remove("active");
+        }, 4000);
+      }
+    </script>
+    <div id="cart-bar">
+      <div class="cart-bar-left">
+        <strong> ✓ Added To Cart </strong>
+
+        <span id="cart-count"> Item Added Successfully </span>
+      </div>
+
+      <a href="/cart" class="view-cart-btn"> 🛍 View Cart → </a>
+    </div>
+    <a href="/cart" class="floating-cart">
+
+    <span class="cart-icon">
+        🛍
+    </span>
+
+    <span class="cart-text">
+    View Cart →
+</span>
+
+</a>
+    </a>
   </body>
 </html>

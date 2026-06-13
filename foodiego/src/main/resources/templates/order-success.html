@@ -1,26 +1,83 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
   <head>
-    <title>Order Success</title>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Order Successful</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" th:href="@{/css/order-success.css}" />
   </head>
 
-  <body
-    style="
-      background: #0f0f0f;
-      color: white;
-      font-family: Poppins, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    "
-  >
-    <div>
-      <h1>🎉 Order Placed Successfully</h1>
+  <body>
+    <div class="background-glow glow-1"></div>
+    <div class="background-glow glow-2"></div>
 
-      <br />
+    <div class="success-container">
+      <div class="success-card">
+        <div class="success-animation">
+          <div class="circle">
+            <svg viewBox="0 0 52 52">
+              <circle class="check-circle" cx="26" cy="26" r="25" fill="none" />
 
-      <a href="/dashboard"> Back To Home </a>
+              <path class="check-mark" fill="none" d="M14 27 L22 35 L38 18" />
+            </svg>
+          </div>
+        </div>
+
+        <div class="success-badge">ORDER CONFIRMED</div>
+
+        <h1>Order Placed Successfully 🎉</h1>
+
+        <p class="subtitle">
+          Your food is now being prepared by the restaurant. Sit back and relax
+          while we bring your favorite meal directly to your doorstep.
+        </p>
+
+        <div class="order-info">
+          <div class="info-box">
+            <span>Order ID</span>
+
+            <strong> #<span th:text="${orderId}"> 1 </span> </strong>
+          </div>
+
+          <div class="info-box">
+            <span>Estimated Delivery</span>
+
+            <strong> 20 - 30 Min </strong>
+          </div>
+        </div>
+
+        <div class="progress-section">
+          <div class="progress-track">
+            <div class="progress-fill"></div>
+          </div>
+
+          <div class="progress-labels">
+            <span>Order Placed</span>
+
+            <span>Preparing</span>
+
+            <span>Delivery</span>
+          </div>
+        </div>
+
+        <div class="action-buttons">
+          <a href="/orders" class="track-btn"> Track Order </a>
+
+          <a href="/dashboard" class="home-btn"> Continue Shopping </a>
+        </div>
+      </div>
     </div>
   </body>
 </html>
