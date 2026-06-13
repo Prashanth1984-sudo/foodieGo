@@ -1,0 +1,62 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" xml:lang="en">
+  <head>
+    <title>Restaurant Form</title>
+
+    <link rel="stylesheet" th:href="@{/css/restaurant-form.css}" />
+  </head>
+
+  <body>
+    <div class="container">
+      <h1
+        th:text="${restaurant.id == null}
+             ? 'Add Restaurant'
+             : 'Edit Restaurant'"
+      >
+        Restaurant
+      </h1>
+
+      <form
+        th:action="@{/admin/restaurants/save}"
+        th:object="${restaurant}"
+        method="post"
+      >
+        <input type="hidden" th:field="*{id}" />
+
+        <input
+          type="text"
+          th:field="*{name}"
+          placeholder="Restaurant Name"
+          required
+        />
+
+        <input
+          type="text"
+          th:field="*{cuisine}"
+          placeholder="Cuisine"
+          required
+        />
+
+        <input
+          type="number"
+          step="0.1"
+          th:field="*{rating}"
+          placeholder="Rating"
+        />
+
+        <input
+          type="text"
+          th:field="*{deliveryTime}"
+          placeholder="Delivery Time"
+        />
+
+        <input type="text" th:field="*{imageUrl}" placeholder="Image URL" />
+
+        <textarea th:field="*{description}" placeholder="Description">
+        </textarea>
+
+        <button type="submit">Save Restaurant</button>
+      </form>
+    </div>
+  </body>
+</html>

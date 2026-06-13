@@ -1,0 +1,113 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    background:#0f0f0f;
+    color:white;
+    min-height:100vh;
+}
+
+.container{
+    max-width:1400px;
+    margin:auto;
+    padding:40px;
+}
+
+.header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:35px;
+}
+
+.header h1{
+    font-size:38px;
+    font-weight:700;
+}
+
+.add-btn{
+    text-decoration:none;
+    color:white;
+    padding:14px 22px;
+    border-radius:12px;
+    font-weight:600;
+    background:linear-gradient(
+            135deg,
+            #ff6b35,
+            #ff914d
+    );
+}
+
+.add-btn:hover{
+    transform:translateY(-2px);
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    background:#171717;
+    border-radius:20px;
+    overflow:hidden;
+}
+
+thead{
+    background:#202020;
+}
+
+th{
+    color:#ff914d;
+    text-align:left;
+    padding:18px;
+    font-size:15px;
+}
+
+td{
+    padding:18px;
+    border-bottom:1px solid #2a2a2a;
+}
+
+tr:hover{
+    background:#1d1d1d;
+}
+
+.edit-btn{
+    text-decoration:none;
+    color:#4ade80;
+    font-weight:600;
+    margin-right:15px;
+}
+
+.delete-btn{
+    border:none;
+    padding:10px 15px;
+    border-radius:10px;
+    cursor:pointer;
+    color:white;
+    background:#ef4444;
+}
+
+.delete-btn:hover{
+    opacity:.9;
+}
+
+@media(max-width:768px){
+
+    .container{
+        padding:20px;
+    }
+
+    .header{
+        flex-direction:column;
+        gap:15px;
+        align-items:flex-start;
+    }
+
+    table{
+        display:block;
+        overflow-x:auto;
+    }
+}

@@ -30,6 +30,10 @@ public class MenuItem {
         return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public Long getRestaurantId() {
         return restaurantId;
     }

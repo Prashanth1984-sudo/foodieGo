@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" xml:lang="en">
+
+<head>
+
+    <title>Manage Orders</title>
+
+    <link rel="stylesheet"
+          th:href="@{/css/admin-orders.css}">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>
+        📦 Manage Orders
+    </h1>
+
+    <table>
+
+        <thead>
+
+        <tr>
+
+            <th>ID</th>
+
+            <th>User</th>
+
+            <th>Total</th>
+
+            <th>Status</th>
+
+            <th>Action</th>
+
+        </tr>
+
+        </thead>
+
+        <tbody>
+
+        <tr th:each="order : ${orders}">
+
+            <td th:text="${order.id}">
+            </td>
+
+            <td th:text="${order.userEmail}">
+            </td>
+
+            <td>
+
+                ₹<span
+                th:text="${order.totalAmount}">
+                </span>
+
+            </td>
+
+            <td th:text="${order.status}">
+            </td>
+
+            <td>
+
+                <form
+                action="/admin/orders/update"
+                method="post">
+
+                    <input
+                    type="hidden"
+                    name="orderId"
+                    th:value="${order.id}">
+
+                    <select name="status">
+
+                        <option value="PLACED">
+                            PLACED
+                        </option>
+
+                        <option value="PREPARING">
+                            PREPARING
+                        </option>
+
+                        <option value="OUT_FOR_DELIVERY">
+                            OUT FOR DELIVERY
+                        </option>
+
+                        <option value="DELIVERED">
+                            DELIVERED
+                        </option>
+
+                    </select>
+
+                    <button type="submit">
+
+                        Update
+
+                    </button>
+
+                </form>
+
+            </td>
+
+        </tr>
+
+        </tbody>
+
+    </table>
+
+</div>
+
+</body>
+</html>

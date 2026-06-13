@@ -1,0 +1,72 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" xml:lang="en">
+  <head>
+    <title>Admin Dashboard</title>
+
+    <link rel="stylesheet" th:href="@{/css/admin-dashboard.css}" />
+  </head>
+
+  <body>
+    <div class="admin-container">
+      <aside class="sidebar">
+        <h2>🍔 FoodieGo</h2>
+
+        <a href="/admin"> Dashboard </a>
+
+        <a href="/admin/restaurants"> Restaurants </a>
+
+        <a href="/admin/menu"> Menu Items </a>
+
+        <a href="/admin/orders"> Orders </a>
+
+        <a href="/dashboard"> Back To App </a>
+      </aside>
+
+      <main class="content">
+        <h1>Admin Dashboard</h1>
+
+        <div class="stats-grid">
+          <div class="stat-card revenue">
+            <h3>₹<span th:text="${totalRevenue}"> </span></h3>
+
+            <p>Total Revenue</p>
+          </div>
+
+          <div class="stat-card">
+            <h3 th:text="${totalOrders}">0</h3>
+
+            <p>Total Orders</p>
+          </div>
+
+          <div class="stat-card">
+            <h3 th:text="${totalUsers}">0</h3>
+
+            <p>Total Users</p>
+          </div>
+
+          <div class="stat-card">
+            <h3 th:text="${totalRestaurants}">0</h3>
+
+            <p>Restaurants</p>
+          </div>
+
+          <div class="stat-card">
+            <h3 th:text="${totalMenuItems}">0</h3>
+
+            <p>Menu Items</p>
+          </div>
+        </div>
+        <div class="dashboard-card">
+          <h2>📦 Recent Orders</h2>
+
+          <p>
+            Total Orders:
+            <strong th:text="${totalOrders}"> </strong>
+          </p>
+
+          <p>Revenue: ₹<strong th:text="${totalRevenue}"> </strong></p>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>

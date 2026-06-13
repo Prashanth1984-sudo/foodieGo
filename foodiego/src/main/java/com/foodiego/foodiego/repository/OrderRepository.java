@@ -6,8 +6,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface OrderRepository
-        extends JpaRepository<Order, Long> {
+                extends JpaRepository<Order, Long> {
 
-    List<Order> findByUserEmailOrderByOrderDateDesc(
-            String userEmail);
+        List<Order> findByUserEmailOrderByOrderDateDesc(
+                        String userEmail);
+
+        List<Order> findAllByOrderByOrderDateDesc();
 }

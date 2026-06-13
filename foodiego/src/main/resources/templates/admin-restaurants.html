@@ -1,0 +1,63 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" xml:lang="en">
+  <head>
+    <title>Manage Restaurants</title>
+
+    <link rel="stylesheet" th:href="@{/css/admin-restaurants.css}" />
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>🍔 Manage Restaurants</h1>
+
+        <a href="/admin/restaurants/add" class="add-btn"> + Add Restaurant </a>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+
+            <th>Name</th>
+
+            <th>Cuisine</th>
+
+            <th>Rating</th>
+
+            <th>Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr th:each="restaurant : ${restaurants}">
+            <td th:text="${restaurant.id}"></td>
+
+            <td th:text="${restaurant.name}"></td>
+
+            <td th:text="${restaurant.cuisine}"></td>
+
+            <td th:text="${restaurant.rating}"></td>
+
+            <td>
+              <a
+                th:href="@{/admin/restaurants/edit/{id}(id=${restaurant.id})}"
+                class="edit-btn"
+              >
+                Edit
+              </a>
+
+              <form
+                th:action="@{/admin/restaurants/delete/{id}(id=${restaurant.id})}"
+                method="post"
+                style="display: inline"
+              >
+                <button type="submit" class="delete-btn">Delete</button>
+              </form>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </body>
+</html>
