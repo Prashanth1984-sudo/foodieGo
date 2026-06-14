@@ -19,8 +19,21 @@ public class Order {
 
     private LocalDateTime orderDate;
 
+    private Long addressId;
+
     public Order() {
-        /* Default constructor required by JPA for entity instantiation. Intentionally left empty. */
+        /*
+         * Default constructor required by JPA for entity instantiation. Intentionally
+         * left empty.
+         */
+    }
+
+    public Long getAddressId() {
+        return addressId;
+    }
+
+    public void setAddressId(Long addressId) {
+        this.addressId = addressId;
     }
 
     public Long getId() {

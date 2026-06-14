@@ -11,14 +11,100 @@
       <h1>Checkout</h1>
 
       <form action="/checkout/place-order" method="post">
-        <input type="text" placeholder="Delivery Address" required />
+        <div class="price-summary">
+          <div class="price-row">
+            <span>Subtotal</span>
+            <span>₹<span id="subtotal" th:text="${subtotal}">0</span></span>
+          </div>
 
-        <input type="text" placeholder="Phone Number" required />
+          <div class="price-row">
+            <span>Discount</span>
+            <span class="discount-text">
+              -₹<span id="discount" th:text="${discount}">0</span>
+            </span>
+          </div>
 
-        <div class="total">Total: ₹<span th:text="${total}"> </span></div>
+          <div class="price-row total-row">
+            <span>Total</span>
+            <span>
+              ₹<span id="finalTotal" th:text="${finalTotal}">0</span>
+            </span>
+          </div>
+        </div>
+        <div class="coupon-box">
+          <label for="couponCode">Coupon Code</label>
 
+          <div class="coupon-row">
+            <input
+              type="text"
+              name="couponCode"
+              id="couponCode"
+              placeholder="Enter Coupon Code"
+            />
+
+            <button type="button" onclick="applyCoupon()">Apply</button>
+          </div>
+        </div>
+        <div class="address-section">
+          <h1>Addresses</h1>
+          <h3>Select Delivery Address</h3>
+
+          <div class="address-list">
+            <label class="address-card" th:each="address : ${addresses}">
+              <input
+                type="radio"
+                name="addressId"
+                th:value="${address.id}"
+                required
+              />
+
+              <div class="address-info">
+                <h4 th:text="${address.fullName}">Full Name</h4>
+
+                <p th:text="${address.addressLine}">Address</p>
+
+                <p>
+                  <span th:text="${address.city}"> City </span>
+
+                  ,
+
+                  <span th:text="${address.state}"> State </span>
+
+                  -
+
+                  <span th:text="${address.pincode}"> Pincode </span>
+                </p>
+              </div>
+            </label>
+          </div>
+        </div>
         <button type="submit">Place Order</button>
       </form>
     </div>
+    <script>
+      function applyCoupon() {
+        const subtotal = parseFloat(
+          document.getElementById("subtotal").innerText,
+        );
+
+        const code = document.getElementById("couponCode").value.toUpperCase();
+
+        let discount = 0;
+
+        if (code === "FOOD50") {
+          discount = 50;
+        } else if (code === "WELCOME20") {
+          discount = subtotal * 0.2;
+        } else if (code === "FREEDEL") {
+          discount = 40;
+        }
+
+        document.getElementById("discount").innerText = discount.toFixed(2);
+
+        document.getElementById("finalTotal").innerText = (
+          subtotal - discount
+        ).toFixed(2);
+      }
+    </script>
   </body>
 </html>

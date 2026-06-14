@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>My Addresses | FoodieGo</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <link rel="stylesheet" th:href="@{/css/fonts.css}" />
+
+    <link rel="stylesheet" th:href="@{/css/addresses.css}" />
+  </head>
+
+  <body>
+    <div class="addresses-page">
+      <div class="page-header">
+        <div>
+          <span class="page-tag"> FOODIEGO </span>
+
+          <h1>Manage Delivery Addresses</h1>
+
+          <p class="subtitle">
+            Save your home, work and other delivery locations.
+          </p>
+        </div>
+
+        <a href="/profile" class="back-btn"> Back To Profile </a>
+      </div>
+
+      <!-- ADD ADDRESS -->
+
+      <div class="add-address-card">
+        <h2>Add New Address</h2>
+
+        <form action="/profile/addresses/add" method="post">
+          <div class="form-grid">
+            <input
+              type="text"
+              name="fullName"
+              placeholder="Full Name"
+              required
+            />
+
+            <input
+              type="text"
+              name="phone"
+              placeholder="Phone Number"
+              required
+            />
+
+            <textarea
+              name="addressLine"
+              placeholder="Flat / House No, Street Name, Area, Landmark..."
+              required
+            ></textarea>
+
+            <input type="text" name="city" placeholder="City" required />
+
+            <input type="text" name="state" placeholder="State" required />
+
+            <input type="text" name="pincode" placeholder="Pincode" required />
+          </div>
+
+          <button type="submit">Save Address</button>
+        </form>
+      </div>
+
+      <!-- ADDRESS LIST -->
+
+      <div class="address-grid">
+        <div class="address-card" th:each="address : ${addresses}">
+          <div class="card-top">
+            <span class="default-badge" th:if="${address.isDefault}">
+              Default
+            </span>
+          </div>
+
+          <h3 th:text="${address.fullName}">Full Name</h3>
+
+          <p th:text="${address.phone}">Phone</p>
+
+          <p th:text="${address.addressLine}">Address</p>
+
+          <p>
+            <span th:text="${address.city}"> </span>,
+
+            <span th:text="${address.state}"> </span>
+          </p>
+
+          <p th:text="${address.pincode}">Pincode</p>
+
+          <div class="card-actions">
+            <a
+              th:href="@{/profile/addresses/edit/{id}(id=${address.id})}"
+              class="edit-btn"
+            >
+              Edit
+            </a>
+
+            <form
+              th:action="@{/profile/addresses/delete/{id}(id=${address.id})}"
+              method="post"
+            >
+              <form
+                th:action="@{/profile/addresses/delete/{id}(id=${address.id})}"
+                method="post"
+              >
+                <button type="submit" class="delete-btn">Delete</button>
+              </form>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

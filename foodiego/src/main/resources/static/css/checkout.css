@@ -68,3 +68,342 @@ button{
     #ff914d
     );
 }
+.address-section{
+
+    margin:30px 0;
+}
+
+.address-section h3{
+
+    margin-bottom:15px;
+}
+
+.address-list{
+
+    display:grid;
+
+    gap:15px;
+}
+
+.address-option{
+
+    display:flex;
+
+    gap:15px;
+
+    padding:18px;
+
+    border-radius:18px;
+
+    background:
+    rgba(255,255,255,.04);
+
+    border:
+    1px solid rgba(255,255,255,.08);
+
+    cursor:pointer;
+
+    transition:.3s;
+}
+
+.address-option:hover{
+
+    border-color:
+    #ff914d;
+}
+
+.address-option input{
+
+    margin-top:5px;
+}
+.address-section{
+    margin-top:30px;
+}
+
+.address-list{
+    display:flex;
+    flex-direction:column;
+    gap:15px;
+}
+
+.address-card{
+    display:flex;
+    align-items:flex-start;
+    gap:15px;
+
+    padding:18px;
+
+    border:1px solid rgba(255,255,255,.08);
+
+    background:rgba(255,255,255,.04);
+
+    border-radius:16px;
+
+    cursor:pointer;
+
+    transition:.3s;
+}
+
+.address-card:hover{
+    border-color:#ff914d;
+    transform:translateY(-2px);
+}
+
+.address-card input{
+    margin-top:6px;
+    accent-color:#ff914d;
+}
+
+.address-info h4{
+    margin-bottom:6px;
+    color:#fff;
+}
+
+.address-info p{
+    color:#bdbdbd;
+    font-size:.9rem;
+    margin:4px 0;
+}
+.address-card{
+
+    display:flex;
+    gap:18px;
+
+    padding:22px;
+
+    background:
+    rgba(255,255,255,.05);
+
+    border:
+    1px solid rgba(255,255,255,.08);
+
+    border-radius:20px;
+
+    transition:.3s ease;
+
+    cursor:pointer;
+}
+
+.address-card:hover{
+
+    border-color:#ff914d;
+
+    transform:
+    translateY(-3px);
+
+    box-shadow:
+    0 10px 25px rgba(255,145,77,.15);
+}
+
+.address-card input{
+
+    accent-color:#ff914d;
+
+    transform:scale(1.3);
+
+    margin-top:8px;
+}
+
+.address-info h4{
+
+    color:white;
+
+    font-size:1.15rem;
+
+    margin-bottom:8px;
+}
+
+.address-info p{
+
+    color:#bdbdbd;
+
+    line-height:1.6;
+}
+.coupon-box{
+
+    margin:25px 0;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:10px;
+}
+
+.coupon-box label{
+
+    color:white;
+
+    font-weight:600;
+}
+
+.coupon-box input{
+
+    background:
+    rgba(255,255,255,.05);
+
+    border:
+    1px solid rgba(255,255,255,.08);
+
+    border-radius:14px;
+
+    padding:14px;
+
+    color:white;
+}
+
+.coupon-box input:focus{
+
+    border-color:#ff914d;
+
+    outline:none;
+}
+.price-summary{
+
+    margin:25px 0;
+
+    background:
+    rgba(255,255,255,.04);
+
+    border:
+    1px solid rgba(255,255,255,.08);
+
+    border-radius:18px;
+
+    padding:20px;
+}
+
+.price-row{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    margin-bottom:12px;
+
+    color:#ddd;
+}
+
+.total-row{
+
+    margin-top:15px;
+
+    padding-top:15px;
+
+    border-top:
+    1px solid rgba(255,255,255,.08);
+
+    font-size:1.2rem;
+
+    font-weight:700;
+
+    color:white;
+}
+
+.discount-text{
+
+    color:#4ade80;
+}
+
+.coupon-row{
+
+    display:flex;
+
+    gap:10px;
+}
+
+.coupon-row button{
+
+    background:#ff914d;
+
+    border:none;
+
+    padding:12px 20px;
+
+    border-radius:12px;
+
+    color:white;
+
+    font-weight:600;
+
+    cursor:pointer;
+}
+.checkout-container{
+
+    max-width:700px;
+
+    margin:50px auto;
+
+    padding:40px;
+}
+
+.price-summary{
+
+    margin:25px 0;
+
+    padding:24px;
+
+    border-radius:18px;
+
+    background:rgba(255,255,255,.04);
+
+    border:1px solid rgba(255,255,255,.08);
+}
+
+.price-row{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:10px 0;
+
+    font-size:1rem;
+}
+
+.total-row{
+
+    margin-top:12px;
+
+    padding-top:18px;
+
+    border-top:1px solid rgba(255,255,255,.08);
+
+    font-size:1.3rem;
+
+    font-weight:700;
+}
+
+.coupon-box{
+
+    margin-top:20px;
+}
+
+.coupon-row{
+
+    display:flex;
+
+    gap:12px;
+
+    margin-top:10px;
+}
+
+.coupon-row input{
+
+    flex:1;
+
+    height:52px;
+}
+
+.coupon-row button{
+
+    min-width:120px;
+
+    height:52px;
+
+    border-radius:14px;
+
+    font-weight:600;
+}

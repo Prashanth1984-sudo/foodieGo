@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Edit Address | FoodieGo</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" th:href="@{/css/addresses.css}" />
+  </head>
+
+  <body>
+    <div class="addresses-page">
+      <div class="page-header">
+        <div>
+          <span class="page-tag"> FOODIEGO </span>
+
+          <h1>Edit Address</h1>
+
+          <p class="subtitle">Update your delivery address information.</p>
+        </div>
+
+        <a href="/profile/addresses" class="back-btn"> Back </a>
+      </div>
+
+      <div class="add-address-card">
+        <h2>Update Address</h2>
+
+        <form th:action="@{/profile/addresses/update}" method="post">
+          <input type="hidden" name="id" th:value="${address.id}" />
+          <input
+            type="hidden"
+            name="userEmail"
+            th:value="${address.userEmail}"
+          />
+
+          <div class="form-grid">
+            <input
+              type="text"
+              name="fullName"
+              th:value="${address.fullName}"
+              required
+            />
+
+            <input
+              type="text"
+              name="phone"
+              th:value="${address.phone}"
+              required
+            />
+
+            <textarea
+              name="addressLine"
+              required
+              th:text="${address.addressLine}"
+            ></textarea>
+
+            <input
+              type="text"
+              name="city"
+              th:value="${address.city}"
+              required
+            />
+
+            <input
+              type="text"
+              name="state"
+              th:value="${address.state}"
+              required
+            />
+
+            <input
+              type="text"
+              name="pincode"
+              th:value="${address.pincode}"
+              required
+            />
+          </div>
+
+          <button type="submit">Update Address</button>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

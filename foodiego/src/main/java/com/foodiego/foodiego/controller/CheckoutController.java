@@ -5,6 +5,7 @@ import com.foodiego.foodiego.entity.MenuItem;
 import com.foodiego.foodiego.entity.Order;
 import com.foodiego.foodiego.entity.OrderItem;
 
+import com.foodiego.foodiego.repository.AddressRepository;
 import com.foodiego.foodiego.repository.CartItemRepository;
 import com.foodiego.foodiego.repository.MenuItemRepository;
 import com.foodiego.foodiego.repository.OrderItemRepository;
@@ -15,7 +16,7 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
+import com.foodiego.foodiego.repository.CouponRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -27,17 +28,23 @@ public class CheckoutController {
         private final MenuItemRepository menuItemRepository;
         private final OrderRepository orderRepository;
         private final OrderItemRepository orderItemRepository;
+        private final AddressRepository addressRepository;
+        private final CouponRepository couponRepository;
 
         public CheckoutController(
                         CartItemRepository cartItemRepository,
                         MenuItemRepository menuItemRepository,
                         OrderRepository orderRepository,
-                        OrderItemRepository orderItemRepository) {
+                        OrderItemRepository orderItemRepository,
+                        AddressRepository addressRepository,
+                        CouponRepository couponRepository) {
 
                 this.cartItemRepository = cartItemRepository;
                 this.menuItemRepository = menuItemRepository;
                 this.orderRepository = orderRepository;
                 this.orderItemRepository = orderItemRepository;
+                this.addressRepository = addressRepository;
+                this.couponRepository = couponRepository;
         }
 
         @GetMapping
@@ -67,18 +74,30 @@ public class CheckoutController {
                         if (menu != null) {
 
                                 total += menu.getPrice()
-                                                *
-                                                cart.getQuantity();
+                                                * cart.getQuantity();
                         }
                 }
 
-                model.addAttribute("total", total);
+                model.addAttribute("subtotal", total);
+                model.addAttribute("discount", 0);
+                model.addAttribute("finalTotal", total);
+
+                model.addAttribute(
+                                "addresses",
+                                addressRepository
+                                                .findByUserEmail(
+                                                                userEmail));
 
                 return "checkout";
         }
 
         @PostMapping("/place-order")
         public String placeOrder(
+
+                        @RequestParam Long addressId,
+
+                        @RequestParam(required = false) String couponCode,
+
                         HttpSession session) {
 
                 String userEmail = (String) session.getAttribute(
@@ -103,9 +122,42 @@ public class CheckoutController {
                         if (menu != null) {
 
                                 total += menu.getPrice()
-                                                *
-                                                cart.getQuantity();
+                                                * cart.getQuantity();
                         }
+                }
+                double discount = 0;
+
+                if (couponCode != null &&
+                                !couponCode.isBlank()) {
+
+                        var coupon = couponRepository
+                                        .findByCode(
+                                                        couponCode.toUpperCase());
+
+                        if (coupon.isPresent()) {
+
+                                if (coupon.get()
+                                                .getDiscountAmount() != null) {
+
+                                        discount = coupon.get()
+                                                        .getDiscountAmount();
+                                }
+
+                                if (coupon.get()
+                                                .getDiscountPercent() != null) {
+
+                                        discount = total *
+                                                        coupon.get()
+                                                                        .getDiscountPercent()
+                                                        / 100.0;
+                                }
+                        }
+                }
+
+                total -= discount;
+
+                if (total < 0) {
+                        total = 0;
                 }
 
                 Order order = new Order();
@@ -118,6 +170,9 @@ public class CheckoutController {
 
                 order.setOrderDate(
                                 LocalDateTime.now());
+
+                // IMPORTANT
+                order.setAddressId(addressId);
 
                 orderRepository.save(order);
 
@@ -132,9 +187,11 @@ public class CheckoutController {
 
                                 OrderItem item = new OrderItem();
 
-                                item.setOrderId(order.getId());
+                                item.setOrderId(
+                                                order.getId());
 
-                                item.setMenuItemId(menu.getId());
+                                item.setMenuItemId(
+                                                menu.getId());
 
                                 item.setQuantity(
                                                 cart.getQuantity());
@@ -142,13 +199,20 @@ public class CheckoutController {
                                 item.setPrice(
                                                 menu.getPrice());
 
-                                orderItemRepository.save(item);
+                                orderItemRepository
+                                                .save(item);
                         }
                 }
 
-                cartItemRepository.deleteAll(cartItems);
+                cartItemRepository.deleteAll(
+                                cartItems);
 
-                return "redirect:/order-success/" + order.getId();
+                return "redirect:/checkout/success";
         }
 
+        @GetMapping("/success")
+        public String success() {
+
+                return "order-success";
+        }
 }
