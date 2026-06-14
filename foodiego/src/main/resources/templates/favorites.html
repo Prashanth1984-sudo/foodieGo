@@ -1,0 +1,39 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>My Favorites</title>
+
+    <link rel="stylesheet" th:href="@{/css/favorites.css}" />
+  </head>
+
+  <body>
+    <div class="favorites-container">
+      <div class="header">
+        <h1>My Favorites</h1>
+
+        <a href="/profile"> Back To Profile </a>
+      </div>
+
+      <div class="favorites-grid">
+        <a
+          class="favorite-card"
+          th:each="restaurant : ${favorites}"
+          th:href="@{/restaurants/{id}(id=${restaurant.id})}"
+        >
+          <img th:src="${restaurant.imageUrl}" th:alt="${restaurant.name}" />
+
+          <div class="favorite-info">
+            <h3 th:text="${restaurant.name}" th:attr="aria-label=${restaurant.name}">Restaurant name</h3>
+
+            <p th:text="${restaurant.cuisine}"></p>
+
+            <span>
+              ⭐
+              <span th:text="${restaurant.rating}"> </span>
+            </span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </body>
+</html>

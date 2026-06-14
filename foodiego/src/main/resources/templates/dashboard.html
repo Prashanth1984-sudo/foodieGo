@@ -41,13 +41,23 @@
       </div>
 
       <div class="nav-actions">
-        <a href="#" class="btn-nav"> Profile </a>
+        <a href="/cart" class="btn-nav"> 🛍 Cart </a>
 
-        <a href="/cart" class="btn-nav"> Cart </a>
+        <div class="profile-dropdown">
+          <div class="profile-icon">
+            <img src="/images/logo.jpg" alt="Profile" />
+          </div>
 
-        <a href="/orders" class="btn-nav"> Orders </a>
+          <div class="dropdown-menu">
+            <a href="/profile">Profile </a>
 
-        <a href="/logout" class="btn-nav logout-btn"> Logout </a>
+            <a href="/orders"> Orders </a>
+
+            <a href="/profile/favorites"> Favourites </a>
+
+            <a href="/logout">Logout </a>
+          </div>
+        </div>
       </div>
     </nav>
 
@@ -203,29 +213,42 @@
       </div>
 
       <div class="restaurant-grid">
-        <a
-          class="restaurant-card"
-          th:each="restaurant : ${restaurants}"
-          th:href="@{/restaurants/{id}(id=${restaurant.id})}"
-        >
-          <img th:src="${restaurant.imageUrl}" th:alt="${restaurant.name}" />
+        <div class="restaurant-card" th:each="restaurant : ${restaurants}">
+          <a
+            class="restaurant-link"
+            th:href="@{/restaurants/{id}(id=${restaurant.id})}"
+          >
+            <img th:src="${restaurant.imageUrl}" th:alt="${restaurant.name}" />
 
-          <div class="restaurant-info">
-            <h3 th:text="${restaurant.name}">Restaurant Name</h3>
+            <div class="restaurant-info">
+              <h3 class="restaurant-name" th:text="${restaurant.name}">Restaurant Name</h3>
 
-            <p th:text="${restaurant.cuisine}">Cuisine</p>
+              <p class="restaurant-cuisine" th:text="${restaurant.cuisine}"></p>
 
-            <div class="restaurant-meta">
-              <span>
-                ⭐
+              <div class="restaurant-meta">
+                <span>
+                  ⭐
+                  <span th:text="${restaurant.rating}"></span>
+                </span>
 
-                <span th:text="${restaurant.rating}"> 4.9 </span>
-              </span>
-
-              <span th:text="${restaurant.deliveryTime}"> 20 Min </span>
+                <span>
+                  🚚
+                  <span th:text="${restaurant.deliveryTime}"></span>
+                </span>
+              </div>
             </div>
-          </div>
-        </a>
+          </a>
+
+          <button
+            type="button"
+            class="favorite-btn"
+            th:classappend="${favoriteIds.contains(restaurant.id)} ? ' active' : ''"
+            th:attr="data-id=${restaurant.id}, aria-pressed=${favoriteIds.contains(restaurant.id)}"
+            onclick="toggleFavorite(this, event)"
+          >
+            <span class="heart-icon"> ♥ </span>
+          </button>
+        </div>
       </div>
     </section>
 
@@ -297,5 +320,28 @@
         </div>
       </section>
     </footer>
+    <script>
+      function toggleFavorite(button, event) {
+        if (event && typeof event.preventDefault === "function") {
+          event.preventDefault();
+        }
+
+        const id = button.dataset.id;
+
+        fetch(`/favorites/${id}`, {
+          method: "POST",
+        })
+          .then((response) => response.text())
+          .then((result) => {
+            if (result === "added") {
+              button.classList.add("active");
+              button.setAttribute("aria-pressed", "true");
+            } else {
+              button.classList.remove("active");
+              button.setAttribute("aria-pressed", "false");
+            }
+          });
+      }
+    </script>
   </body>
 </html>

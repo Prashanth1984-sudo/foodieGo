@@ -96,11 +96,13 @@ body{
     color:#ff914d;
 }
 
-.nav-actions{
+.nav-actions {
 
-    display:flex;
+    display: flex;
 
-    gap:10px;
+    align-items: center;
+
+    gap: 16px;
 }
 
 .btn-nav{
@@ -930,4 +932,381 @@ body{
     font-weight:700;
 
     margin:0;
+}
+/* PREMIUM RESTAURANT NAME */
+
+.restaurant-name{
+
+    margin-top:15px;
+
+    margin-bottom:8px;
+}
+
+.restaurant-name a{
+
+    text-decoration:none;
+
+    color:white;
+
+    font-size:28px;
+
+    font-weight:700;
+
+    letter-spacing:-0.5px;
+
+    transition:.3s;
+}
+
+.restaurant-name a:hover{
+
+    color:#ff914d;
+}
+
+.restaurant-cuisine{
+
+    color:#bdbdbd;
+
+    font-size:15px;
+
+    margin-bottom:18px;
+}
+.restaurant-card{
+
+     position:relative;
+
+    text-decoration:none;
+
+    color:white;
+    text-decoration:none;
+
+    color:white;
+
+    background:
+    rgba(255,255,255,.04);
+
+    border:1px solid
+    rgba(255,255,255,.08);
+
+    border-radius:28px;
+
+    overflow:hidden;
+
+    transition:.35s;
+}
+
+.restaurant-card:hover{
+
+    transform:translateY(-8px);
+
+    border-color:
+    rgba(255,145,77,.3);
+
+    box-shadow:
+    0 20px 50px
+    rgba(0,0,0,.3);
+}
+
+.restaurant-card img{
+
+    width:100%;
+
+    height:230px;
+
+    object-fit:cover;
+}
+
+.restaurant-info{
+
+    padding:20px;
+}
+
+.restaurant-name{
+
+    font-size:28px;
+
+    font-weight:700;
+
+    color:white;
+
+    margin-bottom:10px;
+}
+
+.restaurant-cuisine{
+
+    color:#bdbdbd;
+
+    margin-bottom:20px;
+}
+
+.restaurant-meta{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    color:#ff914d;
+
+    font-weight:600;
+}
+.profile-dropdown{
+
+    position:relative;
+}
+
+.profile-icon{
+
+    width:50px;
+
+    height:50px;
+
+    border-radius:50%;
+
+    background:
+    rgba(255,255,255,.08);
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    font-size:24px;
+
+    cursor:pointer;
+
+    transition:.3s;
+}
+
+.profile-icon:hover{
+
+    background:
+    rgba(255,255,255,.15);
+}
+
+.dropdown-menu {
+
+    position: absolute;
+
+    top: 65px;
+    right: 0;
+
+    width: 220px;
+
+    background: rgba(15,15,15,0.95);
+
+    backdrop-filter: blur(20px);
+
+    border: 1px solid rgba(255,255,255,0.08);
+
+    border-radius: 20px;
+
+    padding: 12px;
+
+    opacity: 0;
+    visibility: hidden;
+
+    transform: translateY(10px);
+
+    transition: all .3s ease;
+
+    z-index: 1000;
+}
+
+.profile-dropdown:hover
+.dropdown-menu{
+
+    opacity:1;
+
+    visibility:visible;
+
+    transform:translateY(0);
+}
+
+.dropdown-menu a {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 14px 16px;
+
+    border-radius: 12px;
+
+    color: white;
+
+    text-decoration: none;
+
+    font-size: 15px;
+
+    font-weight: 500;
+
+    transition: .25s;
+}
+
+.dropdown-menu a:hover {
+
+    background: rgba(255,145,77,.15);
+
+    color: #ff914d;
+
+    transform: translateX(4px);
+}
+.profile-icon {
+
+    width: 50px;
+    height: 50px;
+
+    border-radius: 50%;
+    overflow: hidden;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+
+    border: 2px solid rgba(255,255,255,0.15);
+
+    transition: .3s;
+}
+
+.profile-icon:hover {
+
+    transform: scale(1.05);
+
+    border-color: #ff914d;
+}
+
+.profile-icon img {
+
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+
+    display: block;
+}
+.favorite-btn{
+
+    position:absolute;
+
+    top:18px;
+
+    right:18px;
+
+    width:52px;
+
+    height:52px;
+
+    border-radius:50%;
+
+    background:
+    rgba(15,15,15,.75);
+
+    backdrop-filter:blur(20px);
+
+    border:
+    1px solid rgba(255,255,255,.08);
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+    z-index:10;
+}
+
+.favorite-btn:hover{
+
+    transform:scale(1.08);
+
+    border-color:
+    rgba(255,145,77,.4);
+}
+
+.heart-icon{
+
+    font-size:22px;
+
+    color:white;
+
+    transition:.3s;
+}
+
+.favorite-btn.active{
+
+    background:
+    linear-gradient(
+    135deg,
+    #ff6b35,
+    #ff914d
+    );
+
+    border:none;
+}
+
+.favorite-btn.active .heart-icon{
+
+    color:white;
+}
+.restaurant-info{
+
+    padding:24px;
+}
+
+.restaurant-name{
+
+    font-size:30px;
+
+    font-weight:700;
+
+    color:#fff;
+
+    margin-bottom:12px;
+
+    text-decoration:none;
+}
+
+.restaurant-cuisine{
+
+    color:#b5b5b5;
+
+    font-size:17px;
+
+    margin-bottom:20px;
+}
+
+.restaurant-meta{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    color:#ff914d;
+
+    font-weight:600;
+
+    font-size:18px;
+}
+.restaurant-card{
+
+    text-decoration:none;
+
+    color:white;
+}
+
+.restaurant-card *{
+
+    text-decoration:none !important;
 }
