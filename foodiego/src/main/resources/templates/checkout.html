@@ -46,39 +46,56 @@
           </div>
         </div>
         <div class="address-section">
-          <h1>Addresses</h1>
           <h3>Select Delivery Address</h3>
 
-          <div class="address-list">
-            <label class="address-card" th:each="address : ${addresses}">
-              <input
-                type="radio"
-                name="addressId"
-                th:value="${address.id}"
-                required
-              />
+          <div th:if="${hasAddresses}">
+            <div class="address-list">
+              <label class="address-card" th:each="address : ${addresses}">
+                <input
+                  type="radio"
+                  name="addressId"
+                  th:value="${address.id}"
+                  required
+                />
 
-              <div class="address-info">
-                <h4 th:text="${address.fullName}">Full Name</h4>
+                <div class="address-info">
+                  <h4 th:text="${address.fullName}">Recipient name</h4>
 
-                <p th:text="${address.addressLine}">Address</p>
+                  <p th:text="${address.addressLine}"></p>
 
-                <p>
-                  <span th:text="${address.city}"> City </span>
+                  <p>
+                    <span th:text="${address.city}"> </span>
 
-                  ,
+                    ,
 
-                  <span th:text="${address.state}"> State </span>
+                    <span th:text="${address.state}"> </span>
 
-                  -
+                    -
 
-                  <span th:text="${address.pincode}"> Pincode </span>
-                </p>
-              </div>
-            </label>
+                    <span th:text="${address.pincode}"> </span>
+                  </p>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <div class="no-address-card" th:if="${!hasAddresses}">
+            <h4>📍 Delivery Address Required</h4>
+
+            <p>Please add a delivery address before placing an order.</p>
+
+            <a href="/profile/addresses" class="add-address-btn">
+              Add Address
+            </a>
           </div>
         </div>
-        <button type="submit">Place Order</button>
+        <button
+          type="submit"
+          th:disabled="${!hasAddresses}"
+          class="place-order-btn"
+        >
+          Place Order
+        </button>
       </form>
     </div>
     <script>

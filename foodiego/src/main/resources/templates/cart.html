@@ -12,7 +12,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
     <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
 
@@ -27,7 +27,11 @@
         <h1>🛒 Your Cart</h1>
       </div>
 
-      <div class="cart-layout">
+      <!-- CART HAS ITEMS -->
+
+      <div class="cart-layout" th:if="${!#lists.isEmpty(cartItems)}">
+        <!-- CART ITEMS -->
+
         <div class="cart-items">
           <div class="cart-card" th:each="item : ${cartItems}">
             <img th:src="${item.imageUrl}" th:alt="${item.name}" />
@@ -65,6 +69,8 @@
           </div>
         </div>
 
+        <!-- ORDER SUMMARY -->
+
         <div class="summary-card">
           <h2>Order Summary</h2>
 
@@ -75,6 +81,23 @@
           </div>
 
           <a href="/checkout" class="checkout-btn"> Proceed To Checkout </a>
+        </div>
+      </div>
+
+      <!-- EMPTY CART -->
+
+      <div class="empty-cart" th:if="${#lists.isEmpty(cartItems)}">
+        <div class="empty-cart-card">
+          <div class="empty-icon">🛒</div>
+
+          <h2>Your Cart Is Empty</h2>
+
+          <p>
+            Looks like you haven't added any food yet. Explore restaurants and
+            discover something delicious.
+          </p>
+
+          <a href="/dashboard" class="browse-btn"> Browse Restaurants </a>
         </div>
       </div>
     </div>

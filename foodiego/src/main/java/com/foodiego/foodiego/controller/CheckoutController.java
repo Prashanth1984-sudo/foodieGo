@@ -62,6 +62,11 @@ public class CheckoutController {
                 List<CartItem> cartItems = cartItemRepository
                                 .findByUserEmail(userEmail);
 
+                if (cartItems.isEmpty()) {
+
+                        return "redirect:/cart";
+                }
+
                 double total = 0;
 
                 for (CartItem cart : cartItems) {
@@ -82,11 +87,17 @@ public class CheckoutController {
                 model.addAttribute("discount", 0);
                 model.addAttribute("finalTotal", total);
 
+                var addresses = addressRepository
+                                .findByUserEmail(
+                                                userEmail);
+
                 model.addAttribute(
                                 "addresses",
-                                addressRepository
-                                                .findByUserEmail(
-                                                                userEmail));
+                                addresses);
+
+                model.addAttribute(
+                                "hasAddresses",
+                                !addresses.isEmpty());
 
                 return "checkout";
         }
@@ -94,7 +105,7 @@ public class CheckoutController {
         @PostMapping("/place-order")
         public String placeOrder(
 
-                        @RequestParam Long addressId,
+                        @RequestParam(required = false) Long addressId,
 
                         @RequestParam(required = false) String couponCode,
 
@@ -106,9 +117,24 @@ public class CheckoutController {
                 if (userEmail == null) {
                         return "redirect:/login";
                 }
+                if (addressId == null) {
+
+                        return "redirect:/profile/addresses";
+                }
+
+                if (!addressRepository.existsById(
+                                addressId)) {
+
+                        return "redirect:/profile/addresses";
+                }
 
                 List<CartItem> cartItems = cartItemRepository
                                 .findByUserEmail(userEmail);
+
+                if (cartItems.isEmpty()) {
+
+                        return "redirect:/cart";
+                }
 
                 double total = 0;
 

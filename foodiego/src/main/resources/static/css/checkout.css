@@ -407,3 +407,57 @@ button{
 
     font-weight:600;
 }
+.no-address-card{
+
+    margin-top:20px;
+
+    padding:25px;
+
+    border-radius:18px;
+
+    background:
+    rgba(255,255,255,.04);
+
+    border:
+    1px solid rgba(255,255,255,.08);
+
+    text-align:center;
+}
+
+.no-address-card h4{
+
+    color:white;
+
+    margin-bottom:10px;
+}
+
+.no-address-card p{
+
+    color:#bdbdbd;
+
+    margin-bottom:20px;
+}
+
+.add-address-btn{
+
+    display:inline-block;
+
+    padding:12px 24px;
+
+    border-radius:12px;
+
+    background:#ff914d;
+
+    color:white;
+
+    text-decoration:none;
+
+    font-weight:600;
+}
+
+.place-order-btn:disabled{
+
+    opacity:.5;
+
+    cursor:not-allowed;
+}
