@@ -12,4 +12,6 @@ public interface OrderRepository
                         String userEmail);
 
         List<Order> findAllByOrderByOrderDateDesc();
+
+        long countByUserEmail(String userEmail);
 }

@@ -1,0 +1,128 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Poppins,sans-serif;
+}
+
+body{
+    background:#0f0f0f;
+    color:white;
+}
+
+.settings-page{
+
+    min-height:100vh;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    padding:40px;
+}
+
+.settings-card{
+
+    width:100%;
+
+    max-width:700px;
+
+    background:#171717;
+
+    padding:40px;
+
+    border-radius:24px;
+
+    border:1px solid rgba(255,255,255,.08);
+}
+
+.settings-card h1{
+
+    margin-bottom:30px;
+}
+
+.settings-card h2{
+
+    margin:25px 0 15px;
+}
+
+.settings-card form{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:15px;
+}
+
+.settings-card input{
+
+    padding:15px;
+
+    border:none;
+
+    border-radius:12px;
+
+    background:#252525;
+
+    color:white;
+}
+
+.settings-card button{
+
+    padding:15px;
+
+    border:none;
+
+    border-radius:12px;
+
+    cursor:pointer;
+
+    font-weight:600;
+
+    color:white;
+
+    background:linear-gradient(
+        135deg,
+        #ff914d,
+        #ff6b35
+    );
+}
+
+.back-btn{
+
+    display:inline-block;
+
+    margin-top:25px;
+
+    text-decoration:none;
+
+    color:#ff914d;
+}
+.error-message {
+
+    background: rgba(255,0,0,.15);
+
+    color: #ff6b6b;
+
+    padding: 14px;
+
+    border-radius: 10px;
+
+    margin-bottom: 20px;
+}
+
+.success-message {
+
+    background: rgba(0,255,128,.15);
+
+    color: #4ade80;
+
+    padding: 14px;
+
+    border-radius: 10px;
+
+    margin-bottom: 20px;
+}

@@ -165,32 +165,39 @@ body{
     font-weight:600;
 }
 
-.checkout-btn{
+.checkout-btn {
+    display: block;
 
-    width:100%;
+    width: 100%;
 
-    border:none;
+    text-align: center;
 
-    padding:15px;
+    text-decoration: none;   /* Removes underline */
 
-    border-radius:12px;
+    color: white;
 
-    cursor:pointer;
-
-    color:white;
-
-    font-size:16px;
-
-    font-weight:600;
-
-    background:
-    linear-gradient(
-    135deg,
-    #ff6b35,
-    #ff914d
+    background: linear-gradient(
+        135deg,
+        #ff914d,
+        #ff6b35
     );
+
+    padding: 16px;
+
+    border-radius: 14px;
+
+    font-weight: 600;
+
+    margin-top: 20px;
+
+    transition: 0.3s ease;
 }
 
+.checkout-btn:hover {
+    text-decoration: none;   /* Prevent underline on hover */
+
+    transform: translateY(-2px);
+}
 @media(max-width:900px){
 
     .cart-layout{

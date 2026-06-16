@@ -1,0 +1,71 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" xml:lang="en">
+  <head>
+    <title>Settings | FoodieGo</title>
+
+    <link rel="stylesheet" th:href="@{/css/settings.css}" />
+  </head>
+
+  <body>
+    <div class="settings-page">
+      <div class="settings-card">
+        <h1>Account Settings</h1>
+
+        <div th:if="${error == 'current'}" class="error-message">
+          Current password is incorrect.
+        </div>
+
+        <div th:if="${error == 'confirm'}" class="error-message">
+          New password and confirm password do not match.
+        </div>
+
+        <div th:if="${success == 'password'}" class="success-message">
+          Password updated successfully.
+        </div>
+
+        <!-- PROFILE -->
+
+        <form th:action="@{/profile/settings/update}" method="post">
+          <h2>Profile Information</h2>
+
+          <input type="text" name="name" th:value="${user.name}" required />
+
+          <input type="email" name="email" th:value="${user.email}" required />
+
+          <button type="submit">Save Changes</button>
+        </form>
+
+        <!-- PASSWORD -->
+
+        <form th:action="@{/profile/settings/password}" method="post">
+          <h2>Change Password</h2>
+
+          <input
+            type="password"
+            name="currentPassword"
+            placeholder="Current Password"
+            required
+          />
+
+          <input
+            type="password"
+            name="newPassword"
+            placeholder="New Password"
+            required
+          />
+
+          <input
+            type="password"
+            name="confirmPassword"
+            placeholder="Confirm Password"
+            required
+          />
+
+          <button type="submit">Update Password</button>
+        </form>
+
+        <a href="/profile" class="back-btn"> Back To Profile </a>
+      </div>
+    </div>
+  </body>
+</html>

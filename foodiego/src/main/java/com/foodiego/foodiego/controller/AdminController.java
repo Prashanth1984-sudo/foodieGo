@@ -13,207 +13,215 @@ import com.foodiego.foodiego.entity.MenuItem;
 import com.foodiego.foodiego.entity.Order;
 import com.foodiego.foodiego.entity.Restaurant;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Controller
 public class AdminController {
 
-    private final UserRepository userRepository;
-    private final RestaurantRepository restaurantRepository;
-    private final MenuItemRepository menuItemRepository;
-    private final OrderRepository orderRepository;
+        private final UserRepository userRepository;
+        private final RestaurantRepository restaurantRepository;
+        private final MenuItemRepository menuItemRepository;
+        private final OrderRepository orderRepository;
 
-    public AdminController(
-            UserRepository userRepository,
-            RestaurantRepository restaurantRepository,
-            MenuItemRepository menuItemRepository,
-            OrderRepository orderRepository) {
+        public AdminController(
+                        UserRepository userRepository,
+                        RestaurantRepository restaurantRepository,
+                        MenuItemRepository menuItemRepository,
+                        OrderRepository orderRepository) {
 
-        this.userRepository = userRepository;
-        this.restaurantRepository = restaurantRepository;
-        this.menuItemRepository = menuItemRepository;
-        this.orderRepository = orderRepository;
-    }
-
-    @GetMapping("/admin")
-    public String adminDashboard(Model model) {
-
-        long totalUsers = userRepository.count();
-
-        long totalRestaurants = restaurantRepository.count();
-
-        long totalMenuItems = menuItemRepository.count();
-
-        long totalOrders = orderRepository.count();
-
-        double totalRevenue = 0;
-
-        for (Order order : orderRepository.findAll()) {
-
-            totalRevenue += order.getTotalAmount();
+                this.userRepository = userRepository;
+                this.restaurantRepository = restaurantRepository;
+                this.menuItemRepository = menuItemRepository;
+                this.orderRepository = orderRepository;
         }
 
-        model.addAttribute(
-                "totalUsers",
-                totalUsers);
+        @GetMapping("/admin")
+        public String adminDashboard(Model model) {
 
-        model.addAttribute(
-                "totalRestaurants",
-                totalRestaurants);
+                long totalUsers = userRepository.count();
 
-        model.addAttribute(
-                "totalMenuItems",
-                totalMenuItems);
+                long totalRestaurants = restaurantRepository.count();
 
-        model.addAttribute(
-                "totalOrders",
-                totalOrders);
+                long totalMenuItems = menuItemRepository.count();
 
-        model.addAttribute(
-                "totalRevenue",
-                totalRevenue);
+                long totalOrders = orderRepository.count();
 
-        return "admin-dashboard";
-    }
+                double totalRevenue = 0;
 
-    @GetMapping("/admin/orders")
-    public String manageOrders(Model model) {
+                for (Order order : orderRepository.findAll()) {
 
-        model.addAttribute(
-                "orders",
-                orderRepository.findAllByOrderByOrderDateDesc());
+                        totalRevenue += order.getTotalAmount();
+                }
 
-        return "admin-orders";
-    }
+                model.addAttribute("totalUsers", totalUsers);
+                model.addAttribute("totalRestaurants", totalRestaurants);
+                model.addAttribute("totalMenuItems", totalMenuItems);
+                model.addAttribute("totalOrders", totalOrders);
+                model.addAttribute("totalRevenue", totalRevenue);
 
-    @PostMapping("/admin/orders/update")
-    public String updateOrderStatus(
-            @RequestParam Long orderId,
-            @RequestParam String status) {
+                // NEW
+                model.addAttribute(
+                                "users",
+                                userRepository.findAll());
 
-        Order order = orderRepository
-                .findById(orderId)
-                .orElse(null);
+                Map<String, Long> userOrders = new HashMap<>();
 
-        if (order != null) {
+                for (var user : userRepository.findAll()) {
 
-            order.setStatus(status);
+                        userOrders.put(
+                                        user.getEmail(),
+                                        orderRepository.countByUserEmail(
+                                                        user.getEmail()));
+                }
 
-            orderRepository.save(order);
+                model.addAttribute(
+                                "userOrders",
+                                userOrders);
+
+                return "admin-dashboard";
         }
 
-        return "redirect:/admin/orders";
-    }
+        @GetMapping("/admin/orders")
+        public String manageOrders(Model model) {
 
-    @GetMapping("/admin/restaurants")
-    public String restaurants(Model model) {
+                model.addAttribute(
+                                "orders",
+                                orderRepository.findAllByOrderByOrderDateDesc());
 
-        model.addAttribute(
-                "restaurants",
-                restaurantRepository.findAll());
+                return "admin-orders";
+        }
 
-        return "admin-restaurants";
-    }
+        @PostMapping("/admin/orders/update")
+        public String updateOrderStatus(
+                        @RequestParam Long orderId,
+                        @RequestParam String status) {
 
-    @PostMapping("/admin/restaurants/delete/{id}")
-    public String deleteRestaurant(
-            @PathVariable Long id) {
+                Order order = orderRepository
+                                .findById(orderId)
+                                .orElse(null);
 
-        restaurantRepository.deleteById(id);
+                if (order != null) {
 
-        return "redirect:/admin/restaurants";
-    }
+                        order.setStatus(status);
 
-    @GetMapping("/admin/restaurants/add")
-    public String addRestaurantPage(
-            Model model) {
+                        orderRepository.save(order);
+                }
 
-        model.addAttribute(
-                "restaurant",
-                new Restaurant());
+                return "redirect:/admin/orders";
+        }
 
-        return "restaurant-form";
-    }
+        @GetMapping("/admin/restaurants")
+        public String restaurants(Model model) {
 
-    @PostMapping("/admin/restaurants/save")
-    public String saveRestaurant(
-            Restaurant restaurant) {
+                model.addAttribute(
+                                "restaurants",
+                                restaurantRepository.findAll());
 
-        restaurantRepository.save(restaurant);
+                return "admin-restaurants";
+        }
 
-        return "redirect:/admin/restaurants";
-    }
+        @PostMapping("/admin/restaurants/delete/{id}")
+        public String deleteRestaurant(
+                        @PathVariable Long id) {
 
-    @GetMapping("/admin/restaurants/edit/{id}")
-    public String editRestaurant(
-            @PathVariable Long id,
-            Model model) {
+                restaurantRepository.deleteById(id);
 
-        model.addAttribute(
-                "restaurant",
-                restaurantRepository
-                        .findById(id)
-                        .orElse(null));
+                return "redirect:/admin/restaurants";
+        }
 
-        return "restaurant-form";
-    }
+        @GetMapping("/admin/restaurants/add")
+        public String addRestaurantPage(
+                        Model model) {
 
-    @GetMapping("/admin/menu")
-    public String menuItems(Model model) {
+                model.addAttribute(
+                                "restaurant",
+                                new Restaurant());
 
-        model.addAttribute(
-                "menuItems",
-                menuItemRepository.findAll());
+                return "restaurant-form";
+        }
 
-        return "admin-menu";
-    }
+        @PostMapping("/admin/restaurants/save")
+        public String saveRestaurant(
+                        Restaurant restaurant) {
 
-    @GetMapping("/admin/menu/add")
-    public String addMenuItemPage(
-            Model model) {
+                restaurantRepository.save(restaurant);
 
-        model.addAttribute(
-                "menuItem",
-                new MenuItem());
+                return "redirect:/admin/restaurants";
+        }
 
-        model.addAttribute(
-                "restaurants",
-                restaurantRepository.findAll());
+        @GetMapping("/admin/restaurants/edit/{id}")
+        public String editRestaurant(
+                        @PathVariable Long id,
+                        Model model) {
 
-        return "menu-form";
-    }
+                model.addAttribute(
+                                "restaurant",
+                                restaurantRepository
+                                                .findById(id)
+                                                .orElse(null));
 
-    @GetMapping("/admin/menu/edit/{id}")
-    public String editMenuItem(
-            @PathVariable Long id,
-            Model model) {
+                return "restaurant-form";
+        }
 
-        model.addAttribute(
-                "menuItem",
-                menuItemRepository
-                        .findById(id)
-                        .orElse(null));
+        @GetMapping("/admin/menu")
+        public String menuItems(Model model) {
 
-        model.addAttribute(
-                "restaurants",
-                restaurantRepository.findAll());
+                model.addAttribute(
+                                "menuItems",
+                                menuItemRepository.findAll());
 
-        return "menu-form";
-    }
+                return "admin-menu";
+        }
 
-    @PostMapping("/admin/menu/save")
-    public String saveMenuItem(
-            MenuItem menuItem) {
+        @GetMapping("/admin/menu/add")
+        public String addMenuItemPage(
+                        Model model) {
 
-        menuItemRepository.save(menuItem);
+                model.addAttribute(
+                                "menuItem",
+                                new MenuItem());
 
-        return "redirect:/admin/menu";
-    }
+                model.addAttribute(
+                                "restaurants",
+                                restaurantRepository.findAll());
 
-    @PostMapping("/admin/menu/delete/{id}")
-    public String deleteMenuItem(
-            @PathVariable Long id) {
+                return "menu-form";
+        }
 
-        menuItemRepository.deleteById(id);
+        @GetMapping("/admin/menu/edit/{id}")
+        public String editMenuItem(
+                        @PathVariable Long id,
+                        Model model) {
 
-        return "redirect:/admin/menu";
-    }
+                model.addAttribute(
+                                "menuItem",
+                                menuItemRepository
+                                                .findById(id)
+                                                .orElse(null));
+
+                model.addAttribute(
+                                "restaurants",
+                                restaurantRepository.findAll());
+
+                return "menu-form";
+        }
+
+        @PostMapping("/admin/menu/save")
+        public String saveMenuItem(
+                        MenuItem menuItem) {
+
+                menuItemRepository.save(menuItem);
+
+                return "redirect:/admin/menu";
+        }
+
+        @PostMapping("/admin/menu/delete/{id}")
+        public String deleteMenuItem(
+                        @PathVariable Long id) {
+
+                menuItemRepository.deleteById(id);
+
+                return "redirect:/admin/menu";
+        }
 }
