@@ -31,29 +31,25 @@
             </span>
           </div>
         </div>
-        <div th:if="${error == 'welcome20'}" class="coupon-error">
-          WELCOME20 is only valid for your first order.
-        </div>
 
-        <div th:if="${error == 'food50'}" class="coupon-error">
-          FOOD50 requires a minimum order value of ₹499.
-        </div>
-
-        <div th:if="${error == 'invalid'}" class="coupon-error">
-          Invalid coupon code.
-        </div>
         <div class="coupon-box">
-          <label for="couponCode">Coupon Code</label>
+          <label for="couponCode"> Coupon Code </label>
 
-          <div class="coupon-row">
-            <input
-              type="text"
-              name="couponCode"
-              id="couponCode"
-              placeholder="Enter Coupon Code"
-            />
+          <div class="coupon-section">
+            <div id="couponMessage"></div>
+            <div class="coupon-row">
+              <input
+                type="text"
+                id="couponCode"
+                placeholder="Enter Coupon Code"
+              />
 
-            <button type="button" onclick="applyCoupon()">Apply</button>
+              <button type="button" id="applyBtn" onclick="applyCoupon()">
+                Apply
+              </button>
+            </div>
+
+            <input type="hidden" id="appliedCoupon" name="couponCode" />
           </div>
         </div>
         <div class="address-section">
@@ -111,35 +107,69 @@
     </div>
     <script>
       function applyCoupon() {
-        const subtotal = parseFloat(
-          document.getElementById("subtotal").innerText,
-        );
+        const couponCode = document.getElementById("couponCode").value.trim();
 
-        const code = document.getElementById("couponCode").value.toUpperCase();
+        const msg = document.getElementById("couponMessage");
 
-        let discount = 0;
+        if (!couponCode) {
+          msg.className = "coupon-error";
+          msg.innerHTML = "❌ Please enter a coupon code";
+          msg.style.display = "block";
 
-        if (code === "FOOD50") {
-          if (subtotal >= 499) {
-            discount = 50;
-          } else {
-            alert("FOOD50 is valid only for orders above ₹499");
-            return;
-          }
-        } else if (code === "WELCOME20") {
-          discount = subtotal * 0.2;
-        } else {
-          alert("Invalid Coupon Code");
           return;
         }
 
-        const finalTotal = subtotal - discount;
+        fetch("/checkout/validate-coupon", {
+          method: "POST",
 
-        document.getElementById("discount").innerText = discount.toFixed(2);
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
 
-        document.getElementById("finalTotal").innerText = (
-          subtotal - discount
-        ).toFixed(2);
+          body: "couponCode=" + encodeURIComponent(couponCode),
+        })
+          .then((response) => response.json())
+
+          .then((data) => {
+            if (data.success) {
+              msg.className = "coupon-success";
+
+              msg.innerHTML = "✅ " + data.message;
+
+              msg.style.display = "block";
+
+              document.getElementById("discount").innerText =
+                data.discount.toFixed(2);
+
+              document.getElementById("finalTotal").innerText =
+                data.finalTotal.toFixed(2);
+
+              // IMPORTANT
+              document.getElementById("appliedCoupon").value =
+                couponCode.toUpperCase();
+            } else {
+              msg.className = "coupon-error";
+
+              msg.innerHTML = "❌ " + data.message;
+
+              msg.style.display = "block";
+
+              document.getElementById("discount").innerText = "0";
+
+              document.getElementById("finalTotal").innerText =
+                document.getElementById("subtotal").innerText;
+
+              document.getElementById("appliedCoupon").value = "";
+            }
+          })
+
+          .catch((error) => {
+            msg.className = "coupon-error";
+
+            msg.innerHTML = "❌ Something went wrong";
+
+            msg.style.display = "block";
+          });
       }
     </script>
   </body>

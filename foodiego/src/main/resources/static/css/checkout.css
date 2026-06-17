@@ -469,3 +469,193 @@ button{
     margin-bottom:15px;
     font-weight:600;
 }
+.coupon-success{
+
+    color:#22c55e;
+
+    margin-top:10px;
+
+    font-weight:600;
+}
+
+.coupon-error{
+
+    color:#ef4444;
+
+    margin-top:10px;
+
+    font-weight:600;
+}
+#couponMessage{
+
+    margin-top:12px;
+
+    padding:12px;
+
+    border-radius:12px;
+
+    font-weight:600;
+}
+
+.coupon-success{
+
+    background:#143d25;
+
+    color:#4ade80;
+}
+
+.coupon-error{
+
+    background:#4a1d1d;
+
+    color:#f87171;
+}
+.coupon-row{
+    display:flex;
+    gap:12px;
+    align-items:center;
+}
+
+.coupon-row input{
+    flex:1;
+}
+
+#couponMessage{
+    margin-top:12px;
+    display:none;
+    padding:12px 16px;
+    border-radius:12px;
+    font-weight:600;
+}
+
+.coupon-success{
+    display:block;
+    background:#173d27;
+    color:#4ade80;
+    border:1px solid #22c55e;
+}
+
+.coupon-error{
+    display:block;
+    background:#4b1d1d;
+    color:#f87171;
+    border:1px solid #ef4444;
+}
+.coupon-success {
+
+    margin-top: 12px;
+
+    padding: 12px 16px;
+
+    border-radius: 12px;
+
+    background: rgba(34,197,94,.15);
+
+    color: #4ade80;
+
+    border: 1px solid #22c55e;
+
+    font-weight: 600;
+}
+
+.coupon-error {
+
+    margin-top: 12px;
+
+    padding: 12px 16px;
+
+    border-radius: 12px;
+
+    background: rgba(239,68,68,.15);
+
+    color: #f87171;
+
+    border: 1px solid #ef4444;
+
+    font-weight: 600;
+}
+.coupon-success {
+
+    margin-top: 12px;
+
+    padding: 14px;
+
+    border-radius: 12px;
+
+    background: rgba(34,197,94,.12);
+
+    border: 1px solid #22c55e;
+
+    color: #4ade80;
+
+    font-weight: 600;
+}
+
+.coupon-error {
+
+    margin-top: 12px;
+
+    padding: 14px;
+
+    border-radius: 12px;
+
+    background: rgba(239,68,68,.12);
+
+    border: 1px solid #ef4444;
+
+    color: #f87171;
+
+    font-weight: 600;
+}
+#couponMessage{
+    display:none;
+    margin-top:15px;
+    padding:14px 18px;
+    border-radius:12px;
+    font-weight:600;
+    animation:fadeIn .3s ease;
+}
+
+.coupon-success{
+    background:#163d22;
+    color:#4ade80;
+    border:1px solid #22c55e;
+}
+
+.coupon-error{
+    background:#451a1a;
+    color:#f87171;
+    border:1px solid #ef4444;
+}
+
+@keyframes fadeIn{
+    from{
+        opacity:0;
+        transform:translateY(-10px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+#couponMessage{
+    display:none;
+    margin-top:12px;
+}
+
+.coupon-success{
+    background:#173d27;
+    color:#4ade80;
+    border:1px solid #22c55e;
+    padding:12px;
+    border-radius:10px;
+}
+
+.coupon-error{
+    background:#4b1d1d;
+    color:#f87171;
+    border:1px solid #ef4444;
+    padding:12px;
+    border-radius:10px;
+}
