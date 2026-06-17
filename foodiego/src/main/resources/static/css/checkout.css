@@ -461,3 +461,11 @@ button{
 
     cursor:not-allowed;
 }
+.coupon-error{
+    background:#ff4d4f;
+    color:white;
+    padding:12px;
+    border-radius:12px;
+    margin-bottom:15px;
+    font-weight:600;
+}

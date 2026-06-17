@@ -31,6 +31,17 @@
             </span>
           </div>
         </div>
+        <div th:if="${error == 'welcome20'}" class="coupon-error">
+          WELCOME20 is only valid for your first order.
+        </div>
+
+        <div th:if="${error == 'food50'}" class="coupon-error">
+          FOOD50 requires a minimum order value of ₹499.
+        </div>
+
+        <div th:if="${error == 'invalid'}" class="coupon-error">
+          Invalid coupon code.
+        </div>
         <div class="coupon-box">
           <label for="couponCode">Coupon Code</label>
 
@@ -109,12 +120,20 @@
         let discount = 0;
 
         if (code === "FOOD50") {
-          discount = 50;
+          if (subtotal >= 499) {
+            discount = 50;
+          } else {
+            alert("FOOD50 is valid only for orders above ₹499");
+            return;
+          }
         } else if (code === "WELCOME20") {
           discount = subtotal * 0.2;
-        } else if (code === "FREEDEL") {
-          discount = 40;
+        } else {
+          alert("Invalid Coupon Code");
+          return;
         }
+
+        const finalTotal = subtotal - discount;
 
         document.getElementById("discount").innerText = discount.toFixed(2);
 

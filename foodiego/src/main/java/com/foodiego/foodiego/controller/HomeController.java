@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 
 import com.foodiego.foodiego.entity.Favorite;
+import com.foodiego.foodiego.entity.User;
 import com.foodiego.foodiego.repository.FavoriteRepository;
 import com.foodiego.foodiego.repository.RestaurantRepository;
+import com.foodiego.foodiego.repository.UserRepository;
 
 @Controller
 public class HomeController {
@@ -20,13 +22,18 @@ public class HomeController {
 
         private final FavoriteRepository favoriteRepository;
 
+        private final UserRepository userRepository;
+
         public HomeController(
                         RestaurantRepository restaurantRepository,
-                        FavoriteRepository favoriteRepository) {
+                        FavoriteRepository favoriteRepository,
+                        UserRepository userRepository) {
 
                 this.restaurantRepository = restaurantRepository;
 
                 this.favoriteRepository = favoriteRepository;
+
+                this.userRepository = userRepository;
         }
 
         @GetMapping("/")
@@ -70,6 +77,14 @@ public class HomeController {
 
                 String userEmail = (String) session.getAttribute(
                                 "loggedInUser");
+
+                User user = userRepository
+                                .findByEmail(userEmail)
+                                .orElse(null);
+
+                model.addAttribute(
+                                "user",
+                                user);
 
                 List<Long> favoriteIds = favoriteRepository
                                 .findByUserEmail(userEmail)

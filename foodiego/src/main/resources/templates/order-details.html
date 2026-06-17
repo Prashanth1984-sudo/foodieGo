@@ -170,7 +170,31 @@
 
           <span> Standard Delivery </span>
         </div>
+        <div class="summary-row">
+          <span>Subtotal</span>
 
+          <span>
+            ₹<span
+              th:text="${order.totalAmount + (order.discountAmount != null ? order.discountAmount : 0)}"
+            >
+            </span>
+          </span>
+        </div>
+
+        <div
+          th:if="${order.discountAmount != null && order.discountAmount > 0}"
+          class="summary-row"
+        >
+          <span>Discount</span>
+
+          <span> -₹<span th:text="${order.discountAmount}"></span> </span>
+        </div>
+
+        <div th:if="${order.couponCode != null}" class="summary-row">
+          <span>Coupon</span>
+
+          <span th:text="${order.couponCode}"></span>
+        </div>
         <div class="summary-row total-row">
           <span> Total Amount </span>
 

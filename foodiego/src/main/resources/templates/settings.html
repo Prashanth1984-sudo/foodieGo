@@ -19,13 +19,43 @@
           New password and confirm password do not match.
         </div>
 
+        <div th:if="${error == 'email'}" class="error-message">
+          Email already exists.
+        </div>
+
         <div th:if="${success == 'password'}" class="success-message">
           Password updated successfully.
         </div>
 
-        <!-- PROFILE -->
+        <div th:if="${success == 'profile'}" class="success-message">
+          Profile updated successfully.
+        </div>
 
-        <form th:action="@{/profile/settings/update}" method="post">
+        <!-- PROFILE -->
+        <form
+          th:action="@{/profile/settings/update-profile}"
+          method="post"
+          enctype="multipart/form-data"
+        >
+          <div class="profile-section">
+            <img
+              id="previewImage"
+              th:src="${user.profileImage != null ? user.profileImage : '\images\default-avatar.png'}"
+              class="profile-avatar"
+              alt="Profile avatar"
+            />
+
+            <label for="profileImage" class="upload-btn"> Change Photo </label>
+
+            <input
+              type="file"
+              id="profileImage"
+              name="profileImage"
+              accept="image/*"
+              onchange="previewPhoto(event)"
+              hidden
+            />
+          </div>
           <h2>Profile Information</h2>
 
           <input type="text" name="name" th:value="${user.name}" required />
@@ -67,5 +97,16 @@
         <a href="/profile" class="back-btn"> Back To Profile </a>
       </div>
     </div>
+    <script>
+      function previewPhoto(event) {
+        const reader = new FileReader();
+
+        reader.onload = function () {
+          document.getElementById("previewImage").src = reader.result;
+        };
+
+        reader.readAsDataURL(event.target.files[0]);
+      }
+    </script>
   </body>
 </html>

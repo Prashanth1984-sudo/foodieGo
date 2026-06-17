@@ -50,7 +50,8 @@ public class CheckoutController {
         @GetMapping
         public String checkout(
                         HttpSession session,
-                        Model model) {
+                        Model model,
+                        @RequestParam(required = false) String error) {
 
                 String userEmail = (String) session.getAttribute(
                                 "loggedInUser");
@@ -98,6 +99,8 @@ public class CheckoutController {
                 model.addAttribute(
                                 "hasAddresses",
                                 !addresses.isEmpty());
+
+                model.addAttribute("error", error);
 
                 return "checkout";
         }
@@ -156,27 +159,37 @@ public class CheckoutController {
                 if (couponCode != null &&
                                 !couponCode.isBlank()) {
 
-                        var coupon = couponRepository
-                                        .findByCode(
-                                                        couponCode.toUpperCase());
+                        couponCode = couponCode.trim().toUpperCase();
 
-                        if (coupon.isPresent()) {
+                        if (couponCode.equals("FOOD50")) {
 
-                                if (coupon.get()
-                                                .getDiscountAmount() != null) {
+                                if (total >= 499) {
 
-                                        discount = coupon.get()
-                                                        .getDiscountAmount();
+                                        discount = 50;
+
+                                } else {
+
+                                        return "redirect:/checkout?error=food50";
                                 }
+                        }
 
-                                if (coupon.get()
-                                                .getDiscountPercent() != null) {
+                        else if (couponCode.equals("WELCOME20")) {
 
-                                        discount = total *
-                                                        coupon.get()
-                                                                        .getDiscountPercent()
-                                                        / 100.0;
+                                long orderCount = orderRepository.countByUserEmail(userEmail);
+
+                                if (orderCount == 0) {
+
+                                        discount = total * 0.20;
+
+                                } else {
+
+                                        return "redirect:/checkout?error=welcome20";
                                 }
+                        }
+
+                        else {
+
+                                return "redirect:/checkout?error=invalid";
                         }
                 }
 
@@ -192,12 +205,14 @@ public class CheckoutController {
 
                 order.setTotalAmount(total);
 
+                order.setDiscountAmount(discount);
+
+                order.setCouponCode(couponCode);
+
                 order.setStatus("PLACED");
 
-                order.setOrderDate(
-                                LocalDateTime.now());
+                order.setOrderDate(LocalDateTime.now());
 
-                // IMPORTANT
                 order.setAddressId(addressId);
 
                 orderRepository.save(order);

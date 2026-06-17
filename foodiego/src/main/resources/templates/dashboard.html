@@ -45,7 +45,17 @@
 
         <div class="profile-dropdown">
           <div class="profile-icon">
-            <img src="/images/logo.jpg" alt="Profile" />
+            <img
+              th:if="${user != null && user.profileImage != null}"
+              th:src="${user.profileImage}"
+              alt="Profile"
+            />
+
+            <img
+              th:unless="${user != null && user.profileImage != null}"
+              src="/images/default-avatar.png"
+              alt="Profile"
+            />
           </div>
 
           <div class="dropdown-menu">
@@ -136,9 +146,9 @@
         <div class="premium-offer-card">
           <span class="offer-tag"> 🔥 LIMITED OFFER </span>
 
-          <h3>50% OFF</h3>
+          <h3>₹ 50 OFF</h3>
 
-          <p>First Order Discount</p>
+          <p>order above ₹499</p>
 
           <div class="offer-code">FOOD50</div>
         </div>
@@ -156,11 +166,11 @@
         <div class="premium-offer-card">
           <span class="offer-tag"> ⭐ SPECIAL </span>
 
-          <h3>Buy 1 Get 1</h3>
+          <h3>New User</h3>
 
-          <p>Selected Restaurants</p>
+          <p>Get 20% off on your first order</p>
 
-          <div class="offer-code">WEEKEND DEAL</div>
+          <div class="offer-code">WELCOME20</div>
         </div>
       </div>
     </section>
@@ -221,7 +231,9 @@
             <img th:src="${restaurant.imageUrl}" th:alt="${restaurant.name}" />
 
             <div class="restaurant-info">
-              <h3 class="restaurant-name" th:text="${restaurant.name}">Restaurant Name</h3>
+              <h3 class="restaurant-name" th:text="${restaurant.name}">
+                Restaurant Name
+              </h3>
 
               <p class="restaurant-cuisine" th:text="${restaurant.cuisine}"></p>
 

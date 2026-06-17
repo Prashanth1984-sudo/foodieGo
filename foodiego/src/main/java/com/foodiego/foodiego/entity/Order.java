@@ -15,6 +15,10 @@ public class Order {
 
     private Double totalAmount;
 
+    private Double discountAmount = 0.0;
+
+    private String couponCode;
+
     private String status;
 
     private LocalDateTime orderDate;
@@ -22,18 +26,8 @@ public class Order {
     private Long addressId;
 
     public Order() {
-        /*
-         * Default constructor required by JPA for entity instantiation. Intentionally
-         * left empty.
-         */
-    }
-
-    public Long getAddressId() {
-        return addressId;
-    }
-
-    public void setAddressId(Long addressId) {
-        this.addressId = addressId;
+        // Default constructor required by JPA for entity instantiation.
+        // Intentionally left empty for the persistence framework to use.
     }
 
     public Long getId() {
@@ -56,6 +50,22 @@ public class Order {
         this.totalAmount = totalAmount;
     }
 
+    public Double getDiscountAmount() {
+        return discountAmount;
+    }
+
+    public void setDiscountAmount(Double discountAmount) {
+        this.discountAmount = discountAmount;
+    }
+
+    public String getCouponCode() {
+        return couponCode;
+    }
+
+    public void setCouponCode(String couponCode) {
+        this.couponCode = couponCode;
+    }
+
     public String getStatus() {
         return status;
     }
@@ -70,5 +80,13 @@ public class Order {
 
     public void setOrderDate(LocalDateTime orderDate) {
         this.orderDate = orderDate;
+    }
+
+    public Long getAddressId() {
+        return addressId;
+    }
+
+    public void setAddressId(Long addressId) {
+        this.addressId = addressId;
     }
 }

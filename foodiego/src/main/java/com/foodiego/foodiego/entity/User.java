@@ -21,6 +21,17 @@ public class User {
 
     private String role = "USER";
 
+    @Column(name = "profile_image")
+    private String profileImage;
+
+    public String getProfileImage() {
+        return profileImage;
+    }
+
+    public void setProfileImage(String profileImage) {
+        this.profileImage = profileImage;
+    }
+
     public User() {
     }
 

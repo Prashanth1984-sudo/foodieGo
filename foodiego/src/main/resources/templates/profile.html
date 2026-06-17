@@ -26,7 +26,12 @@
       <aside class="sidebar">
         <div class="profile-card">
           <span class="profile-label"> MY ACCOUNT </span>
-
+          <img
+            id="previewImage"
+            th:src="${user.profileImage != null ? user.profileImage : '/images/default-avatar.png'}"
+            th:alt="${user.name} + ' profile image'"
+            class="profile-avatar"
+          />
           <h2 th:text="${user.name}">User Name</h2>
 
           <p th:text="${user.email}">user@email.com</p>

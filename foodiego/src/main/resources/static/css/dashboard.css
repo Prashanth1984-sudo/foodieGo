@@ -1310,3 +1310,11 @@ body{
 
     text-decoration:none !important;
 }
+.profile-icon img {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #ff914d;
+    cursor: pointer;
+}

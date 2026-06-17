@@ -13,5 +13,7 @@ public interface OrderRepository
 
         List<Order> findAllByOrderByOrderDateDesc();
 
+        boolean existsByUserEmail(String userEmail);
+
         long countByUserEmail(String userEmail);
 }
