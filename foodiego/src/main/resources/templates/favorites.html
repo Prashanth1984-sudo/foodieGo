@@ -4,6 +4,7 @@
     <title>My Favorites</title>
 
     <link rel="stylesheet" th:href="@{/css/favorites.css}" />
+    <link rel="shortcut icon" th:href="@{/images/fevicon.png}" />
   </head>
 
   <body>
@@ -23,7 +24,12 @@
           <img th:src="${restaurant.imageUrl}" th:alt="${restaurant.name}" />
 
           <div class="favorite-info">
-            <h3 th:text="${restaurant.name}" th:attr="aria-label=${restaurant.name}">Restaurant name</h3>
+            <h3
+              th:text="${restaurant.name}"
+              th:attr="aria-label=${restaurant.name}"
+            >
+              Restaurant name
+            </h3>
 
             <p th:text="${restaurant.cuisine}"></p>
 

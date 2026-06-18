@@ -1,29 +1,19 @@
-<!DOCTYPE html>
+<!doctype html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en" xml:lang="en">
-
-<head>
-
+  <head>
     <title>Manage Orders</title>
 
-    <link rel="stylesheet"
-          th:href="@{/css/admin-orders.css}">
+    <link rel="stylesheet" th:href="@{/css/admin-orders.css}" />
+    <link rel="shortcut icon" th:href="@{/images/fevicon.png}" />
+  </head>
 
-</head>
+  <body>
+    <div class="container">
+      <h1>📦 Manage Orders</h1>
 
-<body>
-
-<div class="container">
-
-    <h1>
-        📦 Manage Orders
-    </h1>
-
-    <table>
-
+      <table>
         <thead>
-
-        <tr>
-
+          <tr>
             <th>ID</th>
 
             <th>User</th>
@@ -33,80 +23,39 @@
             <th>Status</th>
 
             <th>Action</th>
-
-        </tr>
-
+          </tr>
         </thead>
 
         <tbody>
+          <tr th:each="order : ${orders}">
+            <td th:text="${order.id}"></td>
 
-        <tr th:each="order : ${orders}">
+            <td th:text="${order.userEmail}"></td>
 
-            <td th:text="${order.id}">
-            </td>
+            <td>₹<span th:text="${order.totalAmount}"> </span></td>
 
-            <td th:text="${order.userEmail}">
-            </td>
-
-            <td>
-
-                ₹<span
-                th:text="${order.totalAmount}">
-                </span>
-
-            </td>
-
-            <td th:text="${order.status}">
-            </td>
+            <td th:text="${order.status}"></td>
 
             <td>
+              <form action="/admin/orders/update" method="post">
+                <input type="hidden" name="orderId" th:value="${order.id}" />
 
-                <form
-                action="/admin/orders/update"
-                method="post">
+                <select name="status">
+                  <option value="PLACED">PLACED</option>
 
-                    <input
-                    type="hidden"
-                    name="orderId"
-                    th:value="${order.id}">
+                  <option value="PREPARING">PREPARING</option>
 
-                    <select name="status">
+                  <option value="OUT_FOR_DELIVERY">OUT FOR DELIVERY</option>
 
-                        <option value="PLACED">
-                            PLACED
-                        </option>
+                  <option value="DELIVERED">DELIVERED</option>
+                </select>
 
-                        <option value="PREPARING">
-                            PREPARING
-                        </option>
-
-                        <option value="OUT_FOR_DELIVERY">
-                            OUT FOR DELIVERY
-                        </option>
-
-                        <option value="DELIVERED">
-                            DELIVERED
-                        </option>
-
-                    </select>
-
-                    <button type="submit">
-
-                        Update
-
-                    </button>
-
-                </form>
-
+                <button type="submit">Update</button>
+              </form>
             </td>
-
-        </tr>
-
+          </tr>
         </tbody>
-
-    </table>
-
-</div>
-
-</body>
+      </table>
+    </div>
+  </body>
 </html>
