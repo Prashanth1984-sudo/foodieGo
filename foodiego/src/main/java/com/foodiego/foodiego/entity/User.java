@@ -33,6 +33,7 @@ public class User {
     }
 
     public User() {
+        /* Default constructor required by JPA for entity instantiation */
     }
 
     public Long getId() {

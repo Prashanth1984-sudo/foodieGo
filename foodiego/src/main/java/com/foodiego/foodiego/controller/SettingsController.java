@@ -148,6 +148,13 @@ public class SettingsController {
                         return "redirect:/profile/settings?error=current";
                 }
 
+                if (encoder.matches(
+                                newPassword,
+                                user.getPassword())) {
+
+                        return "redirect:/profile/settings?error=samepassword";
+                }
+
                 if (!newPassword.equals(confirmPassword)) {
 
                         return "redirect:/profile/settings?error=confirm";

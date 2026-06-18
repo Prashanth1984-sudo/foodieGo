@@ -15,6 +15,10 @@
           Current password is incorrect.
         </div>
 
+        <div th:if="${error == 'samepassword'}" class="error-message">
+          New password cannot be the same as current password.
+        </div>
+
         <div th:if="${error == 'confirm'}" class="error-message">
           New password and confirm password do not match.
         </div>

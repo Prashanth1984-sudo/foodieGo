@@ -25,16 +25,37 @@
 
       <aside class="sidebar">
         <div class="profile-card">
-          <span class="profile-label"> MY ACCOUNT </span>
-          <img
-            id="previewImage"
-            th:src="${user.profileImage != null ? user.profileImage : '/images/default-avatar.png'}"
-            th:alt="${user.name} + ' profile image'"
-            class="profile-avatar"
-          />
-          <h2 th:text="${user.name}">User Name</h2>
+          <span class="profile-label">MY ACCOUNT</span>
 
-          <p th:text="${user.email}">user@email.com</p>
+          <form
+            action="/profile/upload-image"
+            method="post"
+            enctype="multipart/form-data"
+            id="profileImageForm"
+          >
+            <div class="profile-image-wrapper">
+              <img
+                id="previewImage"
+                th:src="${user.profileImage != null ? user.profileImage : '/images/default-avatar.png'}"
+                class="profile-avatar"
+                alt="Profile"
+              />
+
+              <label for="profileImage" class="edit-avatar-btn"> ✏️ </label>
+
+              <input
+                type="file"
+                id="profileImage"
+                name="profileImage"
+                accept="image/*"
+                hidden
+                onchange="uploadProfileImage(this)"
+              />
+            </div>
+          </form>
+
+          <h2 th:text="${user.name} ?: 'User'">User</h2>
+          <p th:text="${user.email}"></p>
         </div>
 
         <nav class="sidebar-menu">
@@ -97,5 +118,20 @@
         </div>
       </main>
     </div>
+    <script>
+      function uploadProfileImage(input) {
+        if (input.files && input.files[0]) {
+          const reader = new FileReader();
+
+          reader.onload = function (e) {
+            document.getElementById("previewImage").src = e.target.result;
+          };
+
+          reader.readAsDataURL(input.files[0]);
+
+          document.getElementById("profileImageForm").submit();
+        }
+      }
+    </script>
   </body>
 </html>
