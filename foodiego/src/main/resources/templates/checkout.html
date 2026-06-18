@@ -55,57 +55,167 @@
         <div class="address-section">
           <h3>Select Delivery Address</h3>
 
-          <div th:if="${hasAddresses}">
+          <input
+            type="hidden"
+            id="selectedAddressId"
+            name="addressId"
+            th:value="${hasAddresses ? addresses[0].id : ''}"
+          />
+
+          <!-- Saved Addresses -->
+
+          <div th:if="${!hasAddresses}">
+            <p class="empty-address-msg">
+              No saved address found. Add one below to continue.
+            </p>
+          </div>
+
+          <div th:if="${hasAddresses}" class="saved-addresses">
             <div class="address-list">
-              <label class="address-card" th:each="address : ${addresses}">
+              <label
+                class="address-card"
+                th:each="address, addressStat : ${addresses}"
+              >
                 <input
                   type="radio"
                   name="addressId"
                   th:value="${address.id}"
+                  th:checked="${addressStat.index == 0}"
                   required
                 />
 
                 <div class="address-info">
-                  <h4 th:text="${address.fullName}">Recipient name</h4>
+                  <h4 th:text="${address.fullName}"></h4>
 
                   <p th:text="${address.addressLine}"></p>
 
                   <p>
-                    <span th:text="${address.city}"> </span>
-
-                    ,
-
-                    <span th:text="${address.state}"> </span>
-
+                    <span th:text="${address.city}"></span>,
+                    <span th:text="${address.state}"></span>
                     -
-
-                    <span th:text="${address.pincode}"> </span>
+                    <span th:text="${address.pincode}"></span>
                   </p>
+
+                  <small>
+                    📞
+                    <span th:text="${address.phone}"></span>
+                  </small>
                 </div>
               </label>
             </div>
+
+            <button
+              type="button"
+              class="add-new-address-btn"
+              onclick="toggleAddressForm()"
+            >
+              + Add New Address
+            </button>
           </div>
 
-          <div class="no-address-card" th:if="${!hasAddresses}">
-            <h4>📍 Delivery Address Required</h4>
+          <!-- Add Address Form -->
 
-            <p>Please add a delivery address before placing an order.</p>
+          <div
+            id="addressFormContainer"
+            th:style="${hasAddresses} ? 'display:none;' : 'display:block;'"
+          >
+            <div class="checkout-address-form">
+              <h3>Add Delivery Address</h3>
 
-            <a href="/profile/addresses" class="add-address-btn">
-              Add Address
-            </a>
+              <div id="newAddressForm">
+                <div class="form-grid">
+                  <input
+                    type="text"
+                    id="fullName"
+                    placeholder="Full Name"
+                    pattern="[A-Za-z ]{3,50}"
+                  />
+
+                  <input
+                    type="tel"
+                    id="phone"
+                    placeholder="Phone Number"
+                    pattern="[0-9]{10}"
+                    maxlength="10"
+                  />
+
+                  <textarea
+                    id="addressLine"
+                    placeholder="Flat / House No, Street Name, Area, Landmark"
+                  ></textarea>
+
+                  <input
+                    type="text"
+                    id="city"
+                    placeholder="City"
+                    pattern="[A-Za-z ]+"
+                  />
+
+                  <input
+                    type="text"
+                    id="state"
+                    placeholder="State"
+                    pattern="[A-Za-z ]+"
+                  />
+
+                  <input
+                    type="text"
+                    id="pincode"
+                    placeholder="Pincode"
+                    pattern="[0-9]{6}"
+                    maxlength="6"
+                  />
+                </div>
+
+                <button
+                  type="button"
+                  class="save-address-btn"
+                  onclick="saveAndUseAddress()"
+                >
+                  Save & Use Address
+                </button>
+              </div>
+            </div>
           </div>
         </div>
-        <button
-          type="submit"
-          th:disabled="${!hasAddresses}"
-          class="place-order-btn"
-        >
-          Place Order
-        </button>
+        <button type="submit" class="place-order-btn">Place Order</button>
       </form>
     </div>
+    <div id="toast" class="toast">Address saved successfully ✓</div>
     <script>
+      function toggleAddressForm() {
+        const form = document.getElementById("addressFormContainer");
+
+        form.style.display = form.style.display === "none" ? "block" : "none";
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        document
+          .querySelectorAll("input[name='addressId']")
+          .forEach((radio) => {
+            radio.addEventListener("change", function () {
+              document.getElementById("selectedAddressId").value = this.value;
+            });
+          });
+
+        const form = document.querySelector(
+          "form[action='/checkout/place-order']",
+        );
+
+        if (form) {
+          form.addEventListener("submit", function (e) {
+            const addressId =
+              document.getElementById("selectedAddressId").value;
+
+            if (!addressId) {
+              e.preventDefault();
+
+              alert("Please select or add a delivery address.");
+            }
+          });
+        }
+      });
+
       function applyCoupon() {
         const couponCode = document.getElementById("couponCode").value.trim();
 
@@ -113,7 +223,9 @@
 
         if (!couponCode) {
           msg.className = "coupon-error";
+
           msg.innerHTML = "❌ Please enter a coupon code";
+
           msg.style.display = "block";
 
           return;
@@ -144,7 +256,6 @@
               document.getElementById("finalTotal").innerText =
                 data.finalTotal.toFixed(2);
 
-              // IMPORTANT
               document.getElementById("appliedCoupon").value =
                 couponCode.toUpperCase();
             } else {
@@ -163,13 +274,59 @@
             }
           })
 
-          .catch((error) => {
+          .catch(() => {
             msg.className = "coupon-error";
 
             msg.innerHTML = "❌ Something went wrong";
 
             msg.style.display = "block";
           });
+      }
+
+      function saveAndUseAddress() {
+        const formData = new FormData();
+
+        formData.append("fullName", document.getElementById("fullName").value);
+
+        formData.append("phone", document.getElementById("phone").value);
+
+        formData.append(
+          "addressLine",
+          document.getElementById("addressLine").value,
+        );
+
+        formData.append("city", document.getElementById("city").value);
+
+        formData.append("state", document.getElementById("state").value);
+
+        formData.append("pincode", document.getElementById("pincode").value);
+
+        fetch("/checkout/add-address", {
+          method: "POST",
+          body: formData,
+        })
+          .then((response) => response.text())
+          .then(() => {
+            const toast = document.getElementById("toast");
+
+            toast.classList.add("show");
+
+            setTimeout(() => {
+              toast.classList.remove("show");
+            }, 2500);
+
+            setTimeout(() => {
+              location.reload();
+            }, 1000);
+
+            location.reload();
+          })
+          .catch((error) => {
+            console.error(error);
+
+            alert("Failed to save address");
+          });
+        document.getElementById("addressFormContainer").style.display = "none";
       }
     </script>
   </body>

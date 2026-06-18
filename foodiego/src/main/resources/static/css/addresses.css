@@ -313,3 +313,67 @@ input::placeholder{
 
     color:white;
 }
+.address-card {
+    position: relative;
+
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            0.03
+        );
+
+    border:
+        1px solid
+        rgba(
+            255,
+            255,
+            255,
+            0.08
+        );
+
+    border-radius: 18px;
+
+    transition: 0.3s ease;
+
+    cursor: pointer;
+}
+
+.address-card:hover {
+    transform:
+        translateY(-4px);
+
+    border-color: #ff9f43;
+
+    box-shadow:
+        0 15px 40px rgba(
+            255,
+            159,
+            67,
+            0.18
+        );
+}
+
+.address-card:has(
+        input:checked
+    ) {
+    border:
+        2px solid #ff9f43;
+
+    background:
+        rgba(
+            255,
+            159,
+            67,
+            0.08
+        );
+
+    box-shadow:
+        0 0 25px rgba(
+            255,
+            159,
+            67,
+            0.25
+        );
+}

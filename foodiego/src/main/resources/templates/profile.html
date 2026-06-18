@@ -28,17 +28,17 @@
           <span class="profile-label">MY ACCOUNT</span>
 
           <form
+            id="profileImageForm"
             action="/profile/upload-image"
             method="post"
             enctype="multipart/form-data"
-            id="profileImageForm"
           >
             <div class="profile-image-wrapper">
               <img
                 id="previewImage"
-                th:src="${user.profileImage != null ? user.profileImage : '/images/default-avatar.png'}"
-                class="profile-avatar"
+                th:src="${user.profileImage != null ? user.profileImage + '?v=' + #dates.createNow().time : '/images/default-avatar.png'}"
                 alt="Profile"
+                class="profile-avatar"
               />
 
               <label for="profileImage" class="edit-avatar-btn"> ✏️ </label>
@@ -49,7 +49,7 @@
                 name="profileImage"
                 accept="image/*"
                 hidden
-                onchange="uploadProfileImage(this)"
+                onchange="previewAndUpload(this)"
               />
             </div>
           </form>
@@ -119,7 +119,7 @@
       </main>
     </div>
     <script>
-      function uploadProfileImage(input) {
+      function previewAndUpload(input) {
         if (input.files && input.files[0]) {
           const reader = new FileReader();
 
@@ -129,7 +129,7 @@
 
           reader.readAsDataURL(input.files[0]);
 
-          document.getElementById("profileImageForm").submit();
+          document.getElementById("uploadForm").submit();
         }
       }
     </script>

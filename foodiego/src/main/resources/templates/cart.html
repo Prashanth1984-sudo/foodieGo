@@ -39,25 +39,26 @@
             <div class="item-details">
               <h3 th:text="${item.name}">Food Name</h3>
 
-              <p>₹<span th:text="${item.price}"> </span></p>
+              <p>₹<span th:text="${item.price}"></span></p>
             </div>
 
             <div class="quantity-section">
-              <form
-                th:action="@{/cart/decrease/{id}(id=${item.cartId})}"
-                method="post"
+              <button
+                type="button"
+                th:attr="onclick='updateQuantity(' + ${item.cartId} + ', `decrease`)'"
               >
-                <button type="submit">-</button>
-              </form>
+                -
+              </button>
 
-              <span th:text="${item.quantity}"> </span>
+              <span th:id="'qty-' + ${item.cartId}" th:text="${item.quantity}">
+              </span>
 
-              <form
-                th:action="@{/cart/increase/{id}(id=${item.cartId})}"
-                method="post"
+              <button
+                type="button"
+                th:attr="onclick='updateQuantity(' + ${item.cartId} + ', `increase`)'"
               >
-                <button type="submit">+</button>
-              </form>
+                +
+              </button>
             </div>
 
             <form
@@ -77,7 +78,7 @@
           <div class="summary-row">
             <span>Total</span>
 
-            <span> ₹<span th:text="${total}"> </span> </span>
+            <span> ₹<span id="cartTotal" th:text="${total}"></span> </span>
           </div>
 
           <a href="/checkout" class="checkout-btn"> Proceed To Checkout </a>
@@ -101,5 +102,24 @@
         </div>
       </div>
     </div>
+
+    <script>
+      async function updateQuantity(cartId, action) {
+        const response = await fetch(`/cart/${action}/${cartId}`, {
+          method: "POST",
+        });
+
+        const data = await response.json();
+
+        if (data.removed) {
+          location.reload();
+          return;
+        }
+
+        document.getElementById("qty-" + cartId).innerText = data.quantity;
+
+        document.getElementById("cartTotal").innerText = data.total.toFixed(2);
+      }
+    </script>
   </body>
 </html>

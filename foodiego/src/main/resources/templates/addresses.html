@@ -43,27 +43,52 @@
               type="text"
               name="fullName"
               placeholder="Full Name"
+              pattern="^[A-Za-z ]{3,50}$"
+              title="Only letters and spaces allowed"
               required
             />
 
             <input
               type="text"
-              name="phone"
+              name="phoneNumber"
               placeholder="Phone Number"
+              maxlength="10"
+              oninput="this.value = this.value.replace(/[^0-9]/g, '')"
               required
             />
 
             <textarea
               name="addressLine"
               placeholder="Flat / House No, Street Name, Area, Landmark..."
+              minlength="10"
+              maxlength="200"
               required
             ></textarea>
 
-            <input type="text" name="city" placeholder="City" required />
+            <input
+              type="text"
+              name="city"
+              placeholder="City"
+              oninput="this.value = this.value.replace(/[^a-zA-Z ]/g, '')"
+              required
+            />
 
-            <input type="text" name="state" placeholder="State" required />
+            <input
+              type="text"
+              name="state"
+              placeholder="State"
+              oninput="this.value = this.value.replace(/[^a-zA-Z ]/g, '')"
+              required
+            />
 
-            <input type="text" name="pincode" placeholder="Pincode" required />
+            <input
+              type="text"
+              name="pincode"
+              placeholder="Pincode"
+              maxlength="6"
+              oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+              required
+            />
           </div>
 
           <button type="submit">Save Address</button>

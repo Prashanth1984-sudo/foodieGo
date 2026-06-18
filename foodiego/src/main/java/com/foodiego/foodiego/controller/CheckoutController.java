@@ -1,5 +1,6 @@
 package com.foodiego.foodiego.controller;
 
+import com.foodiego.foodiego.entity.Address;
 import com.foodiego.foodiego.entity.CartItem;
 import com.foodiego.foodiego.entity.MenuItem;
 import com.foodiego.foodiego.entity.Order;
@@ -375,5 +376,34 @@ public class CheckoutController {
                                 "Invalid coupon code");
 
                 return response;
+        }
+
+        @PostMapping("/add-address")
+        @ResponseBody
+        public Long addAddress(
+                        @RequestParam String fullName,
+                        @RequestParam String phone,
+                        @RequestParam String addressLine,
+                        @RequestParam String city,
+                        @RequestParam String state,
+                        @RequestParam String pincode,
+                        HttpSession session) {
+
+                String userEmail = (String) session.getAttribute(
+                                "loggedInUser");
+
+                Address address = new Address();
+
+                address.setUserEmail(userEmail);
+                address.setFullName(fullName);
+                address.setPhone(phone);
+                address.setAddressLine(addressLine);
+                address.setCity(city);
+                address.setState(state);
+                address.setPincode(pincode);
+
+                Address saved = addressRepository.save(address);
+
+                return saved.getId();
         }
 }

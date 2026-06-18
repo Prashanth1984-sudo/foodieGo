@@ -13,110 +13,135 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/profile/addresses")
 public class AddressController {
 
-    private static final String REDIRECT_ADDRESSES = "redirect:/profile/addresses";
+        private static final String REDIRECT_ADDRESSES = "redirect:/profile/addresses";
 
-    private final AddressRepository addressRepository;
+        private final AddressRepository addressRepository;
 
-    public AddressController(
-            AddressRepository addressRepository) {
+        public AddressController(
+                        AddressRepository addressRepository) {
 
-        this.addressRepository = addressRepository;
-    }
+                this.addressRepository = addressRepository;
+        }
 
-    @GetMapping
-    public String addresses(
-            HttpSession session,
-            Model model) {
+        @GetMapping
+        public String addresses(
+                        HttpSession session,
+                        Model model) {
 
-        String email = (String) session.getAttribute(
-                "loggedInUser");
+                String email = (String) session.getAttribute(
+                                "loggedInUser");
 
-        model.addAttribute(
-                "addresses",
+                model.addAttribute(
+                                "addresses",
 
-                addressRepository
-                        .findByUserEmail(
-                                email));
+                                addressRepository
+                                                .findByUserEmail(
+                                                                email));
 
-        return "addresses";
-    }
+                return "addresses";
+        }
 
-    @PostMapping("/add")
-    public String addAddress(
-            Address address,
-            HttpSession session) {
+        @PostMapping("/add")
+        public String addAddress(
+                        Address address,
+                        HttpSession session) {
 
-        address.setUserEmail(
+                address.setUserEmail(
 
-                (String) session.getAttribute(
-                        "loggedInUser"));
+                                (String) session.getAttribute(
+                                                "loggedInUser"));
 
-        addressRepository.save(
-                address);
+                addressRepository.save(
+                                address);
 
-        return REDIRECT_ADDRESSES;
-    }
+                return REDIRECT_ADDRESSES;
+        }
 
-    @PostMapping("/delete/{id}")
-    public String deleteAddress(
-            @PathVariable Long id) {
+        @PostMapping("/delete/{id}")
+        public String deleteAddress(
+                        @PathVariable Long id) {
 
-        addressRepository.deleteById(
-                id);
+                addressRepository.deleteById(
+                                id);
 
-        return REDIRECT_ADDRESSES;
-    }
+                return REDIRECT_ADDRESSES;
+        }
 
-    @GetMapping("/edit/{id}")
-    public String editAddress(
-            @PathVariable Long id,
-            Model model) {
+        @GetMapping("/edit/{id}")
+        public String editAddress(
+                        @PathVariable Long id,
+                        Model model) {
 
-        model.addAttribute(
-                "address",
+                model.addAttribute(
+                                "address",
 
-                addressRepository
-                        .findById(id)
-                        .orElseThrow());
+                                addressRepository
+                                                .findById(id)
+                                                .orElseThrow());
 
-        return "edit-address";
-    }
+                return "edit-address";
+        }
 
-    @PostMapping("/update")
-    public String updateAddress(
+        @PostMapping("/update")
+        public String updateAddress(
 
-            @RequestParam Long id,
+                        @RequestParam Long id,
 
-            @RequestParam String fullName,
+                        @RequestParam String fullName,
 
-            @RequestParam String phone,
+                        @RequestParam String phone,
 
-            @RequestParam String addressLine,
+                        @RequestParam String addressLine,
 
-            @RequestParam String city,
+                        @RequestParam String city,
 
-            @RequestParam String state,
+                        @RequestParam String state,
 
-            @RequestParam String pincode) {
+                        @RequestParam String pincode) {
 
-        Address address = addressRepository
-                .findById(id)
-                .orElseThrow();
+                // validate inputs
+                if (!fullName.matches("[A-Za-z ]{3,50}")) {
+                        return "redirect:/profile/addresses?error=name";
+                }
 
-        address.setFullName(fullName);
+                if (!phone.matches("\\d{10}")) {
+                        return "redirect:/profile/addresses?error=phone";
+                }
 
-        address.setPhone(phone);
+                if (addressLine == null || addressLine.trim().length() < 10) {
+                        return "redirect:/profile/addresses/edit/" + id + "?error=address";
+                }
 
-        address.setAddressLine(addressLine);
+                if (!pincode.matches("\\d{6}")) {
+                        return "redirect:/profile/addresses?error=pincode";
+                }
 
-        address.setCity(city);
+                if (!city.matches("[A-Za-z ]+")) {
+                        return "redirect:/profile/addresses?error=city";
+                }
 
-        address.setState(state);
+                if (!state.matches("[A-Za-z ]+")) {
+                        return "redirect:/profile/addresses?error=state";
+                }
 
-        address.setPincode(pincode);
+                Address address = addressRepository
+                                .findById(id)
+                                .orElseThrow();
 
-        addressRepository.save(address);
+                address.setFullName(fullName);
 
-        return "redirect:/profile/addresses";
-    }
+                address.setPhone(phone);
+
+                address.setAddressLine(addressLine);
+
+                address.setCity(city);
+
+                address.setState(state);
+
+                address.setPincode(pincode);
+
+                addressRepository.save(address);
+
+                return REDIRECT_ADDRESSES;
+        }
 }

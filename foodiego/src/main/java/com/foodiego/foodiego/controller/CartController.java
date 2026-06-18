@@ -13,7 +13,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import java.util.ArrayList;
@@ -147,49 +149,75 @@ public class CartController {
                 return "cart";
         }
 
+        @ResponseBody
         @PostMapping("/increase/{id}")
-        public String increase(
+        public Map<String, Object> increase(
                         @PathVariable Long id) {
 
                 CartItem item = cartItemRepository
                                 .findById(id)
-                                .orElse(null);
+                                .orElseThrow();
 
-                if (item != null) {
+                item.setQuantity(
+                                item.getQuantity() + 1);
 
-                        item.setQuantity(
-                                        item.getQuantity() + 1);
+                cartItemRepository.save(item);
 
-                        cartItemRepository.save(item);
-                }
+                Map<String, Object> response = new HashMap<>();
 
-                return REDIRECT_CART;
+                response.put(
+                                "quantity",
+                                item.getQuantity());
+
+                response.put(
+                                "total",
+                                calculateCartTotal(
+                                                item.getUserEmail()));
+
+                return response;
         }
 
+        @ResponseBody
         @PostMapping("/decrease/{id}")
-        public String decrease(
+        public Map<String, Object> decrease(
                         @PathVariable Long id) {
 
                 CartItem item = cartItemRepository
                                 .findById(id)
-                                .orElse(null);
+                                .orElseThrow();
 
-                if (item != null) {
+                Map<String, Object> response = new HashMap<>();
 
-                        if (item.getQuantity() > 1) {
+                if (item.getQuantity() > 1) {
 
-                                item.setQuantity(
-                                                item.getQuantity() - 1);
+                        item.setQuantity(
+                                        item.getQuantity() - 1);
 
-                                cartItemRepository.save(item);
+                        cartItemRepository.save(item);
 
-                        } else {
+                        response.put(
+                                        "quantity",
+                                        item.getQuantity());
 
-                                cartItemRepository.delete(item);
-                        }
+                        response.put(
+                                        "total",
+                                        calculateCartTotal(
+                                                        item.getUserEmail()));
+
+                        response.put(
+                                        "removed",
+                                        false);
+
+                } else {
+
+                        cartItemRepository.delete(item);
+
+                        response.put(
+                                        "removed",
+                                        true);
                 }
 
-                return REDIRECT_CART;
+                return response;
         }
 
         @PostMapping("/remove/{id}")
@@ -199,5 +227,29 @@ public class CartController {
                 cartItemRepository.deleteById(id);
 
                 return REDIRECT_CART;
+        }
+
+        private double calculateCartTotal(
+                        String userEmail) {
+
+                List<CartItem> cartItems = cartItemRepository.findByUserEmail(
+                                userEmail);
+
+                double total = 0;
+
+                for (CartItem cart : cartItems) {
+
+                        MenuItem menu = menuItemRepository.findById(
+                                        cart.getMenuItemId())
+                                        .orElse(null);
+
+                        if (menu != null) {
+
+                                total += menu.getPrice()
+                                                * cart.getQuantity();
+                        }
+                }
+
+                return total;
         }
 }
