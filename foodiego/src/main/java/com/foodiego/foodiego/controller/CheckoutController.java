@@ -112,148 +112,114 @@ public class CheckoutController {
 
         @PostMapping("/place-order")
         public String placeOrder(
-
                         @RequestParam(required = false) Long addressId,
-
                         @RequestParam(required = false) String couponCode,
-
+                        @RequestParam String paymentMethod,
                         HttpSession session) {
 
-                String userEmail = (String) session.getAttribute(
-                                "loggedInUser");
-
+                String userEmail = (String) session.getAttribute("loggedInUser");
                 if (userEmail == null) {
                         return "redirect:/login";
                 }
-                if (addressId == null) {
 
+                if (addressId == null || !addressRepository.existsById(addressId)) {
                         return "redirect:/profile/addresses";
                 }
 
-                if (!addressRepository.existsById(
-                                addressId)) {
-
-                        return "redirect:/profile/addresses";
-                }
-
-                List<CartItem> cartItems = cartItemRepository
-                                .findByUserEmail(userEmail);
-
+                List<CartItem> cartItems = cartItemRepository.findByUserEmail(userEmail);
                 if (cartItems.isEmpty()) {
-
                         return "redirect:/cart";
                 }
 
-                double total = 0;
+                double subtotal = calculateCartTotal(userEmail);
 
-                for (CartItem cart : cartItems) {
-
-                        MenuItem menu = menuItemRepository
-                                        .findById(
-                                                        cart.getMenuItemId())
-                                        .orElse(null);
-
-                        if (menu != null) {
-
-                                total += menu.getPrice()
-                                                * cart.getQuantity();
-                        }
-                }
-                double discount = 0;
-
-                if (couponCode != null &&
-                                !couponCode.isBlank()) {
-
-                        couponCode = couponCode.trim().toUpperCase();
-
-                        if (couponCode.equals("FOOD50")) {
-
-                                if (total >= 499) {
-
-                                        discount = 50;
-
-                                } else {
-
-                                        return "redirect:/checkout?error=food50";
-                                }
-                        }
-
-                        else if (couponCode.equals("WELCOME20")) {
-
-                                long orderCount = orderRepository.countByUserEmail(userEmail);
-
-                                if (orderCount == 0) {
-
-                                        discount = total * 0.20;
-
-                                } else {
-
-                                        return "redirect:/checkout?error=welcome20";
-                                }
-                        }
-
-                        else {
-
-                                return "redirect:/checkout?error=invalid";
-                        }
+                DiscountResult dr = evaluateCoupon(couponCode, subtotal, userEmail);
+                if (dr.errorRedirect != null) {
+                        return dr.errorRedirect;
                 }
 
-                total -= discount;
-
+                double total = subtotal - dr.discount;
                 if (total < 0) {
                         total = 0;
                 }
 
-                Order order = new Order();
+                Order order = buildAndSaveOrder(userEmail, total, paymentMethod, dr.discount, couponCode, addressId);
 
-                order.setUserEmail(userEmail);
+                saveOrderItemsFromCart(order, cartItems);
 
-                order.setTotalAmount(total);
-
-                order.setDiscountAmount(discount);
-
-                order.setCouponCode(couponCode);
-
-                order.setStatus("PLACED");
-
-                order.setOrderDate(LocalDateTime.now());
-
-                order.setAddressId(addressId);
-
-                orderRepository.save(order);
-
-                for (CartItem cart : cartItems) {
-
-                        MenuItem menu = menuItemRepository
-                                        .findById(
-                                                        cart.getMenuItemId())
-                                        .orElse(null);
-
-                        if (menu != null) {
-
-                                OrderItem item = new OrderItem();
-
-                                item.setOrderId(
-                                                order.getId());
-
-                                item.setMenuItemId(
-                                                menu.getId());
-
-                                item.setQuantity(
-                                                cart.getQuantity());
-
-                                item.setPrice(
-                                                menu.getPrice());
-
-                                orderItemRepository
-                                                .save(item);
-                        }
-                }
-
-                cartItemRepository.deleteAll(
-                                cartItems);
+                cartItemRepository.deleteAll(cartItems);
 
                 return "redirect:/checkout/success";
+        }
+
+        // helper result container for coupon evaluation
+        private static class DiscountResult {
+                double discount;
+                String errorRedirect;
+        }
+
+        // evaluate coupon and return discount or an error redirect string in result.errorRedirect
+        private DiscountResult evaluateCoupon(String couponCode, double subtotal, String userEmail) {
+                DiscountResult res = new DiscountResult();
+                res.discount = 0;
+                res.errorRedirect = null;
+
+                if (couponCode == null || couponCode.isBlank()) {
+                        return res;
+                }
+
+                String code = couponCode.trim().toUpperCase();
+
+                if ("FOOD50".equals(code)) {
+                        if (subtotal < 499) {
+                                res.errorRedirect = "redirect:/checkout?error=food50";
+                                return res;
+                        }
+                        res.discount = 50;
+                        return res;
+                }
+
+                if ("WELCOME20".equals(code)) {
+                        long orderCount = orderRepository.countByUserEmail(userEmail);
+                        if (orderCount > 0) {
+                                res.errorRedirect = "redirect:/checkout?error=welcome20";
+                                return res;
+                        }
+                        res.discount = subtotal * 0.20;
+                        return res;
+                }
+
+                res.errorRedirect = "redirect:/checkout?error=invalid";
+                return res;
+        }
+
+        private Order buildAndSaveOrder(String userEmail, double total, String paymentMethod, double discount, String couponCode, Long addressId) {
+                Order order = new Order();
+                order.setUserEmail(userEmail);
+                order.setTotalAmount(total);
+                order.setPaymentMethod(paymentMethod);
+                order.setDiscountAmount(discount);
+                order.setCouponCode(couponCode);
+                order.setStatus("PLACED");
+                order.setOrderDate(LocalDateTime.now());
+                order.setAddressId(addressId);
+                orderRepository.save(order);
+                return order;
+        }
+
+        private void saveOrderItemsFromCart(Order order, List<CartItem> cartItems) {
+                for (CartItem cart : cartItems) {
+                        MenuItem menu = menuItemRepository.findById(cart.getMenuItemId()).orElse(null);
+                        if (menu == null) {
+                                continue;
+                        }
+                        OrderItem item = new OrderItem();
+                        item.setOrderId(order.getId());
+                        item.setMenuItemId(menu.getId());
+                        item.setQuantity(cart.getQuantity());
+                        item.setPrice(menu.getPrice());
+                        orderItemRepository.save(item);
+                }
         }
 
         @GetMapping("/success")

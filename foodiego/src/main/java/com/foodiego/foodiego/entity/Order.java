@@ -25,6 +25,8 @@ public class Order {
 
     private Long addressId;
 
+    private String paymentMethod;
+
     public Order() {
         // Default constructor required by JPA for entity instantiation.
         // Intentionally left empty for the persistence framework to use.
@@ -88,5 +90,13 @@ public class Order {
 
     public void setAddressId(Long addressId) {
         this.addressId = addressId;
+    }
+
+    public String getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
     }
 }

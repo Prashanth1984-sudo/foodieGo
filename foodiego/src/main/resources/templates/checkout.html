@@ -180,6 +180,116 @@
             </div>
           </div>
         </div>
+
+        <div class="payment-section">
+          <h3>💳 Select Payment Method</h3>
+
+          <label class="payment-card">
+            <input
+              type="radio"
+              name="paymentMethod"
+              value="COD"
+              checked
+              onchange="toggleUPI()"
+            />
+
+            <div class="payment-content">
+              <span class="payment-icon">💵</span>
+              <div>
+                <h4>Cash On Delivery</h4>
+                <p>Pay when your order arrives</p>
+              </div>
+            </div>
+          </label>
+
+          <label class="payment-card">
+            <input
+              type="radio"
+              name="paymentMethod"
+              value="UPI"
+              onchange="toggleUPI()"
+            />
+
+            <div class="payment-content">
+              <span class="payment-icon">📱</span>
+              <div>
+                <h4>UPI Payment</h4>
+                <p>Fast & secure payments</p>
+              </div>
+            </div>
+          </label>
+
+          <div id="upiApps" class="upi-apps">
+            <div class="upi-grid">
+              <label class="upi-card">
+                <input type="radio" name="upiApp" value="Google Pay" />
+
+                <img src="/images/gpay.jpg" alt="Google Pay" />
+
+                <span>Google Pay</span>
+              </label>
+
+              <label class="upi-card">
+                <input type="radio" name="upiApp" value="PhonePe" />
+
+                <img src="/images/phonepe.jpg" alt="PhonePe" />
+
+                <span>PhonePe</span>
+              </label>
+
+              <label class="upi-card">
+                <input type="radio" name="upiApp" value="Paytm" />
+
+                <img src="/images/paytm.jpg" alt="Paytm" />
+
+                <span>Paytm</span>
+              </label>
+
+              <label class="upi-card">
+                <input type="radio" name="upiApp" value="BHIM" />
+
+                <img src="/images/bhim.jpg" alt="BHIM" />
+
+                <span>BHIM</span>
+              </label>
+            </div>
+          </div>
+
+          <label class="payment-card">
+            <input
+              type="radio"
+              name="paymentMethod"
+              value="CARD"
+              onchange="toggleUPI()"
+            />
+
+            <div class="payment-content">
+              <span class="payment-icon">💳</span>
+              <div>
+                <h4>Credit / Debit Card</h4>
+                <p>Visa, Mastercard, RuPay</p>
+              </div>
+            </div>
+          </label>
+
+          <label class="payment-card">
+            <input
+              type="radio"
+              name="paymentMethod"
+              value="NETBANKING"
+              onchange="toggleUPI()"
+            />
+
+            <div class="payment-content">
+              <span class="payment-icon">🏦</span>
+              <div>
+                <h4>Net Banking</h4>
+                <p>All major banks supported</p>
+              </div>
+            </div>
+          </label>
+        </div>
+
         <button type="submit" class="place-order-btn">Place Order</button>
       </form>
     </div>
@@ -330,6 +440,28 @@
           });
         document.getElementById("addressFormContainer").style.display = "none";
       }
+    </script>
+    <script>
+      function toggleUPI() {
+        const upiSelected =
+          document.querySelector('input[value="UPI"]').checked;
+
+        document.getElementById("upiApps").style.display = upiSelected
+          ? "block"
+          : "none";
+      }
+
+      let paymentMethod = document.querySelector(
+        'input[name="paymentMethod"]:checked',
+      ).value;
+
+      if (paymentMethod === "UPI") {
+        const upiApp = document.querySelector('input[name="upiApp"]:checked');
+
+        paymentMethod = upiApp.value + " UPI";
+      }
+
+      document.getElementById("paymentMethodHidden").value = paymentMethod;
     </script>
   </body>
 </html>

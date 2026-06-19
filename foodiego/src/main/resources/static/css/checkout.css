@@ -838,3 +838,120 @@ button{
     opacity: 1;
     margin-top: 20px;
 }
+.payment-section{
+    margin-top:30px;
+}
+
+.payment-section h3{
+    margin-bottom:18px;
+    font-size:22px;
+    font-weight:700;
+}
+
+.payment-card{
+    display:block;
+    margin-bottom:15px;
+    cursor:pointer;
+}
+
+.payment-card input{
+    display:none;
+}
+
+.payment-content{
+    display:flex;
+    align-items:center;
+    gap:15px;
+    padding:18px;
+    border-radius:16px;
+    background:rgba(255,255,255,0.04);
+    border:1px solid rgba(255,255,255,0.08);
+    transition:all .3s ease;
+}
+
+.payment-card input:checked + .payment-content{
+    border-color:#ffb347;
+    box-shadow:0 0 20px rgba(255,179,71,.2);
+}
+
+.payment-icon{
+    font-size:28px;
+}
+
+.payment-content h4{
+    margin:0;
+    font-size:16px;
+    font-weight:600;
+}
+
+.payment-content p{
+    margin-top:4px;
+    color:#bfbfbf;
+    font-size:13px;
+}
+
+.upi-apps{
+    display:none;
+    margin:15px 0 25px;
+}
+
+.upi-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:15px;
+}
+
+.upi-card{
+    padding:18px;
+    text-align:center;
+    border-radius:16px;
+    background:rgba(255,255,255,0.04);
+    border:1px solid rgba(255,255,255,0.08);
+    transition:.3s;
+}
+
+.upi-card:hover{
+    transform:translateY(-4px);
+    border-color:#ffb347;
+}
+
+.upi-card img{
+    width:50px;
+    height:50px;
+    object-fit:contain;
+    margin-bottom:10px;
+}
+
+.upi-card span{
+    display:block;
+    font-size:14px;
+    font-weight:600;
+}
+.upi-card{
+    position:relative;
+    cursor:pointer;
+    padding:18px;
+    text-align:center;
+    border-radius:16px;
+    background:rgba(255,255,255,.04);
+    border:1px solid rgba(255,255,255,.08);
+    transition:.3s;
+}
+
+.upi-card input{
+    display:none;
+}
+
+.upi-card:hover{
+    border-color:#ffb347;
+}
+
+.upi-card input:checked + img{
+    transform:scale(1.08);
+}
+
+.upi-card:has(input:checked){
+    border:2px solid #ffb347;
+    box-shadow:0 0 20px rgba(255,179,71,.25);
+    background:rgba(255,179,71,.08);
+}

@@ -11,10 +11,8 @@
 
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
-    <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
-      rel="stylesheet"
-    />
+    <!-- Self-hosted Poppins font to avoid external SRI requirement -->
+    <link rel="stylesheet" th:href="@{/css/fonts.css}" />
 
     <link rel="stylesheet" th:href="@{/css/order-details.css}" />
     <link rel="shortcut icon" th:href="@{/images/fevicon.png}" />
@@ -161,16 +159,39 @@
         </div>
 
         <div class="summary-row">
-          <span> Payment Method </span>
+          <span>Payment Method</span>
 
-          <span> Cash On Delivery </span>
+          <span th:text="${order.paymentMethod}"> Cash On Delivery </span>
         </div>
 
         <div class="summary-row">
-          <span> Delivery Type </span>
+          <span> Estimated Delivery </span>
 
-          <span> Standard Delivery </span>
+          <span> 25-30 mins </span>
         </div>
+
+        <div class="delivery-address-card" th:if="${deliveryAddress != null}">
+          <h3 class="address-title">Delivery Address</h3>
+
+          <div class="address-details">
+            <p class="customer-name" th:text="${deliveryAddress.fullName}"></p>
+
+            <p th:text="${deliveryAddress.addressLine}"></p>
+
+            <p>
+              <span th:text="${deliveryAddress.city}"></span>,
+              <span th:text="${deliveryAddress.state}"></span>
+              -
+              <span th:text="${deliveryAddress.pincode}"></span>
+            </p>
+
+            <p>
+              Phone:
+              <span th:text="${deliveryAddress.phone}"></span>
+            </p>
+          </div>
+        </div>
+
         <div class="summary-row">
           <span>Subtotal</span>
 
@@ -196,6 +217,7 @@
 
           <span th:text="${order.couponCode}"></span>
         </div>
+
         <div class="summary-row total-row">
           <span> Total Amount </span>
 
@@ -204,8 +226,6 @@
 
         <div class="action-buttons">
           <a href="/dashboard" class="home-btn"> Continue Shopping </a>
-
-          <button class="reorder-btn">Order Again</button>
         </div>
       </div>
     </div>
