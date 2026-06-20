@@ -37,6 +37,26 @@
 
         <input type="text" th:field="*{imageUrl}" placeholder="Image URL" />
 
+        <select th:field="*{category}" required>
+          <option value="">Select Category</option>
+
+          <option value="biryani">Biryani</option>
+
+          <option value="starters">Starters</option>
+
+          <option value="drinks">Drinks</option>
+
+          <option value="desserts">Desserts</option>
+
+          <option value="main-course">Main Course</option>
+
+          <option value="pizza">Pizza</option>
+
+          <option value="burger">Burger</option>
+
+          <option value="seafood">Seafood</option>
+        </select>
+
         <select th:field="*{restaurantId}">
           <option
             th:each="restaurant : ${restaurants}"

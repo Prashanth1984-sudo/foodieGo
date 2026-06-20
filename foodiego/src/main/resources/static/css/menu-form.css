@@ -131,3 +131,54 @@ button:hover{
         font-size:28px;
     }
 }
+select {
+    width: 100%;
+    padding: 14px 16px;
+    margin-bottom: 18px;
+
+    background: rgba(255,255,255,0.08);
+    color: white;
+
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 12px;
+
+    font-size: 15px;
+    outline: none;
+}
+
+select option {
+    background: #1a1a1a;
+    color: white;
+}
+input,
+textarea,
+select {
+    width: 100%;
+    padding: 16px 20px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 14px;
+
+    color: #d1d5db; /* same color everywhere */
+    font-size: 16px;
+    font-family: 'Poppins', sans-serif;
+
+    outline: none;
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: #9ca3af;
+}
+
+select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    cursor: pointer;
+}
+
+select option {
+    background: #1f2937;
+    color: #d1d5db;
+}

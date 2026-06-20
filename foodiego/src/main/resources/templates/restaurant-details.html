@@ -69,30 +69,17 @@
 
         <div class="categories">
 
-<button class="category-btn active"
-onclick="filterItems('all',this)">
-All
-</button>
+    <button class="category-btn active"
+            onclick="filterItems('all',this)">
+        All
+    </button>
 
-<button class="category-btn"
-onclick="filterItems('biryani',this)">
-Biryani
-</button>
-
-<button class="category-btn"
-onclick="filterItems('starters',this)">
-Starters
-</button>
-
-<button class="category-btn"
-onclick="filterItems('drinks',this)">
-Drinks
-</button>
-
-<button class="category-btn"
-onclick="filterItems('desserts',this)">
-Desserts
-</button>
+    <button
+        th:each="category : ${categories}"
+        class="category-btn"
+        th:text="${category}"
+        th:attr="onclick=|filterItems('${category}',this)|">
+    </button>
 
 </div>
       </div>
@@ -218,11 +205,11 @@ document
 .forEach(card => {
 
 const cardCategory =
-card.dataset.category;
+(card.dataset.category || '').toLowerCase();
 
 if(
 category === "all" ||
-cardCategory === category
+cardCategory === category.toLowerCase()
 ){
 
 card.style.display = "block";
