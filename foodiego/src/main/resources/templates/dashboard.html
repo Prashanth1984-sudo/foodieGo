@@ -31,14 +31,45 @@
       <div class="logo">🍔 FoodieGo</div>
 
       <div class="nav-links">
-        <a href="#hero">Home</a>
+        <button
+          type="button"
+          class="nav-link-button"
+          onclick="scrollToSection('hero')"
+        >
+          Home
+        </button>
 
-        <a href="#restaurants"> Restaurants </a>
+        <button
+          type="button"
+          class="nav-link-button"
+          onclick="scrollToSection('restaurants')"
+        >
+          Restaurants
+        </button>
 
-        <a href="#"> Categories </a>
+        <button
+          type="button"
+          class="nav-link-button"
+          onclick="scrollToSection('categories-section')"
+        >
+          Categories
+        </button>
 
-        <a href="#offers">Offers</a>
-        <a href="#about">About</a>
+        <button
+          type="button"
+          class="nav-link-button"
+          onclick="scrollToSection('offers')"
+        >
+          Offers
+        </button>
+
+        <button
+          type="button"
+          class="nav-link-button"
+          onclick="scrollToSection('about')"
+        >
+          About
+        </button>
       </div>
 
       <div class="nav-actions">
@@ -178,7 +209,7 @@
 
     <!-- SEARCH SECTION -->
 
-    <section class="search-section">
+    <section id="categories-section" class="search-section">
       <form action="/dashboard" method="get">
         <input
           type="text"
@@ -354,6 +385,21 @@
               button.setAttribute("aria-pressed", "false");
             }
           });
+      }
+    </script>
+
+    <script>
+      function scrollToSection(id) {
+        const element = document.getElementById(id);
+
+        console.log(element);
+
+        if (element) {
+          element.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          });
+        }
       }
     </script>
   </body>

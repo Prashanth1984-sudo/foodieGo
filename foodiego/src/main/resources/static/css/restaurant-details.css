@@ -604,3 +604,23 @@ body{
 
     transform:translateX(0);
 }
+.category-btn.active{
+
+background:linear-gradient(
+135deg,
+#ff9f43,
+#ff6b35
+);
+
+color:white;
+
+box-shadow:
+0 8px 20px rgba(
+255,
+140,
+66,
+0.3
+);
+
+transform:translateY(-2px);
+}

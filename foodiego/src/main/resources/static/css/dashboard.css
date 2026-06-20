@@ -1318,3 +1318,19 @@ body{
     border: 2px solid #ff914d;
     cursor: pointer;
 }
+html{
+    scroll-behavior:smooth;
+}
+.nav-link-button{
+    background:none;
+    border:none;
+    color:white;
+    font:inherit;
+    cursor:pointer;
+    padding:0;
+    transition:0.3s;
+}
+
+.nav-link-button:hover{
+    color:#ff9f43;
+}

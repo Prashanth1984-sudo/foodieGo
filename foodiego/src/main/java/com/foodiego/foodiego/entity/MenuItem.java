@@ -18,6 +18,8 @@ public class MenuItem {
 
     private Double price;
 
+    private String category;
+
     @Column(name = "image_url")
     private String imageUrl;
 
@@ -72,5 +74,13 @@ public class MenuItem {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 }

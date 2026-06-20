@@ -68,17 +68,40 @@
         <h2>Popular Dishes</h2>
 
         <div class="categories">
-          <button>All</button>
-          <button>Biryani</button>
-          <button>Starters</button>
-          <button>Drinks</button>
-          <button>Desserts</button>
-        </div>
+
+<button class="category-btn active"
+onclick="filterItems('all',this)">
+All
+</button>
+
+<button class="category-btn"
+onclick="filterItems('biryani',this)">
+Biryani
+</button>
+
+<button class="category-btn"
+onclick="filterItems('starters',this)">
+Starters
+</button>
+
+<button class="category-btn"
+onclick="filterItems('drinks',this)">
+Drinks
+</button>
+
+<button class="category-btn"
+onclick="filterItems('desserts',this)">
+Desserts
+</button>
+
+</div>
       </div>
 
       <div class="content-wrapper">
         <div class="menu-grid">
-          <div class="menu-card" th:each="item : ${menuItems}">
+          <div class="menu-card"
+     th:each="item : ${menuItems}"
+     th:attr="data-category=${item.category}">
             <img th:src="${item.imageUrl}" th:alt="${item.name}" />
 
             <div class="menu-info">
@@ -177,5 +200,41 @@
 
 </a>
     </a>
+
+    <script>
+
+function filterItems(category, button){
+
+document
+.querySelectorAll(".category-btn")
+.forEach(btn =>
+btn.classList.remove("active")
+);
+
+button.classList.add("active");
+
+document
+.querySelectorAll(".menu-card")
+.forEach(card => {
+
+const cardCategory =
+card.dataset.category;
+
+if(
+category === "all" ||
+cardCategory === category
+){
+
+card.style.display = "block";
+
+}else{
+
+card.style.display = "none";
+}
+});
+}
+
+</script>
+
   </body>
 </html>
