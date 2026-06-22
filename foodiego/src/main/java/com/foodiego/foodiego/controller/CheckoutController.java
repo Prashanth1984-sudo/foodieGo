@@ -27,29 +27,24 @@ import java.util.Map;
 @RequestMapping("/checkout")
 public class CheckoutController {
 
-        private static final String SUCCESS_KEY = "success";
-
         private final CartItemRepository cartItemRepository;
         private final MenuItemRepository menuItemRepository;
         private final OrderRepository orderRepository;
         private final OrderItemRepository orderItemRepository;
         private final AddressRepository addressRepository;
-        private final CouponRepository couponRepository;
 
         public CheckoutController(
                         CartItemRepository cartItemRepository,
                         MenuItemRepository menuItemRepository,
                         OrderRepository orderRepository,
                         OrderItemRepository orderItemRepository,
-                        AddressRepository addressRepository,
-                        CouponRepository couponRepository) {
+                        AddressRepository addressRepository) {
 
                 this.cartItemRepository = cartItemRepository;
                 this.menuItemRepository = menuItemRepository;
                 this.orderRepository = orderRepository;
                 this.orderItemRepository = orderItemRepository;
                 this.addressRepository = addressRepository;
-                this.couponRepository = couponRepository;
         }
 
         @GetMapping

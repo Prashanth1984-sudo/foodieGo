@@ -23,7 +23,12 @@
   <body>
     <div class="container">
       <div class="header">
-        <a href="/dashboard" class="back-btn"> ← Continue Shopping </a>
+        <a
+          th:href="@{/restaurants/{id}(id=${restaurantId})}"
+          class="continue-shopping"
+        >
+          ← Continue Shopping
+        </a>
 
         <h1>🛒 Your Cart</h1>
       </div>

@@ -265,3 +265,18 @@ body{
 .browse-btn:hover {
     transform: translateY(-2px);
 }
+.continue-shopping {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #ff8c42;
+    text-decoration: none;
+    font-weight: 600;
+    margin-bottom: 10px;
+    transition: all 0.3s ease;
+}
+
+.continue-shopping:hover {
+    transform: translateX(-4px);
+    color: #ffb36b;
+}

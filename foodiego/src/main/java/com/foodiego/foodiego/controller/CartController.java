@@ -18,12 +18,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import java.util.ArrayList;
-
-import com.foodiego.foodiego.dto.CartItemView;
-
-import com.foodiego.foodiego.entity.MenuItem;
-
 @Controller
 @RequestMapping("/cart")
 public class CartController {
@@ -46,14 +40,25 @@ public class CartController {
         @PostMapping("/add/{menuItemId}")
         public String addToCart(
                         @PathVariable Long menuItemId,
-                        HttpSession session,
-                        @RequestParam Long restaurantId) {
+                        @RequestParam Long restaurantId,
+                        HttpSession session) {
 
-                String userEmail = (String) session.getAttribute(
-                                "loggedInUser");
+                String userEmail = (String) session.getAttribute("loggedInUser");
 
                 if (userEmail == null) {
-                        return "redirect:/login";
+                        return "LOGIN_REQUIRED";
+                }
+
+                List<CartItem> existingCart = cartItemRepository.findByUserEmail(userEmail);
+
+                if (!existingCart.isEmpty()) {
+
+                        Long cartRestaurantId = existingCart.get(0).getRestaurantId();
+
+                        if (!cartRestaurantId.equals(restaurantId)) {
+
+                                return "DIFFERENT_RESTAURANT";
+                        }
                 }
 
                 Optional<CartItem> existingItem = cartItemRepository
@@ -65,8 +70,7 @@ public class CartController {
 
                         CartItem item = existingItem.get();
 
-                        item.setQuantity(
-                                        item.getQuantity() + 1);
+                        item.setQuantity(item.getQuantity() + 1);
 
                         cartItemRepository.save(item);
 
@@ -78,12 +82,43 @@ public class CartController {
 
                         item.setMenuItemId(menuItemId);
 
+                        item.setRestaurantId(restaurantId);
+
                         item.setQuantity(1);
 
                         cartItemRepository.save(item);
                 }
 
-                return "success";
+                return "SUCCESS";
+        }
+
+        @ResponseBody
+        @PostMapping("/replace-cart")
+        public String replaceCart(
+                        @RequestParam Long menuItemId,
+                        @RequestParam Long restaurantId,
+                        HttpSession session) {
+
+                String userEmail = (String) session.getAttribute("loggedInUser");
+
+                if (userEmail == null) {
+                        return "LOGIN_REQUIRED";
+                }
+
+                List<CartItem> existingCart = cartItemRepository.findByUserEmail(userEmail);
+
+                cartItemRepository.deleteAll(existingCart);
+
+                CartItem item = new CartItem();
+
+                item.setUserEmail(userEmail);
+                item.setMenuItemId(menuItemId);
+                item.setRestaurantId(restaurantId);
+                item.setQuantity(1);
+
+                cartItemRepository.save(item);
+
+                return "SUCCESS";
         }
 
         @GetMapping
@@ -145,6 +180,12 @@ public class CartController {
                 model.addAttribute(
                                 "total",
                                 total);
+
+                if (!cartItems.isEmpty()) {
+                        model.addAttribute(
+                                        "restaurantId",
+                                        cartItems.get(0).getRestaurantId());
+                }
 
                 return "cart";
         }

@@ -16,8 +16,13 @@ public class CartItem {
 
     private Integer quantity;
 
+    private Long restaurantId;
+
     public CartItem() {
-        /* Default constructor required by JPA for entity instantiation; kept empty intentionally. */
+        /*
+         * Default constructor required by JPA for entity instantiation; kept empty
+         * intentionally.
+         */
     }
 
     public Long getId() {
@@ -46,5 +51,13 @@ public class CartItem {
 
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
+    }
+
+    public Long getRestaurantId() {
+        return restaurantId;
+    }
+
+    public void setRestaurantId(Long restaurantId) {
+        this.restaurantId = restaurantId;
     }
 }
