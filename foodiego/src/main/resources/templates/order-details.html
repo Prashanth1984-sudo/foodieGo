@@ -160,8 +160,22 @@
 
         <div class="summary-row">
           <span>Payment Method</span>
+          <span th:text="${order.paymentMethod}"></span>
+        </div>
 
-          <span th:text="${order.paymentMethod}"> Cash On Delivery </span>
+        <div class="summary-row">
+          <span>Payment Status</span>
+          <span th:text="${order.paymentStatus}"></span>
+        </div>
+
+        <div class="summary-row" th:if="${order.paymentId != null}">
+          <span>Payment ID</span>
+          <span th:text="${order.paymentId}"></span>
+        </div>
+
+        <div class="summary-row" th:if="${order.razorpayOrderId != null}">
+          <span>Razorpay Order ID</span>
+          <span th:text="${order.razorpayOrderId}"></span>
         </div>
 
         <div class="summary-row">

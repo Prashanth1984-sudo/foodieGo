@@ -290,7 +290,12 @@
           </label>
         </div>
 
-        <button type="submit" class="place-order-btn">Place Order</button>
+        <input type="hidden" name="paymentId" id="paymentId" />
+        <input type="hidden" name="razorpayOrderId" id="razorpayOrderId" />
+
+        <button type="button" class="place-order-btn" onclick="payNow()">
+          Pay & Place Order
+        </button>
       </form>
     </div>
     <div id="toast" class="toast">Address saved successfully ✓</div>
@@ -462,6 +467,68 @@
       }
 
       document.getElementById("paymentMethodHidden").value = paymentMethod;
+    </script>
+
+    <!-- Add Subresource Integrity (SRI) and crossorigin; replace the integrity value with the actual SHA384 hash for the remote script or host the file locally -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script>
+      async function payNow() {
+        const paymentMethod = document.querySelector(
+          'input[name="paymentMethod"]:checked',
+        ).value;
+
+        // COD → Direct Order Placement
+        if (paymentMethod === "COD") {
+          document.querySelector("form").submit();
+          return;
+        }
+
+        const response = await fetch("/checkout/create-order", {
+          method: "POST",
+        });
+
+        const order = await response.json();
+
+        const options = {
+          key: "rzp_test_T4lXtogd3BAbaH",
+
+          amount: order.amount,
+
+          currency: order.currency,
+
+          order_id: order.id,
+
+          name: "FoodieGo",
+
+          description: "Food Order Payment",
+
+          handler: function (response) {
+            document.getElementById("paymentId").value =
+              response.razorpay_payment_id;
+
+            document.getElementById("razorpayOrderId").value =
+              response.razorpay_order_id;
+
+            document.querySelector("form").submit();
+          },
+        };
+
+        const rzp = new Razorpay(options);
+
+        rzp.open();
+      }
+
+      function handlePayment() {
+        const paymentMethod = document.querySelector(
+          'input[name="paymentMethod"]:checked',
+        ).value;
+
+        if (paymentMethod === "COD") {
+          document.querySelector("form").submit();
+        } else {
+          payNow();
+        }
+      }
     </script>
   </body>
 </html>

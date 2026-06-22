@@ -74,7 +74,9 @@
         </div>
 
         <div class="action-buttons">
-          <a href="/orders" class="track-btn"> Track Order </a>
+          <a th:href="@{/orders/{id}(id=${orderId})}" class="track-btn">
+            Track Order
+          </a>
 
           <a href="/dashboard" class="home-btn"> Continue Shopping </a>
         </div>

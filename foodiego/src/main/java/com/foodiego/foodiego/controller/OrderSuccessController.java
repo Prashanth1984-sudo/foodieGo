@@ -12,9 +12,7 @@ public class OrderSuccessController {
             @PathVariable Long id,
             Model model) {
 
-        model.addAttribute(
-                "orderId",
-                id);
+        model.addAttribute("orderId", id);
 
         return "order-success";
     }

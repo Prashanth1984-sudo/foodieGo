@@ -23,6 +23,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.razorpay.RazorpayClient;
+import org.json.JSONObject;
+
 @Controller
 @RequestMapping("/checkout")
 public class CheckoutController {
@@ -32,11 +35,13 @@ public class CheckoutController {
         private final OrderRepository orderRepository;
         private final OrderItemRepository orderItemRepository;
         private final AddressRepository addressRepository;
+        private final RazorpayClient razorpayClient;
 
         public CheckoutController(
                         CartItemRepository cartItemRepository,
                         MenuItemRepository menuItemRepository,
                         OrderRepository orderRepository,
+                        RazorpayClient razorpayClient,
                         OrderItemRepository orderItemRepository,
                         AddressRepository addressRepository) {
 
@@ -45,6 +50,7 @@ public class CheckoutController {
                 this.orderRepository = orderRepository;
                 this.orderItemRepository = orderItemRepository;
                 this.addressRepository = addressRepository;
+                this.razorpayClient = razorpayClient;
         }
 
         @GetMapping
@@ -110,6 +116,8 @@ public class CheckoutController {
                         @RequestParam(required = false) Long addressId,
                         @RequestParam(required = false) String couponCode,
                         @RequestParam String paymentMethod,
+                        @RequestParam(required = false) String paymentId,
+                        @RequestParam(required = false) String razorpayOrderId,
                         HttpSession session) {
 
                 String userEmail = (String) session.getAttribute("loggedInUser");
@@ -138,13 +146,24 @@ public class CheckoutController {
                         total = 0;
                 }
 
-                Order order = buildAndSaveOrder(userEmail, total, paymentMethod, dr.discount, couponCode, addressId);
+                Order order = buildAndSaveOrder(
+                                userEmail,
+                                total,
+                                paymentMethod,
+                                dr.discount,
+                                couponCode,
+                                addressId);
+
+                order.setPaymentId(paymentId);
+                order.setRazorpayOrderId(razorpayOrderId);
+
+                orderRepository.save(order);
 
                 saveOrderItemsFromCart(order, cartItems);
 
                 cartItemRepository.deleteAll(cartItems);
 
-                return "redirect:/checkout/success";
+                return "redirect:/order-success/" + order.getId();
         }
 
         // helper result container for coupon evaluation
@@ -153,7 +172,8 @@ public class CheckoutController {
                 String errorRedirect;
         }
 
-        // evaluate coupon and return discount or an error redirect string in result.errorRedirect
+        // evaluate coupon and return discount or an error redirect string in
+        // result.errorRedirect
         private DiscountResult evaluateCoupon(String couponCode, double subtotal, String userEmail) {
                 DiscountResult res = new DiscountResult();
                 res.discount = 0;
@@ -188,7 +208,8 @@ public class CheckoutController {
                 return res;
         }
 
-        private Order buildAndSaveOrder(String userEmail, double total, String paymentMethod, double discount, String couponCode, Long addressId) {
+        private Order buildAndSaveOrder(String userEmail, double total, String paymentMethod, double discount,
+                        String couponCode, Long addressId) {
                 Order order = new Order();
                 order.setUserEmail(userEmail);
                 order.setTotalAmount(total);
@@ -196,9 +217,16 @@ public class CheckoutController {
                 order.setDiscountAmount(discount);
                 order.setCouponCode(couponCode);
                 order.setStatus("PLACED");
+
+                if ("COD".equals(paymentMethod)) {
+                        order.setPaymentStatus("PENDING");
+                } else {
+                        order.setPaymentStatus("PAID");
+                }
                 order.setOrderDate(LocalDateTime.now());
                 order.setAddressId(addressId);
                 orderRepository.save(order);
+
                 return order;
         }
 
@@ -366,5 +394,33 @@ public class CheckoutController {
                 Address saved = addressRepository.save(address);
 
                 return saved.getId();
+        }
+
+        @PostMapping("/create-order")
+        @ResponseBody
+        public String createOrder(
+                        HttpSession session) throws Exception {
+
+                String userEmail = (String) session.getAttribute("loggedInUser");
+
+                double total = calculateCartTotal(userEmail);
+
+                JSONObject options = new JSONObject();
+
+                options.put(
+                                "amount",
+                                (int) (total * 100));
+
+                options.put(
+                                "currency",
+                                "INR");
+
+                options.put(
+                                "receipt",
+                                "receipt_" + System.currentTimeMillis());
+
+                com.razorpay.Order razorpayOrder = razorpayClient.orders.create(options);
+
+                return razorpayOrder.toString();
         }
 }

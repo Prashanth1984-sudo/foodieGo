@@ -27,6 +27,12 @@ public class Order {
 
     private String paymentMethod;
 
+    private String paymentId;
+
+    private String razorpayOrderId;
+
+    private String paymentStatus;
+
     public Order() {
         // Default constructor required by JPA for entity instantiation.
         // Intentionally left empty for the persistence framework to use.
@@ -98,5 +104,29 @@ public class Order {
 
     public void setPaymentMethod(String paymentMethod) {
         this.paymentMethod = paymentMethod;
+    }
+
+    public String getPaymentId() {
+        return paymentId;
+    }
+
+    public void setPaymentId(String paymentId) {
+        this.paymentId = paymentId;
+    }
+
+    public String getRazorpayOrderId() {
+        return razorpayOrderId;
+    }
+
+    public void setRazorpayOrderId(String razorpayOrderId) {
+        this.razorpayOrderId = razorpayOrderId;
+    }
+
+    public String getPaymentStatus() {
+        return paymentStatus;
+    }
+
+    public void setPaymentStatus(String paymentStatus) {
+        this.paymentStatus = paymentStatus;
     }
 }
