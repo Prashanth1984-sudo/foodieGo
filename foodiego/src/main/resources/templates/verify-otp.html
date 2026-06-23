@@ -1,0 +1,37 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>Verify OTP</title>
+
+    <link rel="stylesheet" th:href="@{/css/auth-extra.css}" />
+    <link rel="shortcut icon" th:href="@{/images/fevicon.png}" />
+  </head>
+
+  <body>
+    <div class="overlay"></div>
+
+    <div class="auth-card">
+      <h1>🍔 FoodieGo</h1>
+
+      <h2>Verify OTP</h2>
+
+      <p class="subtitle">Enter the OTP sent to your email</p>
+
+      <div th:if="${param.error}" class="error-message">
+        Invalid OTP. Please try again.
+      </div>
+
+      <form action="/verify-otp" method="post">
+        <input
+          type="text"
+          name="otp"
+          maxlength="6"
+          placeholder="Enter OTP"
+          required
+        />
+
+        <button type="submit">Verify OTP</button>
+      </form>
+    </div>
+  </body>
+</html>

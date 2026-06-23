@@ -216,3 +216,22 @@ button:hover{
         font-size:28px;
     }
 }
+.password-container{
+    position:relative;
+}
+
+.toggle-password{
+    position:absolute;
+    right:15px;
+    top:50%;
+    transform:translateY(-50%);
+    cursor:pointer;
+}
+
+.forgot-link{
+    display:block;
+    margin-top:12px;
+    text-align:right;
+    color:#ff914d;
+    text-decoration:none;
+}
