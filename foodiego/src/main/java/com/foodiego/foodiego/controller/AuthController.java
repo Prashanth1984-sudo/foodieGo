@@ -67,6 +67,14 @@ public class AuthController {
                     "loggedInUser",
                     user.get().getEmail());
 
+            session.setAttribute(
+                    "userRole",
+                    user.get().getRole());
+
+            if ("ADMIN".equals(user.get().getRole())) {
+                return "redirect:/admin";
+            }
+
             return "redirect:/dashboard";
         }
 

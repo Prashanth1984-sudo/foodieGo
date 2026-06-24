@@ -16,8 +16,13 @@ import com.foodiego.foodiego.entity.Restaurant;
 import java.util.HashMap;
 import java.util.Map;
 
+import jakarta.servlet.http.HttpSession;
+import com.foodiego.foodiego.util.AdminUtil;
+
 @Controller
 public class AdminController {
+
+        private static final String REDIRECT_DASHBOARD = "redirect:/dashboard";
 
         private final UserRepository userRepository;
         private final RestaurantRepository restaurantRepository;
@@ -37,7 +42,13 @@ public class AdminController {
         }
 
         @GetMapping("/admin")
-        public String adminDashboard(Model model) {
+        public String adminDashboard(
+                        HttpSession session,
+                        Model model) {
+
+                if (!AdminUtil.isAdmin(session)) {
+                        return REDIRECT_DASHBOARD;
+                }
 
                 long totalUsers = userRepository.count();
 
@@ -83,7 +94,13 @@ public class AdminController {
         }
 
         @GetMapping("/admin/orders")
-        public String manageOrders(Model model) {
+        public String manageOrders(
+                        HttpSession session,
+                        Model model) {
+
+                if (!AdminUtil.isAdmin(session)) {
+                        return REDIRECT_DASHBOARD;
+                }
 
                 model.addAttribute(
                                 "orders",
@@ -94,8 +111,13 @@ public class AdminController {
 
         @PostMapping("/admin/orders/update")
         public String updateOrderStatus(
+                        HttpSession session,
                         @RequestParam Long orderId,
                         @RequestParam String status) {
+
+                if (!AdminUtil.isAdmin(session)) {
+                        return REDIRECT_DASHBOARD;
+                }
 
                 Order order = orderRepository
                                 .findById(orderId)
@@ -112,8 +134,12 @@ public class AdminController {
         }
 
         @GetMapping("/admin/restaurants")
-        public String restaurants(Model model) {
-
+        public String restaurants(
+                        HttpSession session,
+                        Model model) {
+                if (!AdminUtil.isAdmin(session)) {
+                        return REDIRECT_DASHBOARD;
+                }
                 model.addAttribute(
                                 "restaurants",
                                 restaurantRepository.findAll());
@@ -123,7 +149,11 @@ public class AdminController {
 
         @PostMapping("/admin/restaurants/delete/{id}")
         public String deleteRestaurant(
+                        HttpSession session,
                         @PathVariable Long id) {
+                if (!AdminUtil.isAdmin(session)) {
+                        return REDIRECT_DASHBOARD;
+                }
 
                 restaurantRepository.deleteById(id);
 
@@ -132,7 +162,11 @@ public class AdminController {
 
         @GetMapping("/admin/restaurants/add")
         public String addRestaurantPage(
+                        HttpSession session,
                         Model model) {
+                if (!AdminUtil.isAdmin(session)) {
+                        return REDIRECT_DASHBOARD;
+                }
 
                 model.addAttribute(
                                 "restaurant",
@@ -143,7 +177,12 @@ public class AdminController {
 
         @PostMapping("/admin/restaurants/save")
         public String saveRestaurant(
+                        HttpSession session,
                         Restaurant restaurant) {
+
+                if (!AdminUtil.isAdmin(session)) {
+                        return REDIRECT_DASHBOARD;
+                }
 
                 restaurantRepository.save(restaurant);
 
@@ -152,8 +191,13 @@ public class AdminController {
 
         @GetMapping("/admin/restaurants/edit/{id}")
         public String editRestaurant(
+                        HttpSession session,
                         @PathVariable Long id,
                         Model model) {
+
+                if (!AdminUtil.isAdmin(session)) {
+                        return REDIRECT_DASHBOARD;
+                }
 
                 model.addAttribute(
                                 "restaurant",
@@ -165,7 +209,13 @@ public class AdminController {
         }
 
         @GetMapping("/admin/menu")
-        public String menuItems(Model model) {
+        public String menuItems(
+                        HttpSession session,
+                        Model model) {
+
+                if (!AdminUtil.isAdmin(session)) {
+                        return REDIRECT_DASHBOARD;
+                }
 
                 model.addAttribute(
                                 "menuItems",
@@ -176,7 +226,12 @@ public class AdminController {
 
         @GetMapping("/admin/menu/add")
         public String addMenuItemPage(
+                        HttpSession session,
                         Model model) {
+
+                if (!AdminUtil.isAdmin(session)) {
+                        return REDIRECT_DASHBOARD;
+                }
 
                 model.addAttribute(
                                 "menuItem",
@@ -191,8 +246,13 @@ public class AdminController {
 
         @GetMapping("/admin/menu/edit/{id}")
         public String editMenuItem(
+                        HttpSession session,
                         @PathVariable Long id,
                         Model model) {
+
+                if (!AdminUtil.isAdmin(session)) {
+                        return REDIRECT_DASHBOARD;
+                }
 
                 model.addAttribute(
                                 "menuItem",
@@ -209,7 +269,11 @@ public class AdminController {
 
         @PostMapping("/admin/menu/save")
         public String saveMenuItem(
+                        HttpSession session,
                         MenuItem menuItem) {
+                if (!AdminUtil.isAdmin(session)) {
+                        return REDIRECT_DASHBOARD;
+                }
 
                 menuItemRepository.save(menuItem);
 
@@ -218,7 +282,12 @@ public class AdminController {
 
         @PostMapping("/admin/menu/delete/{id}")
         public String deleteMenuItem(
+                        HttpSession session,
                         @PathVariable Long id) {
+
+                if (!AdminUtil.isAdmin(session)) {
+                        return REDIRECT_DASHBOARD;
+                }
 
                 menuItemRepository.deleteById(id);
 
