@@ -1,5 +1,7 @@
 package com.foodiego.foodiego.entity;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -23,6 +25,11 @@ public class User {
 
     @Column(name = "profile_image")
     private String profileImage;
+
+    @Column(nullable = false)
+    private boolean enabled = true;
+
+    private LocalDateTime createdAt = LocalDateTime.now();
 
     public String getProfileImage() {
         return profileImage;
@@ -74,5 +81,21 @@ public class User {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 }

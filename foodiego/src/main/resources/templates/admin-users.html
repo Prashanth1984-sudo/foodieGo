@@ -1,0 +1,141 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Manage Users | FoodieGo Admin</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    />
+
+    <link rel="stylesheet" th:href="@{/css/admin.css}" />
+    <link rel="stylesheet" th:href="@{/css/admin-users.css}" />
+    <link rel="shortcut icon" th:href="@{/images/fevicon.png}" />
+  </head>
+
+  <body>
+    <div class="container">
+      <a href="/admin" class="back-btn"> ← Back to Dashboard </a>
+
+      <div class="page-header">
+        <div>
+          <h1>👥 User Management</h1>
+
+          <p>Manage all registered FoodieGo users</p>
+        </div>
+
+        <form class="search-form" action="/admin/users" method="get">
+          <input
+            type="text"
+            name="keyword"
+            placeholder="Search by name or email..."
+            th:value="${keyword}"
+          />
+
+          <button type="submit">Search</button>
+        </form>
+      </div>
+
+      <!-- Statistics -->
+
+      <div class="stats">
+        <div class="card">
+          <h2 th:text="${totalUsers}">0</h2>
+
+          <p>Total Users</p>
+        </div>
+
+        <div class="card">
+          <h2 th:text="${admins}">0</h2>
+
+          <p>Admins</p>
+        </div>
+
+        <div class="card">
+          <h2 th:text="${activeUsers}">0</h2>
+
+          <p>Active Users</p>
+        </div>
+
+        <div class="card">
+          <h2 th:text="${blockedUsers}">0</h2>
+
+          <p>Blocked Users</p>
+        </div>
+      </div>
+
+      <!-- User Table -->
+
+      <div class="user-table">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+
+              <th>Name</th>
+
+              <th>Email</th>
+
+              <th>Role</th>
+
+              <th>Status</th>
+
+              <th>Actions</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr th:each="user : ${users}">
+              <td th:text="${user.id}"></td>
+
+              <td th:text="${user.name}"></td>
+
+              <td th:text="${user.email}"></td>
+
+              <td>
+                <span class="role" th:text="${user.role}"> </span>
+              </td>
+
+              <td>
+                <span th:if="${user.enabled}" class="badge active">
+                  Active
+                </span>
+
+                <span th:unless="${user.enabled}" class="badge blocked">
+                  Blocked
+                </span>
+              </td>
+
+              <td class="actions">
+                <a
+                  th:href="@{/admin/users/view/{id}(id=${user.id})}"
+                  class="view-btn"
+                >
+                  👁 View
+                </a>
+
+                <a
+                  th:if="${user.enabled}"
+                  th:href="@{/admin/users/block/{id}(id=${user.id})}"
+                  class="block-btn"
+                >
+                  🚫 Block
+                </a>
+
+                <a
+                  th:unless="${user.enabled}"
+                  th:href="@{/admin/users/unblock/{id}(id=${user.id})}"
+                  class="unblock-btn"
+                >
+                  ✅ Unblock
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </body>
+</html>

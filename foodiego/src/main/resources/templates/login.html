@@ -34,6 +34,10 @@
         Invalid email or password
       </div>
 
+      <div th:if="${error == 'blocked'}" class="error">
+        Your account has been blocked. Please contact FoodieGo support.
+      </div>
+
       <form action="/login" method="post">
         <input type="email" name="email" placeholder="Email Address" required />
 

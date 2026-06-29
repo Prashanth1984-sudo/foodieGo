@@ -52,6 +52,7 @@ public class AuthController {
         user.setPassword(
                 passwordEncoder.encode(password));
 
+        user.setEnabled(true);
         userRepository.save(user);
 
         emailService.sendWelcomeEmail(
@@ -74,6 +75,10 @@ public class AuthController {
                 passwordEncoder.matches(
                         password,
                         user.get().getPassword())) {
+
+            if (!user.get().isEnabled()) {
+                return "redirect:/login?error=blocked";
+            }
 
             session.setAttribute(
                     "loggedInUser",

@@ -12,12 +12,15 @@ import org.springframework.web.bind.annotation.*;
 import com.foodiego.foodiego.entity.MenuItem;
 import com.foodiego.foodiego.entity.Order;
 import com.foodiego.foodiego.entity.Restaurant;
+import com.foodiego.foodiego.entity.User;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import jakarta.servlet.http.HttpSession;
 import com.foodiego.foodiego.util.AdminUtil;
+
+import com.foodiego.foodiego.repository.CouponRepository;
 
 @Controller
 public class AdminController {
@@ -28,17 +31,20 @@ public class AdminController {
         private final RestaurantRepository restaurantRepository;
         private final MenuItemRepository menuItemRepository;
         private final OrderRepository orderRepository;
+        private final CouponRepository couponRepository;
 
         public AdminController(
                         UserRepository userRepository,
                         RestaurantRepository restaurantRepository,
                         MenuItemRepository menuItemRepository,
-                        OrderRepository orderRepository) {
+                        OrderRepository orderRepository,
+                        CouponRepository couponRepository) {
 
                 this.userRepository = userRepository;
                 this.restaurantRepository = restaurantRepository;
                 this.menuItemRepository = menuItemRepository;
                 this.orderRepository = orderRepository;
+                this.couponRepository = couponRepository;
         }
 
         @GetMapping("/admin")
@@ -293,4 +299,65 @@ public class AdminController {
 
                 return "redirect:/admin/menu";
         }
+
+        @GetMapping("/admin/users/block/{id}")
+        public String blockUser(
+                        @PathVariable Long id) {
+
+                User user = userRepository.findById(id).orElse(null);
+
+                if (user != null) {
+
+                        user.setEnabled(false);
+
+                        userRepository.save(user);
+                }
+
+                return "redirect:/admin/users";
+        }
+
+        @GetMapping("/admin/users/unblock/{id}")
+        public String unblockUser(
+                        @PathVariable Long id) {
+
+                User user = userRepository.findById(id).orElse(null);
+
+                if (user != null) {
+
+                        user.setEnabled(true);
+
+                        userRepository.save(user);
+                }
+
+                return "redirect:/admin/users";
+        }
+
+        @GetMapping("/admin/users/view/{id}")
+        public String viewUser(@PathVariable Long id, Model model) {
+
+                User user = userRepository.findById(id).orElse(null);
+
+                model.addAttribute("user", user);
+
+                return "admin-user-profile";
+        }
+
+        @GetMapping("/admin/coupons")
+        public String coupons(Model model) {
+
+                model.addAttribute("coupons", couponRepository.findAll());
+
+                model.addAttribute("totalCoupons", couponRepository.count());
+
+                model.addAttribute("activeCoupons",
+                                couponRepository.countByActive(true));
+
+                model.addAttribute("expiredCoupons",
+                                couponRepository.countByActive(false));
+
+                model.addAttribute("usedCoupons", 0);
+
+                return "admin-coupons";
+        }
+
 }

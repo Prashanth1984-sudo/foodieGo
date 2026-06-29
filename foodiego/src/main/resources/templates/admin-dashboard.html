@@ -12,15 +12,17 @@
       <aside class="sidebar">
         <h2>🍔 FoodieGo</h2>
 
-        <a href="/admin"> Dashboard </a>
+        <a href="/admin/orders">Orders</a>
 
-        <a href="/admin/restaurants"> Restaurants </a>
+        <a href="/admin/restaurants"> Restaurants</a>
 
-        <a href="/admin/menu"> Menu Items </a>
+        <a href="/admin/menu"> Menu Items</a>
 
-        <a href="/admin/orders"> Orders </a>
+        <a href="/admin/users"> Users</a>
 
-        <a href="/dashboard"> Back To App </a>
+        <a href="/admin/coupons">Coupons</a>
+
+        <a href="/dashboard">⬅ Back To App</a>
       </aside>
 
       <main class="content">
@@ -66,38 +68,6 @@
           </p>
           <br />
           <p>Revenue: ₹<strong th:text="${totalRevenue}"> </strong></p>
-        </div>
-        <div class="users-section">
-          <div class="section-header">
-            <h2>👥 Registered Users</h2>
-
-            <span>
-              Total:
-              <strong th:text="${totalUsers}"></strong>
-            </span>
-          </div>
-
-          <div class="users-table">
-            <div class="user-row table-header">
-              <span>#</span>
-
-              <span>Name</span>
-
-              <span>Email</span>
-
-              <span>Orders</span>
-            </div>
-
-            <div class="user-row" th:each="user, stat : ${users}">
-              <span th:text="${stat.count}"></span>
-
-              <span th:text="${user.name}"></span>
-
-              <span th:text="${user.email}"></span>
-
-              <span th:text="${userOrders[user.email]}"> 0 </span>
-            </div>
-          </div>
         </div>
       </main>
     </div>
