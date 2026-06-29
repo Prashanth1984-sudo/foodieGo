@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import com.foodiego.foodiego.entity.Coupon;
 import com.foodiego.foodiego.entity.MenuItem;
 import com.foodiego.foodiego.entity.Order;
 import com.foodiego.foodiego.entity.Restaurant;
@@ -358,6 +359,43 @@ public class AdminController {
                 model.addAttribute("usedCoupons", 0);
 
                 return "admin-coupons";
+        }
+
+        @GetMapping("/admin/coupons/add")
+        public String addCoupon(Model model) {
+
+                model.addAttribute("coupon", new Coupon());
+
+                return "coupon-form";
+        }
+
+        @PostMapping("/admin/coupons/save")
+        public String saveCoupon(Coupon coupon) {
+
+                couponRepository.save(coupon);
+
+                return "redirect:/admin/coupons";
+        }
+
+        @GetMapping("/admin/coupons/edit/{id}")
+        public String editCoupon(
+                        @PathVariable Long id,
+                        Model model) {
+
+                model.addAttribute(
+                                "coupon",
+                                couponRepository.findById(id).orElse(null));
+
+                return "coupon-form";
+        }
+
+        @GetMapping("/admin/coupons/delete/{id}")
+        public String deleteCoupon(
+                        @PathVariable Long id) {
+
+                couponRepository.deleteById(id);
+
+                return "redirect:/admin/coupons";
         }
 
 }

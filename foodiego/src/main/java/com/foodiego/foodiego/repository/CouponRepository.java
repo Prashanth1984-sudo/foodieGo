@@ -1,5 +1,6 @@
 package com.foodiego.foodiego.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,5 +13,7 @@ public interface CouponRepository
     Optional<Coupon> findByCode(String code);
 
     long countByActive(Boolean active);
+
+    List<Coupon> findByActiveTrue();
 
 }

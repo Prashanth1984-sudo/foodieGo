@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+
+    <title>Coupon | FoodieGo Admin</title>
+
+    <link rel="stylesheet" th:href="@{/css/coupon-form.css}" />
+
+    <link rel="shortcut icon" th:href="@{/images/fevicon.png}" />
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="card">
+        <h1 th:if="${coupon.id == null}">Add Coupon</h1>
+        <h1 th:unless="${coupon.id == null}">Edit Coupon</h1>
+
+        <form
+          th:action="@{/admin/coupons/save}"
+          th:object="${coupon}"
+          method="post"
+        >
+          <input type="hidden" th:field="*{id}" />
+
+          <div class="form-group">
+            <label for="code">Coupon Code</label>
+
+            <input
+              id="code"
+              type="text"
+              th:field="*{code}"
+              placeholder="Example: FOOD50"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="discountAmount">Discount Amount (₹)</label>
+
+            <input
+              id="discountAmount"
+              type="number"
+              step="0.01"
+              th:field="*{discountAmount}"
+              placeholder="50"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="discountPercent">Discount Percentage (%)</label>
+
+            <input
+              id="discountPercent"
+              type="number"
+              th:field="*{discountPercent}"
+              placeholder="20"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="minimumOrderAmount">Minimum Order Amount</label>
+
+            <input
+              id="minimumOrderAmount"
+              type="number"
+              step="0.01"
+              th:field="*{minimumOrderAmount}"
+              placeholder="299"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="maximumDiscount">Maximum Discount</label>
+
+            <input
+              id="maximumDiscount"
+              type="number"
+              step="0.01"
+              th:field="*{maximumDiscount}"
+              placeholder="100"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="expiryDate">Expiry Date</label>
+
+            <input id="expiryDate" type="date" th:field="*{expiryDate}" />
+          </div>
+
+          <div class="checkbox">
+            <input id="active" type="checkbox" th:field="*{active}" />
+
+            <label for="active">Active Coupon</label>
+          </div>
+
+          <div class="buttons">
+            <button type="submit" class="save">Save Coupon</button>
+
+            <a href="/admin/coupons" class="cancel"> Cancel </a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

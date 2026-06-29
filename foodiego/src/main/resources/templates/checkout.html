@@ -46,8 +46,17 @@
                 placeholder="Enter Coupon Code"
               />
 
-              <button type="button" id="applyBtn" onclick="applyCoupon()">
+              <button type="button" id="applyBtn" onclick="validateCoupon()">
                 Apply
+              </button>
+              <button
+                type="button"
+                class="explore-offers"
+                onclick="openCouponModal()"
+              >
+                <i class="fa-solid fa-ticket"></i>
+
+                Explore Available Offers
               </button>
             </div>
 
@@ -298,7 +307,55 @@
         </button>
       </form>
     </div>
+
     <div id="toast" class="toast">Address saved successfully ✓</div>
+
+    <div id="couponModal" class="coupon-modal">
+      <div class="coupon-content">
+        <div class="coupon-header">
+          <h2>Available Coupons</h2>
+
+          <span class="close" onclick="closeCouponModal()"> × </span>
+        </div>
+
+        <div class="coupon-list">
+          <div class="coupon-card" th:each="coupon : ${availableCoupons}">
+            <div>
+              <h3 th:text="${coupon.code}"></h3>
+
+              <p>
+                <span th:if="${coupon.discountAmount!=null}">
+                  ₹<span th:text="${coupon.discountAmount}"> </span>
+
+                  OFF
+                </span>
+
+                <span th:if="${coupon.discountPercent!=null}">
+                  <span th:text="${coupon.discountPercent}"> </span>
+
+                  % OFF
+                </span>
+              </p>
+
+              <small>
+                Orders above ₹<span th:text="${coupon.minimumOrderAmount}">
+                </span>
+              </small>
+            </div>
+
+            <button
+              type="button"
+              class="apply-btn"
+              th:data-code="${coupon.code}"
+              onclick="applyCoupon(this.dataset.code)"
+            >
+              Apply
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <script>
       function toggleAddressForm() {
         const form = document.getElementById("addressFormContainer");
@@ -333,7 +390,7 @@
         }
       });
 
-      function applyCoupon() {
+      function validateCoupon() {
         const couponCode = document.getElementById("couponCode").value.trim();
 
         const msg = document.getElementById("couponMessage");
@@ -398,6 +455,14 @@
 
             msg.style.display = "block";
           });
+      }
+
+      function applyCoupon(code) {
+        document.getElementById("couponCode").value = code;
+
+        closeCouponModal();
+
+        validateCoupon();
       }
 
       function saveAndUseAddress() {
@@ -528,6 +593,22 @@
         } else {
           payNow();
         }
+      }
+
+      function openCouponModal() {
+        document.getElementById("couponModal").style.display = "flex";
+      }
+
+      function closeCouponModal() {
+        document.getElementById("couponModal").style.display = "none";
+      }
+
+      function applyCoupon(code) {
+        document.getElementById("couponCode").value = code;
+
+        closeCouponModal();
+
+        document.getElementById("applyCouponBtn").click();
       }
     </script>
   </body>

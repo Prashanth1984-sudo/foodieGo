@@ -35,6 +35,7 @@ public class CheckoutController {
         private final OrderRepository orderRepository;
         private final OrderItemRepository orderItemRepository;
         private final AddressRepository addressRepository;
+        private final CouponRepository couponRepository;
         private final RazorpayClient razorpayClient;
 
         public CheckoutController(
@@ -43,7 +44,8 @@ public class CheckoutController {
                         OrderRepository orderRepository,
                         RazorpayClient razorpayClient,
                         OrderItemRepository orderItemRepository,
-                        AddressRepository addressRepository) {
+                        AddressRepository addressRepository,
+                        CouponRepository couponRepository) {
 
                 this.cartItemRepository = cartItemRepository;
                 this.menuItemRepository = menuItemRepository;
@@ -51,6 +53,7 @@ public class CheckoutController {
                 this.orderItemRepository = orderItemRepository;
                 this.addressRepository = addressRepository;
                 this.razorpayClient = razorpayClient;
+                this.couponRepository = couponRepository;
         }
 
         @GetMapping
@@ -107,6 +110,10 @@ public class CheckoutController {
                                 !addresses.isEmpty());
 
                 model.addAttribute("error", error);
+
+                model.addAttribute(
+                                "availableCoupons",
+                                couponRepository.findByActiveTrue());
 
                 return "checkout";
         }
@@ -174,38 +181,76 @@ public class CheckoutController {
 
         // evaluate coupon and return discount or an error redirect string in
         // result.errorRedirect
-        private DiscountResult evaluateCoupon(String couponCode, double subtotal, String userEmail) {
+        private DiscountResult evaluateCoupon(
+                        String couponCode,
+                        double subtotal,
+                        String userEmail) {
+
                 DiscountResult res = new DiscountResult();
                 res.discount = 0;
-                res.errorRedirect = null;
 
                 if (couponCode == null || couponCode.isBlank()) {
                         return res;
                 }
 
-                String code = couponCode.trim().toUpperCase();
+                var optionalCoupon = couponRepository.findByCode(
+                                couponCode.trim().toUpperCase());
 
-                if ("FOOD50".equals(code)) {
-                        if (subtotal < 499) {
-                                res.errorRedirect = "redirect:/checkout?error=food50";
-                                return res;
-                        }
-                        res.discount = 50;
+                if (optionalCoupon.isEmpty()) {
+                        res.errorRedirect = "redirect:/checkout?error=invalid";
                         return res;
                 }
 
-                if ("WELCOME20".equals(code)) {
+                var coupon = optionalCoupon.get();
+
+                String validationError = validateCouponStatus(coupon, subtotal, userEmail);
+                if (validationError != null) {
+                        res.errorRedirect = validationError;
+                        return res;
+                }
+
+                res.discount = calculateDiscount(coupon, subtotal);
+                return res;
+        }
+
+        private String validateCouponStatus(com.foodiego.foodiego.entity.Coupon coupon, double subtotal,
+                        String userEmail) {
+                if (!coupon.getActive()) {
+                        return "redirect:/checkout?error=inactive";
+                }
+
+                if (coupon.getExpiryDate() != null &&
+                                coupon.getExpiryDate().isBefore(java.time.LocalDate.now())) {
+                        return "redirect:/checkout?error=expired";
+                }
+
+                if (coupon.getMinimumOrderAmount() != null &&
+                                subtotal < coupon.getMinimumOrderAmount()) {
+                        return "redirect:/checkout?error=minorder";
+                }
+
+                if ("WELCOME20".equalsIgnoreCase(coupon.getCode())) {
                         long orderCount = orderRepository.countByUserEmail(userEmail);
                         if (orderCount > 0) {
-                                res.errorRedirect = "redirect:/checkout?error=welcome20";
-                                return res;
+                                return "redirect:/checkout?error=welcome20";
                         }
-                        res.discount = subtotal * 0.20;
-                        return res;
                 }
 
-                res.errorRedirect = "redirect:/checkout?error=invalid";
-                return res;
+                return null;
+        }
+
+        private double calculateDiscount(com.foodiego.foodiego.entity.Coupon coupon, double subtotal) {
+                if (coupon.getDiscountAmount() != null) {
+                        return coupon.getDiscountAmount();
+                } else if (coupon.getDiscountPercent() != null) {
+                        double discount = subtotal * coupon.getDiscountPercent() / 100.0;
+                        if (coupon.getMaximumDiscount() != null &&
+                                        discount > coupon.getMaximumDiscount()) {
+                                return coupon.getMaximumDiscount();
+                        }
+                        return discount;
+                }
+                return 0;
         }
 
         private Order buildAndSaveOrder(String userEmail, double total, String paymentMethod, double discount,
@@ -302,67 +347,93 @@ public class CheckoutController {
 
                 double subtotal = calculateCartTotal(userEmail);
 
-                couponCode = couponCode.trim().toUpperCase();
+                var optionalCoupon = couponRepository.findByCode(
+                                couponCode.trim().toUpperCase());
 
-                double discount = 0;
+                if (optionalCoupon.isEmpty()) {
 
-                // FOOD50
-                if ("FOOD50".equals(couponCode)) {
-
-                        if (subtotal < 499) {
-
-                                response.put("success", false);
-                                response.put(
-                                                "message",
-                                                "Minimum order ₹499 required for FOOD50");
-
-                                return response;
-                        }
-
-                        discount = 50;
-
-                        response.put("success", true);
-                        response.put("discount", discount);
-                        response.put("finalTotal", subtotal - discount);
-                        response.put(
-                                        "message",
-                                        "₹50 discount applied successfully");
+                        response.put("success", false);
+                        response.put("message", "Invalid coupon code");
 
                         return response;
                 }
 
-                // WELCOME20
-                if ("WELCOME20".equals(couponCode)) {
+                var coupon = optionalCoupon.get();
+
+                if (!coupon.getActive()) {
+
+                        response.put("success", false);
+                        response.put("message", "Coupon is inactive");
+
+                        return response;
+                }
+
+                if (coupon.getExpiryDate() != null &&
+                                coupon.getExpiryDate().isBefore(java.time.LocalDate.now())) {
+
+                        response.put("success", false);
+                        response.put("message", "Coupon has expired");
+
+                        return response;
+                }
+
+                if (coupon.getMinimumOrderAmount() != null &&
+                                subtotal < coupon.getMinimumOrderAmount()) {
+
+                        response.put("success", false);
+
+                        response.put(
+                                        "message",
+                                        "Minimum order should be ₹" +
+                                                        coupon.getMinimumOrderAmount());
+
+                        return response;
+                }
+
+                // First order validation
+                if ("WELCOME20".equalsIgnoreCase(coupon.getCode())) {
 
                         long orderCount = orderRepository.countByUserEmail(userEmail);
 
                         if (orderCount > 0) {
 
                                 response.put("success", false);
+
                                 response.put(
                                                 "message",
                                                 "WELCOME20 is only for first order");
 
                                 return response;
                         }
-
-                        discount = subtotal * 0.20;
-
-                        response.put("success", true);
-                        response.put("discount", discount);
-                        response.put("finalTotal", subtotal - discount);
-                        response.put(
-                                        "message",
-                                        "20% first-order discount applied");
-
-                        return response;
                 }
 
-                // INVALID COUPON
-                response.put("success", false);
+                double discount = 0;
+
+                if (coupon.getDiscountAmount() != null) {
+
+                        discount = coupon.getDiscountAmount();
+
+                } else if (coupon.getDiscountPercent() != null) {
+
+                        discount = subtotal *
+                                        coupon.getDiscountPercent() / 100;
+
+                        if (coupon.getMaximumDiscount() != null &&
+                                        discount > coupon.getMaximumDiscount()) {
+
+                                discount = coupon.getMaximumDiscount();
+                        }
+                }
+
+                response.put("success", true);
+
+                response.put("discount", discount);
+
+                response.put("finalTotal", subtotal - discount);
+
                 response.put(
                                 "message",
-                                "Invalid coupon code");
+                                "Coupon applied successfully");
 
                 return response;
         }
