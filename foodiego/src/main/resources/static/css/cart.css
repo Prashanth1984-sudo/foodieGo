@@ -280,3 +280,51 @@ body{
     transform: translateX(-4px);
     color: #ffb36b;
 }
+.add-more-container{
+    margin-top:18px;
+}
+
+.add-more-btn{
+
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+
+    padding:12px 24px;
+
+    background:transparent;
+
+    color:#ff8a3d;
+
+    border:1.5px solid #ff8a3d;
+
+    border-radius:10px;
+
+    font-size:14px;
+
+    font-weight:500;
+
+    text-decoration:none;
+
+    transition:all .3s ease;
+
+}
+
+.add-more-btn:hover{
+
+    background:#ff8a3d;
+
+    color:#fff;
+
+    box-shadow:0 6px 15px rgba(255,138,61,.25);
+
+    transform:translateY(-2px);
+
+}
+
+.add-more-btn i{
+
+    font-size:13px;
+
+}
