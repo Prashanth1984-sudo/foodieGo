@@ -1,14 +1,14 @@
-package com.foodiego.foodiego.controller;
+// package com.foodiego.foodiego.controller;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
+// import org.springframework.stereotype.Controller;
+// import org.springframework.web.bind.annotation.GetMapping;
 
-@Controller
-public class AboutController {
+// @Controller
+// public class AboutController {
 
-    @GetMapping("/about")
-    public String about() {
-        return "about";
-    }
+// @GetMapping("/about")
+// public String about() {
+// return "about";
+// }
 
-}
+// }
