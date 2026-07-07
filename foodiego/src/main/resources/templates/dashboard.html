@@ -22,7 +22,10 @@
 
     <link rel="stylesheet" th:href="@{/css/dashboard.css}" />
     <link rel="shortcut icon" th:href="@{/images/fevicon.png}" />
-  </head>
+
+    <link
+rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 
   <body>
     <!-- NAVBAR -->
@@ -211,7 +214,10 @@
 
     <section id="categories-section" class="search-section">
       <form action="/dashboard" method="get">
+       
+
         <input
+          id="search-keyword"
           type="text"
           name="keyword"
           placeholder="Search restaurants or cuisine..."
@@ -296,74 +302,115 @@
       </div>
     </section>
 
-    <!-- FOOTER -->
+    <!-- ================= ABOUT / FOOTER ================= -->
 
-    <footer class="footer">
-      <section class="about-section" id="about">
-        <div class="about-container">
-          <span class="about-badge"> ABOUT FOODIEGO </span>
-
-          <h2>Bringing Great Food To Your Doorstep</h2>
+    <section id="about" class="about-section">
+      <div class="about-container">
+        <div class="about-heading">
+          <h2>About FoodieGo</h2>
 
           <p>
-            FoodieGo connects food lovers with premium restaurants, offering
-            fast delivery, seamless ordering and a delightful food experience.
+            FoodieGo is a modern food ordering platform that helps users
+            discover restaurants, order delicious food and enjoy a seamless
+            delivery experience.
           </p>
+        </div>
 
-          <div class="about-stats">
-            <div class="about-stat">
-              <h3>500+</h3>
+        <div class="about-grid">
+          <!-- Column 1 -->
 
-              <p>Restaurants</p>
-            </div>
+          <div class="footer-column">
+            <h2 class="footer-logo">🍔 Foodie<span>Go</span></h2>
 
-            <div class="about-stat">
-              <h3>50K+</h3>
-
-              <p>Orders Delivered</p>
-            </div>
-
-            <div class="about-stat">
-              <h3>4.9★</h3>
-
-              <p>Customer Rating</p>
-            </div>
-
-            <div class="about-stat">
-              <h3>24/7</h3>
-
-              <p>Support</p>
-            </div>
+            <p class="footer-description">© 2026 FoodieGo<br /></p>
           </div>
 
-          <div class="features-grid">
-            <div class="feature-box">
-              ⚡
+          <!-- Column 2 -->
 
-              <h4>Fast Delivery</h4>
-            </div>
+          <div class="footer-column">
+            <h3>Company</h3>
 
-            <div class="feature-box">
-              🍔
+           <a th:href="@{/about}">About Us</a>
 
-              <h4>Premium Restaurants</h4>
-            </div>
+<a th:href="@{/privacy}">Privacy Policy</a>
 
-            <div class="feature-box">
-              🛒
+<a th:href="@{/terms}">Terms & Conditions</a>
 
-              <h4>Easy Ordering</h4>
-            </div>
+<a th:href="@{/contact}">Contact Us</a>
+          </div>
 
-            <div class="feature-box">
-              📦
+          <!-- Column 3 -->
 
-              <h4>Live Tracking</h4>
+          <div class="footer-column">
+            <h3>Quick Links</h3>
+
+            <a href="/dashboard">Home</a>
+
+            <a href="/cart">Cart</a>
+
+            <a href="/orders">My Orders</a>
+
+            <a href="/dashboard#restaurants"> Restaurants </a>
+          </div>
+
+          <!-- Column 4 -->
+
+          <div class="footer-column">
+            <h3>Connect</h3>
+
+            <p>
+              <i class="fa-solid fa-envelope"></i>
+
+              support@foodiego.com
+            </p>
+
+            <p>
+              <i class="fa-solid fa-phone"></i>
+
+              +91 90592 37125
+            </p>
+
+            <div class="footer-social">
+              <a
+                href="https://github.com/yourusername"
+                target="_blank"
+                aria-label="GitHub"
+              >
+                <i class="fa-brands fa-github"></i>
+              </a>
+
+              <a
+                href="https://www.linkedin.com/in/yourusername"
+                target="_blank"
+                aria-label="LinkedIn"
+              >
+                <i class="fa-brands fa-linkedin-in"></i>
+              </a>
+
+              <a
+                href="https://www.instagram.com/yourusername"
+                target="_blank"
+                aria-label="Instagram"
+              >
+                <i class="fa-brands fa-instagram"></i>
+              </a>
+
+              <a
+                href="https://x.com/yourusername"
+                target="_blank"
+                aria-label="X"
+              >
+                <i class="fa-brands fa-x-twitter"></i>
+              </a>
             </div>
           </div>
         </div>
-      </section>
-    </footer>
+
+        <div class="footer-bottom">
+          <p>© 2026 FoodieGo</p>
+        </div>
+      </div>
+    </section>
     <script>
       function toggleFavorite(button, event) {
         if (event && typeof event.preventDefault === "function") {
