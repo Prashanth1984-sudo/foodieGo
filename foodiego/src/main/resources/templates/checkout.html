@@ -2,310 +2,418 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en" xml:lang="en">
   <head>
     <title>Checkout</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <link rel="stylesheet" th:href="@{/css/checkout.css}" />
     <link rel="shortcut icon" th:href="@{/images/fevicon.jpg}" />
     <link rel="shortcut icon" th:href="@{/images/fevicon.png}" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
   </head>
 
   <body>
-    <div class="container">
-      <h1>Checkout</h1>
-
-      <form action="/checkout/place-order" method="post">
-        <div class="price-summary">
-          <div class="price-row">
-            <span>Subtotal</span>
-            <span>₹<span id="subtotal" th:text="${subtotal}">0</span></span>
-          </div>
-
-          <div class="price-row">
-            <span>Discount</span>
-            <span class="discount-text">
-              -₹<span id="discount" th:text="${discount}">0</span>
-            </span>
-          </div>
-
-          <div class="price-row total-row">
-            <span>Total</span>
-            <span>
-              ₹<span id="finalTotal" th:text="${finalTotal}">0</span>
-            </span>
-          </div>
+    <div class="checkout-page">
+      <div class="checkout-shell">
+        <div class="checkout-header">
+          <h1>Checkout</h1>
+          <p class="checkout-subtitle">
+            Confirm your address, pick a payment method, and you're set.
+          </p>
         </div>
 
-        <div class="coupon-box">
-          <label for="couponCode"> Coupon Code </label>
+        <form
+          action="/checkout/place-order"
+          method="post"
+          class="checkout-form"
+        >
+          <div class="checkout-grid">
+            <!-- ================= LEFT COLUMN ================= -->
+            <div class="checkout-main">
+              <!-- Address -->
+              <section class="panel address-section">
+                <h3>
+                  <i class="fa-solid fa-location-dot"></i> Delivery Address
+                </h3>
 
-          <div class="coupon-section">
-            <div id="couponMessage"></div>
-            <div class="coupon-row">
-              <input
-                type="text"
-                id="couponCode"
-                placeholder="Enter Coupon Code"
-              />
-
-              <button type="button" id="applyBtn" onclick="validateCoupon()">
-                Apply
-              </button>
-              <button
-                type="button"
-                class="explore-offers"
-                onclick="openCouponModal()"
-              >
-                <i class="fa-solid fa-ticket"></i>
-
-                Explore Available Offers
-              </button>
-            </div>
-
-            <input type="hidden" id="appliedCoupon" name="couponCode" />
-          </div>
-        </div>
-        <div class="address-section">
-          <h3>Select Delivery Address</h3>
-
-          <input
-            type="hidden"
-            id="selectedAddressId"
-            name="addressId"
-            th:value="${hasAddresses ? addresses[0].id : ''}"
-          />
-
-          <!-- Saved Addresses -->
-
-          <div th:if="${!hasAddresses}">
-            <p class="empty-address-msg">
-              No saved address found. Add one below to continue.
-            </p>
-          </div>
-
-          <div th:if="${hasAddresses}" class="saved-addresses">
-            <div class="address-list">
-              <label
-                class="address-card"
-                th:each="address, addressStat : ${addresses}"
-              >
                 <input
-                  type="radio"
+                  type="hidden"
+                  id="selectedAddressId"
                   name="addressId"
-                  th:value="${address.id}"
-                  th:checked="${addressStat.index == 0}"
-                  required
+                  th:value="${hasAddresses ? addresses[0].id : ''}"
                 />
 
-                <div class="address-info">
-                  <h4 th:text="${address.fullName}"></h4>
-
-                  <p th:text="${address.addressLine}"></p>
-
-                  <p>
-                    <span th:text="${address.city}"></span>,
-                    <span th:text="${address.state}"></span>
-                    -
-                    <span th:text="${address.pincode}"></span>
+                <div th:if="${!hasAddresses}" class="no-address-card">
+                  <h4>No saved address yet</h4>
+                  <p class="empty-address-msg">
+                    Add a delivery address below to continue.
                   </p>
-
-                  <small>
-                    📞
-                    <span th:text="${address.phone}"></span>
-                  </small>
                 </div>
-              </label>
+
+                <div th:if="${hasAddresses}" class="saved-addresses">
+                  <div class="address-list">
+                    <label
+                      class="address-card"
+                      th:each="address, addressStat : ${addresses}"
+                    >
+                      <input
+                        type="radio"
+                        name="addressId"
+                        th:value="${address.id}"
+                        th:checked="${addressStat.index == 0}"
+                        required
+                      />
+
+                      <div class="address-info">
+                        <div class="address-info-top">
+                          <h4 th:text="${address.fullName}"></h4>
+                          <span
+                            class="address-badge"
+                            th:if="${addressStat.index == 0}"
+                            >Default</span
+                          >
+                        </div>
+
+                        <p th:text="${address.addressLine}"></p>
+
+                        <p>
+                          <span th:text="${address.city}"></span>,
+                          <span th:text="${address.state}"></span>
+                          -
+                          <span th:text="${address.pincode}"></span>
+                        </p>
+
+                        <small>
+                          <i class="fa-solid fa-phone"></i>
+                          <span th:text="${address.phone}"></span>
+                        </small>
+                      </div>
+                    </label>
+                  </div>
+
+                  <button
+                    type="button"
+                    class="add-new-address-btn"
+                    onclick="toggleAddressForm()"
+                  >
+                    <i class="fa-solid fa-plus"></i> Add New Address
+                  </button>
+                </div>
+
+                <!-- Add Address Form -->
+                <div
+                  id="addressFormContainer"
+                  class="address-form-container"
+                  th:classappend="${hasAddresses} ? '' : 'show'"
+                >
+                  <div class="checkout-address-form">
+                    <h3>Add Delivery Address</h3>
+
+                    <div id="newAddressForm">
+                      <div class="form-grid">
+                        <input
+                          type="text"
+                          id="fullName"
+                          placeholder="Full Name"
+                          pattern="[A-Za-z ]{3,50}"
+                        />
+
+                        <input
+                          type="tel"
+                          id="phone"
+                          placeholder="Phone Number"
+                          pattern="[0-9]{10}"
+                          maxlength="10"
+                        />
+
+                        <textarea
+                          id="addressLine"
+                          placeholder="Flat / House No, Street Name, Area, Landmark"
+                        ></textarea>
+
+                        <input
+                          type="text"
+                          id="city"
+                          placeholder="City"
+                          pattern="[A-Za-z ]+"
+                        />
+
+                        <input
+                          type="text"
+                          id="state"
+                          placeholder="State"
+                          pattern="[A-Za-z ]+"
+                        />
+
+                        <input
+                          type="text"
+                          id="pincode"
+                          placeholder="Pincode"
+                          pattern="[0-9]{6}"
+                          maxlength="6"
+                        />
+                      </div>
+
+                      <button
+                        type="button"
+                        class="save-address-btn"
+                        onclick="saveAndUseAddress()"
+                      >
+                        Save &amp; Use Address
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              <!-- Payment -->
+              <section class="panel payment-section">
+                <h3>
+                  <i class="fa-solid fa-credit-card"></i> Select Payment Method
+                </h3>
+
+                <label class="payment-card">
+                  <input
+                    type="radio"
+                    name="paymentMethod"
+                    value="COD"
+                    checked
+                    onchange="toggleUPI()"
+                  />
+
+                  <div class="payment-content">
+                    <span class="payment-icon">💵</span>
+                    <div>
+                      <h4>Cash On Delivery</h4>
+                      <p>Pay when your order arrives</p>
+                    </div>
+                  </div>
+                </label>
+
+                <label class="payment-card">
+                  <input
+                    type="radio"
+                    name="paymentMethod"
+                    value="UPI"
+                    onchange="toggleUPI()"
+                  />
+
+                  <div class="payment-content">
+                    <span class="payment-icon">📱</span>
+                    <div>
+                      <h4>UPI Payment</h4>
+                      <p>Fast &amp; secure payments</p>
+                    </div>
+                  </div>
+                </label>
+
+                <div id="upiApps" class="upi-apps">
+                  <div class="upi-grid">
+                    <label class="upi-card">
+                      <input type="radio" name="upiApp" value="Google Pay" />
+                      <img src="/images/gpay.jpg" alt="Google Pay" />
+                      <span>Google Pay</span>
+                    </label>
+
+                    <label class="upi-card">
+                      <input type="radio" name="upiApp" value="PhonePe" />
+                      <img src="/images/phonepe.jpg" alt="PhonePe" />
+                      <span>PhonePe</span>
+                    </label>
+
+                    <label class="upi-card">
+                      <input type="radio" name="upiApp" value="Paytm" />
+                      <img src="/images/paytm.jpg" alt="Paytm" />
+                      <span>Paytm</span>
+                    </label>
+
+                    <label class="upi-card">
+                      <input type="radio" name="upiApp" value="BHIM" />
+                      <img src="/images/bhim.jpg" alt="BHIM" />
+                      <span>BHIM</span>
+                    </label>
+                  </div>
+                </div>
+
+                <label class="payment-card">
+                  <input
+                    type="radio"
+                    name="paymentMethod"
+                    value="CARD"
+                    onchange="toggleUPI()"
+                  />
+
+                  <div class="payment-content">
+                    <span class="payment-icon">💳</span>
+                    <div>
+                      <h4>Credit / Debit Card</h4>
+                      <p>Visa, Mastercard, RuPay</p>
+                    </div>
+                  </div>
+                </label>
+
+                <label class="payment-card">
+                  <input
+                    type="radio"
+                    name="paymentMethod"
+                    value="NETBANKING"
+                    onchange="toggleUPI()"
+                  />
+
+                  <div class="payment-content">
+                    <span class="payment-icon">🏦</span>
+                    <div>
+                      <h4>Net Banking</h4>
+                      <p>All major banks supported</p>
+                    </div>
+                  </div>
+                </label>
+              </section>
             </div>
 
-            <button
-              type="button"
-              class="add-new-address-btn"
-              onclick="toggleAddressForm()"
-            >
-              + Add New Address
-            </button>
-          </div>
+            <!-- ================= RIGHT COLUMN ================= -->
+            <aside class="checkout-summary">
+              <div class="summary-sticky">
+                <section
+                  class="panel order-items-panel"
+                  th:if="${cartItems != null and !cartItems.isEmpty()}"
+                >
+                  <h3><i class="fa-solid fa-bag-shopping"></i> Your Order</h3>
 
-          <!-- Add Address Form -->
+                  <div class="order-item-row" th:each="item : ${cartItems}">
+                    <img
+                      th:if="${item.imageUrl}"
+                      th:src="${item.imageUrl}"
+                      alt=""
+                      class="order-item-img"
+                    />
+                    <div class="order-item-info">
+                      <span
+                        class="order-item-name"
+                        th:text="${item.name}"
+                      ></span>
+                      <span
+                        class="order-item-qty"
+                        th:text="'x' + ${item.quantity}"
+                      ></span>
+                    </div>
+                    <span class="order-item-price"
+                      >₹<span th:text="${item.price * item.quantity}"></span
+                    ></span>
+                  </div>
+                </section>
 
-          <div
-            id="addressFormContainer"
-            th:style="${hasAddresses} ? 'display:none;' : 'display:block;'"
-          >
-            <div class="checkout-address-form">
-              <h3>Add Delivery Address</h3>
+                <section class="panel price-summary">
+                  <h3><i class="fa-solid fa-receipt"></i> Bill Details</h3>
 
-              <div id="newAddressForm">
-                <div class="form-grid">
-                  <input
-                    type="text"
-                    id="fullName"
-                    placeholder="Full Name"
-                    pattern="[A-Za-z ]{3,50}"
-                  />
+                  <div class="price-row">
+                    <span>Item Total</span>
+                    <span
+                      >₹<span id="subtotal" th:text="${subtotal}">0</span></span
+                    >
+                  </div>
 
-                  <input
-                    type="tel"
-                    id="phone"
-                    placeholder="Phone Number"
-                    pattern="[0-9]{10}"
-                    maxlength="10"
-                  />
+                  <div class="price-row">
+                    <span>Platform Fee</span>
+                    <span
+                      >₹<span id="platformFee" th:text="${platformFee}"
+                        >0</span
+                      ></span
+                    >
+                  </div>
 
-                  <textarea
-                    id="addressLine"
-                    placeholder="Flat / House No, Street Name, Area, Landmark"
-                  ></textarea>
+                  <div class="price-row">
+                    <span>GST (5%)</span>
+                    <span>₹<span id="gst" th:text="${gst}">0</span></span>
+                  </div>
 
-                  <input
-                    type="text"
-                    id="city"
-                    placeholder="City"
-                    pattern="[A-Za-z ]+"
-                  />
+                  <div
+                    class="price-row"
+                    id="discountRow"
+                    th:classappend="${discount == 0} ? 'price-row-hidden'"
+                  >
+                    <span>Discount</span>
+                    <span class="discount-text">
+                      -₹<span id="discount" th:text="${discount}">0</span>
+                    </span>
+                  </div>
 
-                  <input
-                    type="text"
-                    id="state"
-                    placeholder="State"
-                    pattern="[A-Za-z ]+"
-                  />
+                  <div class="price-row total-row">
+                    <span>Grand Total</span>
+                    <span>
+                      ₹<span id="finalTotal" th:text="${finalTotal}">0</span>
+                    </span>
+                  </div>
+                </section>
 
-                  <input
-                    type="text"
-                    id="pincode"
-                    placeholder="Pincode"
-                    pattern="[0-9]{6}"
-                    maxlength="6"
-                  />
-                </div>
+                <section class="panel coupon-box">
+                  <label for="couponCode"
+                    ><i class="fa-solid fa-ticket"></i> Coupon Code</label
+                  >
+
+                  <div class="coupon-section">
+                    <div id="couponMessage"></div>
+                    <div class="coupon-row">
+                      <input
+                        type="text"
+                        id="couponCode"
+                        placeholder="Enter Coupon Code"
+                      />
+
+                      <button
+                        type="button"
+                        id="applyBtn"
+                        onclick="validateCoupon()"
+                      >
+                        Apply
+                      </button>
+                    </div>
+
+                    <button
+                      type="button"
+                      class="explore-offers"
+                      onclick="openCouponModal()"
+                    >
+                      <i class="fa-solid fa-tags"></i>
+                      Explore Available Offers
+                    </button>
+
+                    <input type="hidden" id="appliedCoupon" name="couponCode" />
+                  </div>
+                </section>
+
+                <input type="hidden" name="paymentId" id="paymentId" />
+                <input
+                  type="hidden"
+                  name="razorpayOrderId"
+                  id="razorpayOrderId"
+                />
 
                 <button
                   type="button"
-                  class="save-address-btn"
-                  onclick="saveAndUseAddress()"
+                  class="place-order-btn"
+                  onclick="payNow()"
                 >
-                  Save & Use Address
+                  Pay &amp; Place Order
                 </button>
+
+                <p class="secure-note">
+                  <i class="fa-solid fa-lock"></i> Secure checkout powered by
+                  Razorpay
+                </p>
               </div>
-            </div>
+            </aside>
           </div>
-        </div>
-
-        <div class="payment-section">
-          <h3>💳 Select Payment Method</h3>
-
-          <label class="payment-card">
-            <input
-              type="radio"
-              name="paymentMethod"
-              value="COD"
-              checked
-              onchange="toggleUPI()"
-            />
-
-            <div class="payment-content">
-              <span class="payment-icon">💵</span>
-              <div>
-                <h4>Cash On Delivery</h4>
-                <p>Pay when your order arrives</p>
-              </div>
-            </div>
-          </label>
-
-          <label class="payment-card">
-            <input
-              type="radio"
-              name="paymentMethod"
-              value="UPI"
-              onchange="toggleUPI()"
-            />
-
-            <div class="payment-content">
-              <span class="payment-icon">📱</span>
-              <div>
-                <h4>UPI Payment</h4>
-                <p>Fast & secure payments</p>
-              </div>
-            </div>
-          </label>
-
-          <div id="upiApps" class="upi-apps">
-            <div class="upi-grid">
-              <label class="upi-card">
-                <input type="radio" name="upiApp" value="Google Pay" />
-
-                <img src="/images/gpay.jpg" alt="Google Pay" />
-
-                <span>Google Pay</span>
-              </label>
-
-              <label class="upi-card">
-                <input type="radio" name="upiApp" value="PhonePe" />
-
-                <img src="/images/phonepe.jpg" alt="PhonePe" />
-
-                <span>PhonePe</span>
-              </label>
-
-              <label class="upi-card">
-                <input type="radio" name="upiApp" value="Paytm" />
-
-                <img src="/images/paytm.jpg" alt="Paytm" />
-
-                <span>Paytm</span>
-              </label>
-
-              <label class="upi-card">
-                <input type="radio" name="upiApp" value="BHIM" />
-
-                <img src="/images/bhim.jpg" alt="BHIM" />
-
-                <span>BHIM</span>
-              </label>
-            </div>
-          </div>
-
-          <label class="payment-card">
-            <input
-              type="radio"
-              name="paymentMethod"
-              value="CARD"
-              onchange="toggleUPI()"
-            />
-
-            <div class="payment-content">
-              <span class="payment-icon">💳</span>
-              <div>
-                <h4>Credit / Debit Card</h4>
-                <p>Visa, Mastercard, RuPay</p>
-              </div>
-            </div>
-          </label>
-
-          <label class="payment-card">
-            <input
-              type="radio"
-              name="paymentMethod"
-              value="NETBANKING"
-              onchange="toggleUPI()"
-            />
-
-            <div class="payment-content">
-              <span class="payment-icon">🏦</span>
-              <div>
-                <h4>Net Banking</h4>
-                <p>All major banks supported</p>
-              </div>
-            </div>
-          </label>
-        </div>
-
-        <input type="hidden" name="paymentId" id="paymentId" />
-        <input type="hidden" name="razorpayOrderId" id="razorpayOrderId" />
-
-        <button type="button" class="place-order-btn" onclick="payNow()">
-          Pay & Place Order
-        </button>
-      </form>
+        </form>
+      </div>
     </div>
 
     <div id="toast" class="toast">Address saved successfully ✓</div>
@@ -314,7 +422,6 @@
       <div class="coupon-content">
         <div class="coupon-header">
           <h2>Available Coupons</h2>
-
           <span class="close" onclick="closeCouponModal()"> × </span>
         </div>
 
@@ -326,13 +433,11 @@
               <p>
                 <span th:if="${coupon.discountAmount!=null}">
                   ₹<span th:text="${coupon.discountAmount}"> </span>
-
                   OFF
                 </span>
 
                 <span th:if="${coupon.discountPercent!=null}">
                   <span th:text="${coupon.discountPercent}"> </span>
-
                   % OFF
                 </span>
               </p>
@@ -359,8 +464,7 @@
     <script>
       function toggleAddressForm() {
         const form = document.getElementById("addressFormContainer");
-
-        form.style.display = form.style.display === "none" ? "block" : "none";
+        form.classList.toggle("show");
       }
 
       document.addEventListener("DOMContentLoaded", function () {
@@ -383,7 +487,6 @@
 
             if (!addressId) {
               e.preventDefault();
-
               alert("Please select or add a delivery address.");
             }
           });
@@ -392,36 +495,29 @@
 
       function validateCoupon() {
         const couponCode = document.getElementById("couponCode").value.trim();
-
         const msg = document.getElementById("couponMessage");
 
         if (!couponCode) {
           msg.className = "coupon-error";
-
           msg.innerHTML = "❌ Please enter a coupon code";
-
           msg.style.display = "block";
-
           return;
         }
 
         fetch("/checkout/validate-coupon", {
           method: "POST",
-
           headers: {
             "Content-Type": "application/x-www-form-urlencoded",
           },
-
           body: "couponCode=" + encodeURIComponent(couponCode),
         })
           .then((response) => response.json())
-
           .then((data) => {
+            const discountRow = document.getElementById("discountRow");
+
             if (data.success) {
               msg.className = "coupon-success";
-
               msg.innerHTML = "✅ " + data.message;
-
               msg.style.display = "block";
 
               document.getElementById("discount").innerText =
@@ -432,55 +528,59 @@
 
               document.getElementById("appliedCoupon").value =
                 couponCode.toUpperCase();
+
+              discountRow.classList.remove("price-row-hidden");
             } else {
               msg.className = "coupon-error";
-
               msg.innerHTML = "❌ " + data.message;
-
               msg.style.display = "block";
 
               document.getElementById("discount").innerText = "0";
 
-              document.getElementById("finalTotal").innerText =
-                document.getElementById("subtotal").innerText;
+              const subtotalVal = parseFloat(
+                document.getElementById("subtotal").innerText,
+              );
+              const platformFeeVal = parseFloat(
+                document.getElementById("platformFee").innerText,
+              );
+              const gstVal = parseFloat(
+                document.getElementById("gst").innerText,
+              );
+
+              document.getElementById("finalTotal").innerText = (
+                subtotalVal +
+                platformFeeVal +
+                gstVal
+              ).toFixed(2);
 
               document.getElementById("appliedCoupon").value = "";
+
+              discountRow.classList.add("price-row-hidden");
             }
           })
-
           .catch(() => {
             msg.className = "coupon-error";
-
             msg.innerHTML = "❌ Something went wrong";
-
             msg.style.display = "block";
           });
       }
 
       function applyCoupon(code) {
         document.getElementById("couponCode").value = code;
-
         closeCouponModal();
-
         validateCoupon();
       }
 
       function saveAndUseAddress() {
         const formData = new FormData();
-
         formData.append("fullName", document.getElementById("fullName").value);
-
         formData.append("phone", document.getElementById("phone").value);
-
         formData.append(
           "addressLine",
           document.getElementById("addressLine").value,
         );
-
         formData.append("city", document.getElementById("city").value);
-
         formData.append("state", document.getElementById("state").value);
-
         formData.append("pincode", document.getElementById("pincode").value);
 
         fetch("/checkout/add-address", {
@@ -490,7 +590,6 @@
           .then((response) => response.text())
           .then(() => {
             const toast = document.getElementById("toast");
-
             toast.classList.add("show");
 
             setTimeout(() => {
@@ -500,18 +599,17 @@
             setTimeout(() => {
               location.reload();
             }, 1000);
-
-            location.reload();
           })
           .catch((error) => {
             console.error(error);
-
             alert("Failed to save address");
           });
-        document.getElementById("addressFormContainer").style.display = "none";
+
+        document
+          .getElementById("addressFormContainer")
+          .classList.remove("show");
       }
-    </script>
-    <script>
+
       function toggleUPI() {
         const upiSelected =
           document.querySelector('input[value="UPI"]').checked;
@@ -521,17 +619,13 @@
           : "none";
       }
 
-      let paymentMethod = document.querySelector(
-        'input[name="paymentMethod"]:checked',
-      ).value;
-
-      if (paymentMethod === "UPI") {
-        const upiApp = document.querySelector('input[name="upiApp"]:checked');
-
-        paymentMethod = upiApp.value + " UPI";
+      function openCouponModal() {
+        document.getElementById("couponModal").style.display = "flex";
       }
 
-      document.getElementById("paymentMethodHidden").value = paymentMethod;
+      function closeCouponModal() {
+        document.getElementById("couponModal").style.display = "none";
+      }
     </script>
 
     <!-- Add Subresource Integrity (SRI) and crossorigin; replace the integrity value with the actual SHA384 hash for the remote script or host the file locally -->
@@ -556,15 +650,10 @@
 
         const options = {
           key: "rzp_test_T4lXtogd3BAbaH",
-
           amount: order.amount,
-
           currency: order.currency,
-
           order_id: order.id,
-
           name: "FoodieGo",
-
           description: "Food Order Payment",
 
           handler: function (response) {
@@ -579,7 +668,6 @@
         };
 
         const rzp = new Razorpay(options);
-
         rzp.open();
       }
 
@@ -593,22 +681,6 @@
         } else {
           payNow();
         }
-      }
-
-      function openCouponModal() {
-        document.getElementById("couponModal").style.display = "flex";
-      }
-
-      function closeCouponModal() {
-        document.getElementById("couponModal").style.display = "none";
-      }
-
-      function applyCoupon(code) {
-        document.getElementById("couponCode").value = code;
-
-        closeCouponModal();
-
-        document.getElementById("applyCouponBtn").click();
       }
     </script>
   </body>

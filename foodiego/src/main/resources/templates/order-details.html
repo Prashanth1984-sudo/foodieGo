@@ -2,13 +2,11 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
   <head>
     <meta charset="UTF-8" />
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <title>Order Details</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
-
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
     <!-- Self-hosted Poppins font to avoid external SRI requirement -->
@@ -16,230 +14,256 @@
 
     <link rel="stylesheet" th:href="@{/css/order-details.css}" />
     <link rel="shortcut icon" th:href="@{/images/fevicon.png}" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
   </head>
 
   <body>
-    <div class="container">
-      <!-- BACK BUTTON -->
-
-      <div class="top-bar">
-        <a href="/orders" class="back-btn"> ← Back to Orders </a>
-      </div>
-
-      <!-- ORDER HEADER -->
-
-      <div class="order-header">
-        <h1>
-          Order #
-          <span th:text="${order.id}"> 1 </span>
-        </h1>
-
-        <div class="status-badge">
-          <span th:text="${order.status}"> PLACED </span>
+    <div class="order-page">
+      <div class="order-shell">
+        <!-- BACK BUTTON -->
+        <div class="top-bar">
+          <a href="/orders" class="back-btn">← Back to Orders</a>
         </div>
 
-        <p class="order-date">
-          Ordered On:
+        <div class="order-grid">
+          <!-- ================= LEFT COLUMN ================= -->
+          <div class="order-main">
+            <!-- ORDER HEADER -->
+            <div class="panel order-header">
+              <div class="order-header-top">
+                <div>
+                  <h1>Order #<span th:text="${order.id}">1</span></h1>
+                  <p class="order-date">
+                    Ordered on
+                    <span
+                      th:text="${#temporals.format(order.orderDate,'dd MMM yyyy • hh:mm a')}"
+                    ></span>
+                  </p>
+                </div>
 
-          <span
-            th:text="${#temporals.format(order.orderDate,'dd MMM yyyy • hh:mm a')}"
-          >
-          </span>
-        </p>
-
-        <div class="order-stats">
-          <div class="stat-box">
-            <h3 th:text="${itemCount}">1</h3>
-
-            <p>Items</p>
-          </div>
-
-          <div class="stat-box">
-            <h3>₹<span th:text="${order.totalAmount}"> </span></h3>
-
-            <p>Total Amount</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- TIMELINE -->
-
-      <div class="timeline">
-        <div class="timeline-step active">✓ Order Placed</div>
-
-        <div
-          th:class="${order.status == 'PREPARING' ||
-                   order.status == 'OUT_FOR_DELIVERY' ||
-                   order.status == 'DELIVERED'}
-                   ?
-                   'timeline-step active'
-                   :
-                   'timeline-step'"
-        >
-          🍳 Preparing
-        </div>
-
-        <div
-          th:class="${order.status == 'OUT_FOR_DELIVERY' ||
-                   order.status == 'DELIVERED'}
-                   ?
-                   'timeline-step active'
-                   :
-                   'timeline-step'"
-        >
-          🚚 Out For Delivery
-        </div>
-
-        <div
-          th:class="${order.status == 'DELIVERED'}
-                   ?
-                   'timeline-step active'
-                   :
-                   'timeline-step'"
-        >
-          🎉 Delivered
-        </div>
-      </div>
-
-      <!-- ORDERED ITEMS -->
-
-      <h2 class="section-title">Ordered Items</h2>
-
-      <div class="items-container">
-        <div class="item-card" th:each="item : ${items}">
-          <div class="item-image">
-            <img th:src="${item.imageUrl}" th:alt="${item.name}" />
-          </div>
-
-          <div class="item-info">
-            <h3 th:text="${item.name}">Food Name</h3>
-
-            <p class="food-description" th:text="${item.description}">
-              Food Description
-            </p>
-
-            <div class="item-meta">
-              <div>
-                <label> Quantity </label>
-
-                <strong th:text="${item.quantity}"> 1 </strong>
+                <div class="status-badge" th:text="${order.status}">PLACED</div>
               </div>
 
-              <div>
-                <label> Price </label>
+              <div class="order-stats">
+                <div class="stat-box">
+                  <h3 th:text="${itemCount}">1</h3>
+                  <p>Items</p>
+                </div>
 
-                <strong> ₹<span th:text="${item.price}"> </span> </strong>
+                <div class="stat-box">
+                  <h3>₹<span th:text="${order.totalAmount}"></span></h3>
+                  <p>Total Amount</p>
+                </div>
               </div>
+            </div>
 
-              <div>
-                <label> Subtotal </label>
+            <!-- TIMELINE -->
+            <div class="panel timeline-panel">
+              <div class="timeline">
+                <div class="timeline-step active">
+                  <span class="timeline-icon">✓</span>
+                  <span>Order Placed</span>
+                </div>
 
-                <strong>
-                  ₹<span th:text="${item.price * item.quantity}"> </span>
-                </strong>
+                <div
+                  th:class="${order.status == 'PREPARING' ||
+                           order.status == 'OUT_FOR_DELIVERY' ||
+                           order.status == 'DELIVERED'}
+                           ?
+                           'timeline-step active'
+                           :
+                           'timeline-step'"
+                >
+                  <span class="timeline-icon">🍳</span>
+                  <span>Preparing</span>
+                </div>
+
+                <div
+                  th:class="${order.status == 'OUT_FOR_DELIVERY' ||
+                           order.status == 'DELIVERED'}
+                           ?
+                           'timeline-step active'
+                           :
+                           'timeline-step'"
+                >
+                  <span class="timeline-icon">🚚</span>
+                  <span>Out For Delivery</span>
+                </div>
+
+                <div
+                  th:class="${order.status == 'DELIVERED'}
+                           ?
+                           'timeline-step active'
+                           :
+                           'timeline-step'"
+                >
+                  <span class="timeline-icon">🎉</span>
+                  <span>Delivered</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- ORDERED ITEMS -->
+            <div class="panel items-panel">
+              <h2 class="section-title">Ordered Items</h2>
+
+              <div class="items-container">
+                <div class="item-card" th:each="item : ${items}">
+                  <div class="item-image">
+                    <img th:src="${item.imageUrl}" th:alt="${item.name}" />
+                  </div>
+
+                  <div class="item-info">
+                    <h3 th:text="${item.name}">Food Name</h3>
+
+                    <p class="food-description" th:text="${item.description}">
+                      Food Description
+                    </p>
+
+                    <div class="item-meta">
+                      <div>
+                        <label>Quantity</label>
+                        <strong th:text="${item.quantity}">1</strong>
+                      </div>
+
+                      <div>
+                        <label>Price</label>
+                        <strong>₹<span th:text="${item.price}"></span></strong>
+                      </div>
+
+                      <div>
+                        <label>Subtotal</label>
+                        <strong
+                          >₹<span th:text="${item.price * item.quantity}"></span
+                        ></strong>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </div>
 
-      <!-- ORDER SUMMARY -->
+          <!-- ================= RIGHT COLUMN ================= -->
+          <aside class="order-sidebar">
+            <div class="sidebar-sticky">
+              <div class="panel summary-card">
+                <h3 class="summary-card-title">
+                  <i class="fa-solid fa-receipt"></i> Order Summary
+                </h3>
 
-      <div class="summary-card">
-        <div class="summary-row">
-          <span> Order Status </span>
+                <div class="summary-row">
+                  <span>Order Status</span>
+                  <span th:text="${order.status}">PLACED</span>
+                </div>
 
-          <span th:text="${order.status}"> PLACED </span>
-        </div>
+                <div class="summary-row">
+                  <span>Total Items</span>
+                  <span th:text="${itemCount}">1</span>
+                </div>
 
-        <div class="summary-row">
-          <span> Total Items </span>
+                <div class="summary-row">
+                  <span>Payment Method</span>
+                  <span th:text="${order.paymentMethod}"></span>
+                </div>
 
-          <span th:text="${itemCount}"> 1 </span>
-        </div>
+                <div class="summary-row">
+                  <span>Payment Status</span>
+                  <span th:text="${order.paymentStatus}"></span>
+                </div>
 
-        <div class="summary-row">
-          <span>Payment Method</span>
-          <span th:text="${order.paymentMethod}"></span>
-        </div>
+                <div class="summary-row" th:if="${order.paymentId != null}">
+                  <span>Payment ID</span>
+                  <span th:text="${order.paymentId}"></span>
+                </div>
 
-        <div class="summary-row">
-          <span>Payment Status</span>
-          <span th:text="${order.paymentStatus}"></span>
-        </div>
+                <div
+                  class="summary-row"
+                  th:if="${order.razorpayOrderId != null}"
+                >
+                  <span>Razorpay Order ID</span>
+                  <span th:text="${order.razorpayOrderId}"></span>
+                </div>
 
-        <div class="summary-row" th:if="${order.paymentId != null}">
-          <span>Payment ID</span>
-          <span th:text="${order.paymentId}"></span>
-        </div>
+                <div class="summary-row">
+                  <span>Estimated Delivery</span>
+                  <span>25-30 mins</span>
+                </div>
+              </div>
 
-        <div class="summary-row" th:if="${order.razorpayOrderId != null}">
-          <span>Razorpay Order ID</span>
-          <span th:text="${order.razorpayOrderId}"></span>
-        </div>
+              <div
+                class="panel delivery-address-card"
+                th:if="${deliveryAddress != null}"
+              >
+                <h3 class="address-header">
+                  <i class="fa-solid fa-location-dot"></i> Delivery Address
+                </h3>
 
-        <div class="summary-row">
-          <span> Estimated Delivery </span>
+                <div class="address-content">
+                  <p
+                    class="customer-name"
+                    th:text="${deliveryAddress.fullName}"
+                  ></p>
+                  <p th:text="${deliveryAddress.addressLine}"></p>
 
-          <span> 25-30 mins </span>
-        </div>
+                  <p>
+                    <span th:text="${deliveryAddress.city}"></span>,
+                    <span th:text="${deliveryAddress.state}"></span>
+                    -
+                    <span th:text="${deliveryAddress.pincode}"></span>
+                  </p>
 
-        <div class="delivery-address-card" th:if="${deliveryAddress != null}">
-          <h3 class="address-title">Delivery Address</h3>
+                  <p class="address-phone">
+                    <i class="fa-solid fa-phone"></i>
+                    <span th:text="${deliveryAddress.phone}"></span>
+                  </p>
+                </div>
+              </div>
 
-          <div class="address-details">
-            <p class="customer-name" th:text="${deliveryAddress.fullName}"></p>
+              <div class="panel bill-card">
+                <h3 class="summary-card-title">
+                  <i class="fa-solid fa-file-invoice"></i> Bill Details
+                </h3>
 
-            <p th:text="${deliveryAddress.addressLine}"></p>
+                <div class="summary-row">
+                  <span>Subtotal</span>
+                  <span>
+                    ₹<span
+                      th:text="${order.totalAmount + (order.discountAmount != null ? order.discountAmount : 0)}"
+                    ></span>
+                  </span>
+                </div>
 
-            <p>
-              <span th:text="${deliveryAddress.city}"></span>,
-              <span th:text="${deliveryAddress.state}"></span>
-              -
-              <span th:text="${deliveryAddress.pincode}"></span>
-            </p>
+                <div
+                  th:if="${order.discountAmount != null && order.discountAmount > 0}"
+                  class="summary-row"
+                >
+                  <span>Discount</span>
+                  <span class="discount-text"
+                    >-₹<span th:text="${order.discountAmount}"></span
+                  ></span>
+                </div>
 
-            <p>
-              Phone:
-              <span th:text="${deliveryAddress.phone}"></span>
-            </p>
-          </div>
-        </div>
+                <div th:if="${order.couponCode != null}" class="summary-row">
+                  <span>Coupon Applied</span>
+                  <span
+                    class="coupon-chip"
+                    th:text="${order.couponCode}"
+                  ></span>
+                </div>
 
-        <div class="summary-row">
-          <span>Subtotal</span>
+                <div class="summary-row total-row">
+                  <span>Total Amount</span>
+                  <span>₹<span th:text="${order.totalAmount}"></span></span>
+                </div>
+              </div>
 
-          <span>
-            ₹<span
-              th:text="${order.totalAmount + (order.discountAmount != null ? order.discountAmount : 0)}"
-            >
-            </span>
-          </span>
-        </div>
-
-        <div
-          th:if="${order.discountAmount != null && order.discountAmount > 0}"
-          class="summary-row"
-        >
-          <span>Discount</span>
-
-          <span> -₹<span th:text="${order.discountAmount}"></span> </span>
-        </div>
-
-        <div th:if="${order.couponCode != null}" class="summary-row">
-          <span>Coupon</span>
-
-          <span th:text="${order.couponCode}"></span>
-        </div>
-
-        <div class="summary-row total-row">
-          <span> Total Amount </span>
-
-          <span> ₹<span th:text="${order.totalAmount}"> </span> </span>
-        </div>
-
-        <div class="action-buttons">
-          <a href="/dashboard" class="home-btn"> Continue Shopping </a>
+              <a href="/dashboard" class="home-btn">Continue Shopping</a>
+            </div>
+          </aside>
         </div>
       </div>
     </div>

@@ -89,10 +89,48 @@
         <div class="summary-card">
           <h2>Order Summary</h2>
 
-          <div class="summary-row">
-            <span>Total</span>
+          <div class="summary-details">
+            <div class="summary-row">
+              <span>Item Total</span>
+              <span>
+                ₹<span
+                  id="cartTotal"
+                  th:text="${#numbers.formatDecimal(total,1,2)}"
+                ></span>
+              </span>
+            </div>
 
-            <span> ₹<span id="cartTotal" th:text="${total}"></span> </span>
+            <div class="summary-row">
+              <span>Platform Fee</span>
+              <span>
+                ₹<span
+                  id="platformFee"
+                  th:text="${#numbers.formatDecimal(platformFee,1,2)}"
+                ></span>
+              </span>
+            </div>
+
+            <div class="summary-row">
+              <span>GST (5%)</span>
+              <span>
+                ₹<span
+                  id="gst"
+                  th:text="${#numbers.formatDecimal(gst,1,2)}"
+                ></span>
+              </span>
+            </div>
+
+            <hr />
+
+            <div class="summary-row grand-total">
+              <span>Grand Total</span>
+              <span>
+                ₹<span
+                  id="grandTotal"
+                  th:text="${#numbers.formatDecimal(grandTotal,1,2)}"
+                ></span>
+              </span>
+            </div>
           </div>
 
           <a href="/checkout" class="checkout-btn"> Proceed To Checkout </a>
@@ -135,6 +173,14 @@
         document.getElementById("qty-" + cartId).innerText = data.quantity;
 
         document.getElementById("cartTotal").innerText = data.total.toFixed(2);
+
+        document.getElementById("platformFee").innerText =
+          data.platformFee.toFixed(2);
+
+        document.getElementById("gst").innerText = data.gst.toFixed(2);
+
+        document.getElementById("grandTotal").innerText =
+          data.grandTotal.toFixed(2);
       }
     </script>
   </body>

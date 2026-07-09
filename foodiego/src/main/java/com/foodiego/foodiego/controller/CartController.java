@@ -23,6 +23,10 @@ import java.util.Optional;
 public class CartController {
 
         private static final String REDIRECT_CART = "redirect:/cart";
+        private static final String LOGGED_IN_USER = "loggedInUser";
+        private static final String TOTAL = "total";
+        private static final String PLATFORM_FEE = "platformFee";
+        private static final String GRAND_TOTAL = "grandTotal";
 
         private final CartItemRepository cartItemRepository;
 
@@ -43,7 +47,7 @@ public class CartController {
                         @RequestParam Long restaurantId,
                         HttpSession session) {
 
-                String userEmail = (String) session.getAttribute("loggedInUser");
+                String userEmail = (String) session.getAttribute(LOGGED_IN_USER);
 
                 if (userEmail == null) {
                         return "LOGIN_REQUIRED";
@@ -99,7 +103,7 @@ public class CartController {
                         @RequestParam Long restaurantId,
                         HttpSession session) {
 
-                String userEmail = (String) session.getAttribute("loggedInUser");
+                String userEmail = (String) session.getAttribute(LOGGED_IN_USER);
 
                 if (userEmail == null) {
                         return "LOGIN_REQUIRED";
@@ -127,7 +131,7 @@ public class CartController {
                         Model model) {
 
                 String userEmail = (String) session.getAttribute(
-                                "loggedInUser");
+                                LOGGED_IN_USER);
 
                 if (userEmail == null) {
                         return "redirect:/login";
@@ -177,9 +181,19 @@ public class CartController {
                                 "cartItems",
                                 cartView);
 
-                model.addAttribute(
-                                "total",
-                                total);
+                double platformFee = 10.0;
+
+                double gst = total * 0.05;
+
+                double grandTotal = total + platformFee + gst;
+
+                model.addAttribute(TOTAL, total);
+
+                model.addAttribute(PLATFORM_FEE, platformFee);
+
+                model.addAttribute("gst", gst);
+
+                model.addAttribute(GRAND_TOTAL, grandTotal);
 
                 if (!cartItems.isEmpty()) {
                         model.addAttribute(
@@ -210,10 +224,16 @@ public class CartController {
                                 "quantity",
                                 item.getQuantity());
 
-                response.put(
-                                "total",
-                                calculateCartTotal(
-                                                item.getUserEmail()));
+                double total = calculateCartTotal(item.getUserEmail());
+
+                double platformFee = 10.0;
+                double gst = total * 0.05;
+                double grandTotal = total + platformFee + gst;
+
+                response.put(TOTAL, total);
+                response.put(PLATFORM_FEE, platformFee);
+                response.put("gst", gst);
+                response.put(GRAND_TOTAL, grandTotal);
 
                 return response;
         }
@@ -240,10 +260,16 @@ public class CartController {
                                         "quantity",
                                         item.getQuantity());
 
-                        response.put(
-                                        "total",
-                                        calculateCartTotal(
-                                                        item.getUserEmail()));
+                        double total = calculateCartTotal(item.getUserEmail());
+
+                        double platformFee = 10.0;
+                        double gst = total * 0.05;
+                        double grandTotal = total + platformFee + gst;
+
+                        response.put(TOTAL, total);
+                        response.put(PLATFORM_FEE, platformFee);
+                        response.put("gst", gst);
+                        response.put(GRAND_TOTAL, grandTotal);
 
                         response.put(
                                         "removed",

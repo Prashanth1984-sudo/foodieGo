@@ -328,3 +328,90 @@ body{
     font-size:13px;
 
 }
+.summary-card{
+
+    background:#171717;
+
+    border-radius:18px;
+
+    padding:30px;
+
+}
+
+.summary-card h2{
+
+    margin-bottom:25px;
+
+}
+
+.summary-details{
+
+    margin-bottom:25px;
+
+}
+
+.summary-row{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:12px 0;
+
+    font-size:16px;
+
+}
+
+.summary-row span:first-child{
+
+    color:#c7ced9;
+
+}
+
+.summary-row span:last-child{
+
+    color:#fff;
+
+    font-weight:600;
+
+    white-space:nowrap;
+
+}
+
+.summary-details hr{
+
+    border:none;
+
+    border-top:1px solid rgba(255,255,255,.12);
+
+    margin:18px 0;
+
+}
+
+.grand-total{
+
+    font-size:20px;
+
+    font-weight:700;
+
+}
+
+.grand-total span{
+
+    color:#ff8a3d;
+
+}
+
+.checkout-btn{
+
+    width:100%;
+
+    display:block;
+
+    text-align:center;
+
+    margin-top:20px;
+
+}

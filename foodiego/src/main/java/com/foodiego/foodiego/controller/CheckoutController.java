@@ -26,6 +26,9 @@ import java.util.Map;
 import com.razorpay.RazorpayClient;
 import org.json.JSONObject;
 
+import com.foodiego.foodiego.dto.CartItemView;
+import java.util.ArrayList;
+
 @Controller
 @RequestMapping("/checkout")
 public class CheckoutController {
@@ -77,25 +80,47 @@ public class CheckoutController {
                         return "redirect:/cart";
                 }
 
-                double total = 0;
+                List<CartItemView> cartView = new ArrayList<>();
+
+                double subtotal = 0;
 
                 for (CartItem cart : cartItems) {
 
                         MenuItem menu = menuItemRepository
-                                        .findById(
-                                                        cart.getMenuItemId())
+                                        .findById(cart.getMenuItemId())
                                         .orElse(null);
 
                         if (menu != null) {
 
-                                total += menu.getPrice()
-                                                * cart.getQuantity();
+                                CartItemView item = new CartItemView();
+
+                                item.setCartId(cart.getId());
+                                item.setMenuItemId(menu.getId());
+                                item.setName(menu.getName());
+                                item.setImageUrl(menu.getImageUrl());
+                                item.setPrice(menu.getPrice());
+                                item.setQuantity(cart.getQuantity());
+
+                                cartView.add(item);
+
+                                subtotal += menu.getPrice() * cart.getQuantity();
                         }
                 }
 
-                model.addAttribute("subtotal", total);
-                model.addAttribute("discount", 0);
-                model.addAttribute("finalTotal", total);
+                double platformFee = 10.0;
+
+                double gst = subtotal * 0.05;
+
+                double discount = 0.0;
+
+                double finalTotal = subtotal + platformFee + gst;
+
+                model.addAttribute("cartItems", cartView);
+                model.addAttribute("subtotal", subtotal);
+                model.addAttribute("platformFee", platformFee);
+                model.addAttribute("gst", gst);
+                model.addAttribute("discount", discount);
+                model.addAttribute("finalTotal", finalTotal);
 
                 var addresses = addressRepository
                                 .findByUserEmail(
@@ -148,7 +173,10 @@ public class CheckoutController {
                         return dr.errorRedirect;
                 }
 
-                double total = subtotal - dr.discount;
+                double platformFee = 10.0;
+                double gst = subtotal * 0.05;
+
+                double total = subtotal + platformFee + gst - dr.discount;
                 if (total < 0) {
                         total = 0;
                 }
@@ -429,7 +457,12 @@ public class CheckoutController {
 
                 response.put("discount", discount);
 
-                response.put("finalTotal", subtotal - discount);
+                double platformFee = 10.0;
+                double gst = subtotal * 0.05;
+
+                response.put(
+                                "finalTotal",
+                                subtotal + platformFee + gst - discount);
 
                 response.put(
                                 "message",
