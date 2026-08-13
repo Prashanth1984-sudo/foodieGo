@@ -48,18 +48,6 @@ An entity-relationship diagram covering Users, Restaurants, Menu Items, Orders, 
 
 ---
 
-## 📸 Screenshots
-
-> Add screenshots or a demo GIF here — landing page, checkout flow, and admin dashboard work well to showcase the UI.
-
-```
-docs/screenshots/landing.png
-docs/screenshots/checkout.png
-docs/screenshots/admin-dashboard.png
-```
-
----
-
 ## 🚀 Getting Started
 
 ### Prerequisites
@@ -162,7 +150,7 @@ This project is licensed under the MIT License — see the [LICENSE](LICENSE) fi
 
 **Prashanth**
 Full Stack Java Developer | Bengaluru, India
-📧 Reach out via [LinkedIn](https://linkedin.com) or GitHub Issues for questions and feedback.
+📧 Reach out via [LinkedIn](https://www.linkedin.com/in/prashanth-pothugunta/) or GitHub Issues for questions and feedback.
 
 ---
 
