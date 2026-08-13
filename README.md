@@ -154,4 +154,4 @@ Full Stack Java Developer | Bengaluru, India
 
 ---
 
-<p align="center">Made with ☕ and Spring Boot</p>
+<p align="center">Made with Java and Spring Boot</p>
